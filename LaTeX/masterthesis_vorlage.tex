@@ -1,0 +1,153 @@
+% Formatvorlage für Abschlussarbeiten an der Universität Wien
+%
+% Diese Vorlage ist für die Einreichung von Masterarbeiten vorgesehen und basiert auf einer Vorlage von Martin Dockner. Sie entspricht den verbindlichen Vorgaben zur Titelblattgestaltung an der Universität Wien. 
+%
+% Fügen Sie in diese Vorlage mittels Copy & Paste die Daten ein, die Ihnen im Schritt 6 im Prozess zum Upload der Abschlussarbeit zur Plagiatsprüfung in u:space angezeigt werden. Verändern Sie die Daten bitte nicht. Ein fehlerhaftes Titelblatt kann das Abschlussprozedere verzögern.  
+%
+% Version 0.9 2023
+%
+% Diese Vorlage nutzt die KOMA-Script-Klassen. Für Details siehe hier:
+% ftp://ftp.dante.de/pub/tex/macros/latex/contrib/koma-script/scrguide.pdf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,pagesize,twoside,DIV=12,headsepline=0.4pt]{scrbook}
+
+% Verwenden des Fonts Source Sans Pro
+\usepackage[default,semibold,light]{sourcesanspro}
+\usepackage[T1]{fontenc}
+
+
+% \usepackage[rm={lining,proportional},sf={lining,proportional},tt={lining,tabular,monowidth}]{cfr-lm}
+% \global\let\bfseries\sbweight
+
+
+
+% folgende drei Pakete sind nur in deutsch wichtig! Sie können für englische
+% Arbeiten auskommentiert werden ( % davor setzen)
+\usepackage[ngerman]{babel}		% deutsche Abteilungsregeln
+\usepackage{lmodern} 	        % notwendig damit im PDF nach Umlauten gesucht werden kann
+\usepackage[utf8]{inputenc}     % notwendig für Darstellung von Umlauten und scharfem S
+\usepackage[T1]{fontenc}
+
+% weitere wichtige Pakete
+\usepackage{graphicx} 			% für Abbildungen benötigt
+%\usepackage{natbib,bibgerm} 	% werden für die meisten Literaturstile benötigt
+\usepackage[natbibapa]{apacite} % für Literaturestile nach den APA Zitierregeln
+\usepackage{booktabs}			% für hübschere Tabellen
+\usepackage{lineno}				% für Zeilnennummerierung
+\usepackage{setspace}			% für 1.5-fachen oder doppelten Zeilenabstand
+%\usepackage[DIV=15]{textarea}   % für Satzspiegeleinstellung/Layout
+
+\usepackage{scrlayer-scrpage}   % für Modifkationen an Kopf- und Fusszeilen
+    \pagestyle{scrheadings}     % völlig frei definierte Kopf- und Fusszeile
+        \automark[chapter]{chapter} % nötig für den folgenden Befehl
+        \ohead[]{\headmark}     % fügt in alle Kopfzeilen den Kapitelnamen ein
+        \cfoot[]{}              % die Mitte der Fusszeile bleibt leer!
+        \ofoot[\pagemark]{\pagemark} % fügt Seitenzahlen in der Fusszeile ein
+
+% folgende Zeilen aktivieren Serifenschrift im kompletten Dokument
+\setkomafont{disposition}{\normalcolor\bfseries}		% für Überschriften
+\setkomafont{descriptionlabel}{\normalcolor\bfseries}	% für Descriptions
+\setkomafont{captionlabel}{\normalcolor\bfseries}		% für Captions
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition der Persönlichen Daten %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Persönliche Angaben zur Arbeit folgen hier
+
+\renewcommand{\title}{Zusatz zum Titel Titel meiner Arbeit} % Titel der Arbeit
+\newcommand{\akademischegrade}{}            % bereits erlangte akademische Grade!
+\renewcommand{\author}{Mag. Max Mustermann, BA}      % Titel Vor Vorname Nachname, Titel Nach
+\newcommand{\matrikelnummer}{00000000}      % Matrikelnummer
+\newcommand{\studienkennzahl}{A 000 000}                % Studienkennzahl
+\newcommand{\studienrichtung}{Masterstudium Beispiel}    % Studienrichtung
+\newcommand{\betreuerin}{ao. Univ. Prof. Dr. Max Mustermann, MSc}        % BetreuerIn
+
+% Wenn du das Datum ändern willst, entferne in der nächsten Zeile
+% Das Prozentzeichen und paße das Jahr händisch an.
+% \year=2013
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}						% Hier fängt der Text an
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hier wird die Titelseite eingefügt. Sie befindet sich in der Datei
+% "titlepage.tex" und entspricht den Vorgaben der Uni Wien.
+% Fügen Sie in diese Vorlage mittels Copy & Paste die Daten ein, die Ihnen im Schritt 6 im Prozess zum Upload der Abschlussarbeit zur Plagiatsprüfung in u:space angezeigt werden. Verändern Sie die Daten bitte nicht.
+\include{titlepage}
+% Ende der Titelseite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Es folgen einige Hilfsmittel, die du einbinden kannst, aber nicht mußt!
+% Zum verwenden, entferne einfach in der entsprechenden Zeile das Prozentzeichen
+
+%\pagewiselinenumbers				% Seitenweise Zeilennummerierung einschalten
+%\onehalfspacing					% aktiviert 1.5-fachen Zeilenabstand
+%\doublespacing						% aktiviert doppelten Zeilenabstand
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents					% Inhaltsverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Aus Datenschutzgründen wird der Text Ihrer Abschlussarbeit in pseudonymisierter Form zur Plagiatsprüfung weitergeleitet. Eine etwaige Danksagung muss sich innerhalb der ersten 6 Seiten der Arbeit befinden, da diese vor der Übermittlung an die Texterkennungssoftware entfernt werden.
+
+\chapter*{Danksagung}
+\label{ch:danksagung}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Die Zusammenfassung/Der Abstract scheint nicht im Inhaltsverzeichnis auf.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{\abstractname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hier beginnt der Haupttext.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Fragestellung}
+\label{ch:fragestellung} % für einen Textverweis auf das Kapitel: \ref{ch:fragestellung}
+
+\input{Kapitel/Einleitung}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methodik}
+\label{ch:methodik}	% für einen Textverweis auf das Kapitel: \ref{ch:methodik}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Ergebnisse}
+\label{ch:ergebnisse}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Diskussion}
+\label{ch:diskussion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Schlussfolgerung}
+\label{ch:schlussfolgerung}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\listoffigures   	% Verzeichnis der Abbildungen
+\listoftables     	% Verzeichnis der Tabellen
+
+%\nocite{*} 		% ALLE Zitate aus der Literaturdatenbank werden übernommen!
+
+% Der Stil der Literaturzitate. Folgende Möglichkeiten sind günstig.
+%  	apacite		= Author(Datum) .. komplett englisch
+%	gerapalike	= Author(Datum) .. komplett deutsch
+%  	gerplain	= [1] 			.. komplett deutsch
+%	apalike2	= Author(Datum) .. teilweise für deutsch geeignet
+%  	apa 		= Author(Datum) .. komplett englisch
+%	elsart-harv	= Author(Datum) .. komplett englisch
+%	chicago		= Author(Datum) .. komplett englisch
+%	plain		= [1]			.. komplett englisch
+%	nature		= ²				.. komplett englisch
+
+\bibliographystyle{apacite} 
+\bibliography{literature}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}						% Ende des Dokuments

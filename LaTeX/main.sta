@@ -1,0 +1,41 @@
+\standalonepreambles
+\subpreamble{chapters/abstract.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/zusammenfassung.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/introduction.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/theory.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/sota.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/implementation.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/experiment.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/discussion.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/summary.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/conclusion.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/outlook.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/acknowledgments.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\subpreamble{chapters/appendix.tex}
+\usepackage [subpreambles=true]{standalone}\ifstandalone \input {../settings+/settings}\fi 
+\endsubpreamble
+\endstandalonepreambles
