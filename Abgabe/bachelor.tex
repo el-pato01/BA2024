@@ -1,0 +1,297 @@
+\documentclass[%
+thesis=student,% bachlor's or master's thesis
+coverpage=false,% do not print an extra cover page
+titlepage=false,% do not print an extra title page
+headmarks=true, % headmarks can be switched on or off
+german,% or `english`
+font=libertine, % use `libertine` font; alternatives: `helvet` / `palatino` / `times`
+math=newpxtx, % math font `newpxtx`; alternatives: `ams`, `pxtx`
+BCOR=5mm,% binding correction - adapt accordingly
+coverBCOR=11mm% binding correction for the cover - adapt accordingly
+]{tumbook}
+
+%\makeatletter %redefine some labels from the TUM template
+%\provideName{\@tum@examiner@}{Supervisor}{Themensteller} % or `Themenstellerin`
+%\provideName{\@tum@supervisor@}{Advisors}{Betreuer} % or `Advisor` / `Betreuerin`
+\makeatother
+
+\usepackage{booktabs}% for more beautiful tables
+\usepackage{cleveref}% intelligent references
+
+\usepackage{diffcoeff}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\newtheoremstyle{break}
+{\topsep}   % Platz oberhalb
+{\topsep}   % Platz unterhalb
+{\itshape}  % Schriftart im Textkörper
+{0pt}       % Einzug (keiner)
+{\bfseries} % Schriftart im Kopf
+{.}         % Punkt nach Theorem-Name
+{\newline}  % Zeilenabstand nach Theorem-Name
+{}          % Zusätzliche Spezifikation
+
+
+\theoremstyle{break}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Satz}
+
+%Literatur
+\usepackage[%
+    backend=bibtex, %, or `biber` on more up-to-date systems
+    sortcites, % sort automatically
+    sorting=nty, % sort order
+    safeinputenc, % solves problems with unicode-formatted author names etc.
+    citestyle=alphabetic, %
+    bibstyle=alphabetic, %
+    hyperref=true, % provide clickable links
+    maxbibnames=3, % shorten author list for more than 3 names
+    maxcitenames=3, % use at most 3 names for key
+    url=false, % do not print URLs
+    doi=false, % do not print DOIs
+    giveninits=true,
+    ]%
+{biblatex}
+\addbibresource{literature.bib}
+
+% automatische Anführungszeichen
+\usepackage[autostyle=true]{csquotes}
+
+
+\title{Verzerrung der Inferenz bei der Verwendung gemischter Modelle in latentent Repräsentationen}
+
+
+\author{Yannick Bantel}
+
+\degree{Bachelor of Science}% or `Bachlor of Science`
+\dateSubmitted{23. Juli 202}% preferably use some universally recognized date format
+
+\examiner{Prof.\@ Dr.\@ Harald Binder}% `Themensteller`
+\supervisor{Clemens Schächter}% `Betreuer`
+
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\section*{Zusammenfassung}
+Eine kurze Zusammenfassung der Arbeit auf Deutsch.
+
+\section*{Abstract}
+A brief abstract of this thesis in English.
+
+\cleardoublepage{}
+
+\tableofcontents
+
+\mainmatter{}
+
+%%---------------EINLEITUNG--------------------------------------------------
+\chapter{Einleitung}
+
+In der modernen Datenanalyse spielen gemischte Modelle eine zentrale Rolle, da sie es ermöglichen, sowohl feste als auch zufällige Effekte zu berücksichtigen, was sie besonders in den Bereichen der Biostatistik, der Sozialwissenschaften und der ökonomischen Modellierung beliebt macht. In dem Rahmen dieser Arbeit finden die gemischten Modelle Anwendung in der medizinischen Datenanalyse. Mit dem Aufkommen von Big Data und komplexen Datenstrukturen hat sich der Fokus zunehmend auf die effiziente und genaue Extraktion von Informationen aus großen und oft unübersichtlichen Datensätzen verschoben. In diesem Kontext gewinnen latente Repräsentationen an Bedeutung, da sie es ermöglichen, die inhärenten Strukturen innerhalb der Daten zu identifizieren und zu nutzen, um tiefergehende Einsichten zu gewinnen.\\
+\\
+Jedoch birgt die Integration von gemischten Modellen in latente Repräsentationen das Risiko einer Verzerrung der Inferenzergebnisse, was die Genauigkeit und Zuverlässigkeit der aus den Daten gezogenen Schlussfolgerungen erheblich beeinträchtigen kann. Diese Arbeit beschäftigt sich daher mit der Untersuchung der Verzerrungen, die bei der Anwendung gemischter Modelle auf latente Repräsentationen auftreten können. Ziel ist es, die Mechanismen zu verstehen, die zu diesen Verzerrungen führen, und Methoden zu entwickeln, um ihre Auswirkungen zu minimieren.\\
+\\
+Die Fragestellung der Verzerrung ist besonders relevant, da eine fehlerhafte Inferenz zu falschen Entscheidungen führen kann, die in praktischen Anwendungen schwerwiegende Folgen haben könnten. Durch eine sorgfältige Analyse und Evaluation der gemischten Modellansätze in Verbindung mit latenten Repräsentationen strebt diese Arbeit an, einen Beitrag zur Verbesserung der Modellgenauigkeit und der Verlässlichkeit von Inferenzschlüssen zu leisten.\\
+\\
+Diese Arbeit gliedert sich in mehrere Teile, die zunächst die theoretischen Grundlagen der gemischten Modelle und der latenten Repräsentationen behandeln, gefolgt von einer Diskussion der Methoden zur Messung und Korrektur von Verzerrungen. Anhand von experimentellen Studien werden diese Konzepte dann praktisch angewendet und evaluiert, um abschließend Empfehlungen für die Anwendung dieser Techniken in der Forschung und Praxis zu geben.\\
+\\
+\subsection{Motivation}
+
+
+%%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
+\chapter{Theoretische Grundlagen}
+Definition, Typen und Anwendungsbereiche.\\
+Bevor wir uns die Methodik dieser Arbeit anschauen benötigt es noch eine theoretische Aufarbeitung der behandelten Themen. In diesem Kapitel werden die theoretischen Aspekte dieser Arbeit umfangreich beschrieben und aufgearbeitet. Sowohl lineare gemischte Modelle als auch die Theorie hinter Variational Autoencodern werden eingeführt und beschrieben. Insbesondere wird in diesem Kapitel die Theorie, welche zur Analyse der Modelle notwendig ist, wie zum Beispiel die Likelihood Berechnung und der Likelihood Ratio Test, behandelt
+\section{Gemischte Modelle}
+Um die theoretischen Aspekte gemischter Modelle aufzuarbeiten folgen wir den Notierungen in dem Buch \cite{pinheiro2000} Mixed-Effects Models in S and S-Plus  von José C. Pinheiro und Douglas M. Bates \cite{pinheiro2000}.\\
+\\
+Ein gemischtes Modell (Mixed Modul) ist ein statistisches Datenanalyseverfahren, welches sowohl feste als auch zufällige Effekte (fixed und random Effects) modelliert. Ihre Anwendung finden die gemischten Modelle haupsächlich in der Analyse von Longitudinaldaten und Clusterdaten.\\
+Die parametrisierten festen und zufälligen Effekte berechnen zusammen mit einem Fehlervektor die Antwortvariable. Das lineare gemischte Modell für eine Gruppe wird folgendermaßen definiert.
+\begin{definition}[Lineares gemischtes Modell für Longitudinal- oder Clusterdaten] 
+	Seien X ($n_i$ x p) und Z ($n_i$ x q) bekannte Designmatrizen für die festen und zufälligen Effekte. Seien $\beta$ ein p-dimensionaler Vektor von p festen Effekten und $b$ ein q-dimensionaler Vektor von q zufälligen Effekten und sei $\epsilon$ ein $n_i$-dimensionaler normalverteilter Fehlervektor.\\
+	\\
+	Ein lineares gemischtes Modell für den $n_i$-dimensionalen Antwortvektor der i-ten Gruppe wird durch 
+	$$y_i = X_i * \beta + Z_i * b_i + \epsilon_i$$ 
+	$$b_i \sim \mathcal{N}(0,\sum), \epsilon_i \sim \mathcal{N}(0,\sigma^2I)$$
+	definiert.
+\end{definition}\noindent
+Dabei sind die Daten der zufälligen und festen Effekte in einer Designmatrix (Datenmatrix) gespeichert.Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Für die immer auftretenden Messfehler oder unerwartete Einflüsse wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
+\\
+Die zufälligen Effekte $b_i$ und der Fehlervektor sind unabhängig voneinander in der selben Gruppe und unabhängig von anderen Gruppen. Wie man leicht erkennen kann, ist der Vektor der zufälligen Effekte ausschließlich von seiner Varianz-Kovarianz-Matrix $\sum$ charackterisiert, welche symmetrisch und postiv semidefinit ist.
+\\
+Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden:
+\begin{definition}[Allgemeines lineares gemischtes Modell]
+	Ein lineares gemischtes Modell ist definiert durch
+	$$y = X\beta + Zb + \epsilon $$
+	mit $$\begin{pmatrix}
+		b \\
+		\epsilon \\
+	\end{pmatrix}
+	\sim
+	\mathcal{N}
+	\begin{pmatrix}
+		\begin{pmatrix}
+			
+			0 \\
+			0 \\
+		\end{pmatrix},
+		\begin{pmatrix}
+			\sum & 0 \\
+			0 & \sigma^2I \\
+		\end{pmatrix}
+	\end{pmatrix}$$
+	gegeben. Dabei sind $X$, bzw $Z$ die Designmatrizen der festen, bzw zufälligen Effekte, $\beta$ und $b$ die Parametervektoren der festen und der zufälligen Effekten und $\epsilon$ der Fehlervektor.
+\end{definition}\noindent
+Die Vektoren $b$ und $\epsilon$ sind also normalverteilt mit Varianz $Var(b) = \sum$ und $Var(\epsilon) = R = \sigma^2I$. Also lässt sich die Varianz von $y$ schreiben als $Var(y) = V = Z \sum Z^t + R.$
+\section{Likelihood Inferenz}
+Um den Einfluss eines festen Effekts zu testen vergleichen wir ein reduziertes Modell, ohne diesen festen Parameter, mit dem vollständigen Modell. Dazu nutzen wir die Likelihood-Ratio-Test (LRT) Statistik, welche üblicherweise dazu genutzt wird. Wie das Testverfahren genau funktioniert und wie die Implementierung des LRT erfolgt, schauen wir uns später an. Zuvor benötigen wir noch ein bisschen Theorie über die Likelihood-Berechnung. 
+\subsection{Likelihood Berechnung gemischter Modelle}
+In diesem Abschnitt wird die Schätzung der unbekannten Parameter behandelt. Hier folgen wir der Herangehensweise von \cite{fahrmeir2010} .\\
+\\
+Wir nutzen die Maximum-Likelihood (ML) Methode zur Berechnung der Schätzer. Eine Alternative dazu wäre die restringierte ML Methode, welche allerdings nicht geeignet für den Likelihood-Ratio-Test ist. Deshalb greifen wir bei unserer Berechnung auf die ML-Methode zurück.\\
+\\
+Die Schätzung der Parameter ist in einem gemischten Modell allerdings etwas komplizierter. Es ist nicht nur $\beta$ unbekannt, sondern auch die $b$, $\sum$ und $R$. Es sind also sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter, welche wir mit $\theta$ bezeichnen, in  $\sum$ und $R$ zu schätzen. Dies zwingt uns zu einer verschachtelten Schätzung.\\
+\\
+Nehmen wir erst einmal an, dass $X,V$ und $Z$ bekannt sind.Für die Schätzung von $\beta$, ausgehend vom marginalen Modell,bietet sich der ML-Schätzer $$\hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y$$ an. Setzen wir hier $\hat{V}$ ein erhalten wir den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die festen Effekte. \\
+Für den Schätzer von $b$ nutzen wir den bedingten Erwartungswert $E(b|y)$ von $b$, gegeben die Daten $y$. \\
+Betrachten wir die gemeinsame Verteilung von $b$ und $y$ 
+$$\begin{pmatrix}
+	y \\
+	b \\
+\end{pmatrix}
+\sim
+\mathbf{N}
+\begin{pmatrix}
+	\begin{pmatrix}
+		
+		X\beta \\
+		0 \\
+	\end{pmatrix},
+	\begin{pmatrix}
+		V & Z\sum \\
+		\sum Z^t & \sum \\
+	\end{pmatrix}
+\end{pmatrix}$$
+erhalten wir $E(b|y) = \sum Z^tV^{-1}(y-X\beta)$. \\
+Ersetzt man nun $\beta$ durch den Schätzer $\hat{\beta}$ erhält man den Schätzer $$\hat{b} = \hat{\sum} Z^t\hat{V}^{-1}(y-X\hat{\beta})$$ für die zufälligen Effekte. Der Schätzer $\hat{b}$ ist der beste lineare unverzerrte Schätzer (BLUP, best linear unbiased prediction)\\
+
+\begin{definition}[Schätzer für feste und zufällige Effekte]
+	Sei $y = X\beta + Zb + \epsilon$ ein lineares gemischtes Modell und sei $V = Var(y)$.
+	Dann ist $$\hat{\beta} = (X^t \hat{V}^{-1}X)^{-1}X^t \hat{V}^{-1}y$$ ein Schätzer für die festen Effekte und $$ \hat{b} = \hat{\tiny\sum} Z^t\hat{V}^{-1}(y-X\hat{\beta})$$ ein Schätzer für die zufälligen Effekte.
+\end{definition}
+
+Wie schon erwähnt soll $\theta$ der Parametervektor sein, der alle unbekannten Parameter in $V= V(\theta), \sum = \sum(\theta)$ und $R = R (\theta)$ enthält. Falls wir nun einen Schätzer $\hat{\theta}$ haben, können wir die Kovarianzschätzer und somit auch die Schätzer der festen und zufälligen Effekte durch Einsetzen von $\hat{\theta}$ berechnen. 
+Die ML-Methode für $\theta$ basiert auf dem marginalen Modell 
+$$y \sim \mathbf{N}(X\beta,V(\theta))$$.
+Die log-likelihood von $\beta$ und $\theta$ ist gegeben durch
+$$l(\beta,\theta) = - \frac{1}{2} (log(|V|)+(y-X\beta)^tV^{-1}(y-X\beta))$$.
+Maximieren von $l(\beta,\theta)$ bezüglich $\beta$ für festes $\theta$ liefert 
+$$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y $$
+Setzt man nun $\hat{\theta}$ in $l(\beta,\theta)$ ein erhält man die Profil-log-Likelihood 
+$$ l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta}))$$
+Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch maximieren von $l(\theta)_p$ 
+\begin{definition}[Kovarianz-Schätzer]
+	Sei $y = X\beta + Zb + \epsilon $ ein lineares gemischtes Modell mit $$\begin{pmatrix}
+		b \\
+		\epsilon \\
+	\end{pmatrix}
+	\sim
+	\mathcal{N}
+	\begin{pmatrix}
+		\begin{pmatrix}
+			
+			0 \\
+			0 \\
+		\end{pmatrix},
+		\begin{pmatrix}
+			\sum & 0 \\
+			0 & R = \sigma^2I \\
+		\end{pmatrix}
+	\end{pmatrix}$$ und sei $\theta$ der unbekannte Parametervektor von $\sum$,$R$ und $V=Var(y)$. \\
+	Dann ist $\hat{\theta}_{ML}$ der ML-Schätzer für $\theta$, den man durch maximieren von $$  l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})) $$erhält.
+	Dabei ist $$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y$$
+\end{definition} \noindent
+ Mit dem Schätzer $\hat{V}$ lassen sich die Schätzer der festen und zufälligen Effekte nun berechnen.
+ 
+
+\begin{definition}[Maximum-Likelihood]
+	Sei 
+	$$ l(\sum,R) = -0.5 * (log(|V|)+ r'V^{-1}r + N * log(2\pi))$$
+\end{definition}\noindent
+\subsection{Likelihood-Ratio-Test}
+Mit der vorausgegangen Theorie über die ML-Methode ist die Berechnung der Likelihood Ratio Test (LRT) Statistik relativ einfach. Zur Erinnerung wollen wir ein reduziertes Modell mit dem vollständigen Modell vergleichen, um herauszufinden wie groß der Einfluss einer Störgröße ist. Dafür nutzen wir den LRT. 
+\begin{definition}[Likelihood-Ratio-Test (LRT)] 
+	Sei $\mathbf{L}_{full}$ der Likelihood-Wert des vollständigen Modells und $\mathbf{L}_{red}$ der Likelihood-Wert des reduzierten Modells. Sei i die Anzahl der Freiheitsgrade. Dann ist die LRT Statistik gegeben durch 
+	$$ LRT = 2(\mathbf{L}_{full}- \mathbf{L}_{red}) $$ 
+\end{definition} \noindent
+Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ wie in der Definition initialisiert sind, gilt $\mathbf{L}_{full} > \mathbf{L}_{red}$. Insbesondere gilt $\log(\mathbf{L}_{full}) > \log(\mathbf{L}_{red})$.
+Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ nun schon die Log-Likelihood-Werte der Modelle sind, gilt für die Berechnung der LRT Statistik einfach $2(\mathbf{L}_{full} - \mathbf{L}_{red})$. \\
+%%---------------VAE-------------------------------------------------------
+\section{Variational Autoencoder}
+Ein Variational Autoencoder (VAE) besteht aus einem Encoder und einem Decoder. VAE sind sehr attraktiv für latente Repräsentationen, da sie hoch dimensionale Datensätze durch den Encoder im latenten Raum niedrig dimensional darstellen können. Der Decoder versucht dann aus der Darstellung im latenten Raum den originalen Datensatz zu rekonstruieren.\\ 
+Bedeutung und Anwendung in verschiedenen Bereichen wie Deep Learning, Faktoranalyse etc.
+\section{Verzerrung (Bias) und ihre Messung}
+Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
+
+%%--------------------METHODIK-----------------------------------------------
+\chapter{Methodik}
+\section{Vorgehen}
+In den ersten Wochen habe ich mir selbst ein Simulationsdesign für einen longitudinalen medizinischen Datensatz ausgedacht und basierend darauf ein gemischtes Modell gefittet. Mit diesen simulierten Daten habe ich ein reduziertes Model mit dem vollständigen Model verglichen. Die LRT Statistik habe ich dann in einem Histogramm dargestellt.\\
+\\
+Wir fügen dem gemischten Modell einen festen Effekt hinzu, welcher keinen Einfluss auf die Trajektorie haben soll. In unserem Fall ist dieser feste Effekt das Geschlecht, welches keinen Einfluss auf den Verlauf einer Krankheit haben sollte.\\
+\\
+Mein zweites Projekt ist nun einen hoch dimensionalen medizinischen Datensatz durch den Encoder eines Variational Autoencoders im latenten Raum zu repräsentieren und dort mit einem gemischten Model darzustellen. Ähnlich wie zuvor will ich wieder eine LRT Statistik erhalten, in dem ich ein reduziertes Modell mit dem vollständigen Model vergleiche. Dazu trainiere ich in einer Schleife den Encoder und das gemischte Model für jeden Iterationsschritt neu und vergleiche die negativen Maximum Likelihood-Werte (ML-Werte) durch den Likelihood Ratio Test. Am Ende der Schleife erhalte ich wieder eine LRT Statistik, welche durch ein Histogramm dargestellt wird. Im Optimalfall ähnelt das Histogramm einer Chi-Quadrat-Verteilung mit einem Freiheitsgrad (Da das reduzierte Model nur einen festen Effekt, das Geschlecht, weniger hat).\\
+\section{Datenbeschaffung}
+Quellen und Typen der verwendeten Daten
+\section{Modellierungstechniken}
+Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
+\section{Analysemethoden}
+Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
+
+%%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
+\chapter{Experimente und Ergebnisse}
+\section{Experimentelles Design}
+Aufbau der experimentellen Tests und Simulationen.
+\section{Durchführung}
+Beschreibung der durchgeführten Experimente und verwendeten Parameter.
+\section{Analyse der Ergebnisse}
+Diskussion der Ergebnisse im Hinblick auf die Verzerrung der Inferenz.
+
+%%------------DISKUSSION-----------------------------------------------------
+\chapter{Diskussion}
+\section{Interpretation der Ergebnisse}
+Tiefere Analyse der Ergebnisse und ihrer Implikationen.
+\section{Vergleich mit bestehenden Arbeiten}
+Wie sich die Ergebnisse zu bereits veröffentlichten Forschungen verhalten.
+\section{Limitationen und Herausforderungen}
+Kritische Betrachtung der Grenzen der Studie und mögliche Probleme.
+\chapter{Schlussfolgerung und Ausblick}
+Zusammenfassung der wichtigsten Erkenntnisse
+Praktische Implikationen: Wie die Ergebnisse in der Praxis angewendet werden können.
+Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder ergänzende Studien.
+\chapter{Anhang}
+\chapter{Literaturverzeichnis}
+\appendix
+\chapter{Appendix}
+\section{Supporting Data}
+\section{Some Code Listings}
+
+\backmatter{}
+\listoffigures% may be removed
+\listoftables% may be removed
+
+\nocite{Alspach:2008,GaleShapley:1962} % further literature that has not been explicitly referenced in the text
+\printbibliography{} % print bibliography
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: default
+%%% TeX-command-extra-options: "-shell-escape"
+%%% ispell-local-dictionary: "american"
+%%% eval: (setenv "TEXINPUTS" ".//:")
+%%% TeX-master: t
+%%% End:

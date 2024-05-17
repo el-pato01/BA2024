@@ -1,0 +1,164 @@
+\documentclass[%
+thesis=student,% bachlor's or master's thesis
+coverpage=false,% do not print an extra cover page
+titlepage=false,% do not print an extra title page
+headmarks=true, % headmarks can be switched on or off
+english,% or `german`
+font=libertine, % use `libertine` font; alternatives: `helvet` / `palatino` / `times`
+math=newpxtx, % math font `newpxtx`; alternatives: `ams`, `pxtx`
+BCOR=5mm,% binding correction - adapt accordingly
+coverBCOR=11mm% binding correction for the cover - adapt accordingly
+]{tumbook}
+
+\makeatletter %redefine some labels from the TUM template
+\provideName{\@tum@examiner@}{Supervisor}{Themensteller} % or `Themenstellerin`
+\provideName{\@tum@supervisor@}{Advisors}{Betreuer} % or `Advisor` / `Betreuerin`
+\makeatother
+
+\usepackage{booktabs}% for more beautiful tables
+\usepackage{cleveref}% intelligent references
+
+\usepackage{diffcoeff}
+\usepackage{amsmath}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Satz}
+
+%Literatur
+\usepackage[%
+    backend=bibtex, %, or `biber` on more up-to-date systems
+    sortcites, % sort automatically
+    sorting=nty, % sort order
+    safeinputenc, % solves problems with unicode-formatted author names etc.
+    citestyle=alphabetic, %
+    bibstyle=alphabetic, %
+    hyperref=true, % provide clickable links
+    maxbibnames=3, % shorten author list for more than 3 names
+    maxcitenames=3, % use at most 3 names for key
+    url=false, % do not print URLs
+    doi=false, % do not print DOIs
+    giveninits=true,
+    ]%
+{biblatex}
+\addbibresource{literature.bib}
+
+% automatische Anführungszeichen
+\usepackage[autostyle=true]{csquotes}
+
+
+\title{How to Write an Excellent Mathematical Thesis}
+\subtitle{A Comprehensive Guide for TUM Students}
+
+\author{Felix Klein}
+
+\degree{Master of Science}% or `Bachlor of Science`
+\dateSubmitted{31. März 2023}% preferably use some universally recognized date format
+
+
+\examiner{Prof.\@ Dr.\@ rer.\@ nat.\@ Adolf Hurwitz}% `Themensteller`
+\supervisor{Dr.\@ L. Euler\\Dr.\@ C.-F. Gauß}% `Betreuer`
+
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\section*{Zusammenfassung}
+Eine kurze Zusammenfassung der Arbeit auf Deutsch.
+
+\section*{Abstract}
+A brief abstract of this thesis in English.
+
+\cleardoublepage{}
+
+\tableofcontents
+
+\mainmatter{}
+\chapter{Introduction}
+
+To use the \LaTeX{} templates provided here you will need to add the directory \verb|tum-templates| as a local package directory to your \LaTeX{} distribution. An easy way to do this is by setting the environment variable \verb|TEXINPUTS| to \verb|.//:| on Linux/Mac systems and to \verb|.//;| on a windows machine (meaning: search the current directory and its subdirectories for packages first, then use the usual search path). On a Linux or Mac you can compile this document to a PDF file in a terminal through the following commands (the first command needs to be issued only once):
+\begin{verbatim}
+export TEXINPUTS=.//:
+pdflatex master
+bibtex master
+pdflatex master
+\end{verbatim}
+
+On a windows computer, you would use the following commands in a terminal:
+
+\begin{verbatim}
+set TEXINPUTS=.//;
+pdflatex master
+bibtex master
+pdflatex master
+\end{verbatim}
+
+
+\section{First Section of the Introduction}%
+\label{sec:first-sect-intr}
+Hier folgt eine ausführliche Erklärung und Motivation. Insbesondere weisen wir auf den wunderbaren Artikel von \textcite{Edmonds:1965} und auf~\cite{GareyJohnson:1979} für weitere Hintergründe.
+
+\section{Second Section of the Introduction}%
+\label{sec:second-sect-intr}
+
+Wichtige Informationen finden sich in \cref{tab:wonderful-table}.
+
+\begin{table}[hbt]
+  \centering
+  \begin{tabular}{rl}
+    \toprule%
+    \textbf{Name}& \textbf{Place of Birth}\\ \midrule
+    Gauß & Braunschweig\\
+    Euler & Basel\\
+    Edmonds & Washington, D.\@C.\@\\
+    \bottomrule
+  \end{tabular}
+
+  \caption{A most wonderful table}%
+  \label{tab:wonderful-table}
+\end{table}
+
+\subsection{A Lonesome Subsection}%
+\label{sec:lonesome-subsection}
+Eine ausführliche \enquote{Erklärung} findet der aufmerksame Leser in \cref{sec:first-sect-intr}.
+
+\clearpage{}
+
+Hier geht es weiter mit dem Text.
+
+\chapter{Mathematical Foundations}
+
+\section{Definitions}
+\begin{definition}[Definitheit]
+  Hier definieren wir definitive Definitheit.
+\end{definition}
+
+\begin{theorem}[vom X]
+  War wohl nix. Es gilt aber
+  \begin{align*}
+    \sum_{i=1}^{n} f_i(x) = \int \hat{f}(x) \dl{x}
+  \end{align*}
+\end{theorem}
+
+\appendix
+\chapter{Appendix}
+\section{Supporting Data}
+\section{Some Code Listings}
+
+\backmatter{}
+\listoffigures% may be removed
+\listoftables% may be removed
+
+\nocite{Alspach:2008,GaleShapley:1962} % further literature that has not been explicitly referenced in the text
+\printbibliography{} % print bibliography
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: default
+%%% TeX-command-extra-options: "-shell-escape"
+%%% ispell-local-dictionary: "american"
+%%% eval: (setenv "TEXINPUTS" ".//:")
+%%% TeX-master: t
+%%% End:

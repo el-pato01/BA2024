@@ -1,0 +1,14 @@
+.auctex-auto/*
+*.aux
+*.bbl
+*-blx.bib
+*.log
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.run.xml
+*.toc
+*.synctex.gz
