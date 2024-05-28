@@ -89,13 +89,13 @@ A brief abstract of this thesis in English.
 %%---------------EINLEITUNG--------------------------------------------------
 \chapter{Einleitung}
 
-In der modernen Datenanalyse spielen gemischte Modelle eine zentrale Rolle, da sie es ermöglichen, sowohl feste als auch zufällige Effekte zu berücksichtigen, was sie besonders in den Bereichen der Biostatistik, der Sozialwissenschaften und der ökonomischen Modellierung beliebt macht. In dem Rahmen dieser Arbeit finden die gemischten Modelle Anwendung in der medizinischen Datenanalyse. Mit dem Aufkommen von Big Data und komplexen Datenstrukturen hat sich der Fokus zunehmend auf die effiziente und genaue Extraktion von Informationen aus großen und oft unübersichtlichen Datensätzen verschoben. In diesem Kontext gewinnen latente Repräsentationen an Bedeutung, da sie es ermöglichen, die inhärenten Strukturen innerhalb der Daten zu identifizieren und zu nutzen, um tiefergehende Einsichten zu gewinnen.\\
+In der modernen Datenanalyse spielen gemischte Modelle eine zentrale Rolle, da sie es ermöglichen, sowohl feste als auch zufällige Effekte zu berücksichtigen, was sie besonders in den Bereichen der Biostatistik, der Sozialwissenschaften und der ökonomischen Modellierung populär macht. Im Rahmen dieser Arbeit werden gemischte Modelle auf die Analyse medizinischer Daten angewendet. Mit dem Aufkommen von Big Data und komplexen Datenstrukturen hat sich der Fokus zunehmend auf die effiziente und genaue Extraktion von Informationen aus großen und oft unübersichtlichen Datensätzen verlagert. In diesem Zusammenhang gewinnen latente Repräsentationen an Bedeutung, da sie es ermöglichen, inhärente Strukturen innerhalb der Daten zu identifizieren und zu nutzen, um tiefere Einblicke zu gewinnen.\\
 \\
-Jedoch birgt die Integration von gemischten Modellen in latente Repräsentationen das Risiko einer Verzerrung der Inferenzergebnisse, was die Genauigkeit und Zuverlässigkeit der aus den Daten gezogenen Schlussfolgerungen erheblich beeinträchtigen kann. Diese Arbeit beschäftigt sich daher mit der Untersuchung der Verzerrungen, die bei der Anwendung gemischter Modelle auf latente Repräsentationen auftreten können. Ziel ist es, die Mechanismen zu verstehen, die zu diesen Verzerrungen führen, und Methoden zu entwickeln, um ihre Auswirkungen zu minimieren.\\
+Die Integration von gemischten Modellen in latente Repräsentationen birgt jedoch das Risiko einer Verzerrung der Inferenzergebnisse, was die Genauigkeit und Zuverlässigkeit der aus den Daten gezogenen Schlussfolgerungen erheblich beeinträchtigen kann. Diese Arbeit befasst sich daher mit der Untersuchung der Verzerrungen, die bei der Anwendung gemischter Modelle auf latente Repräsentationen auftreten können. Ziel ist es, die Mechanismen zu verstehen, die zu diesen Verzerrungen führen, und Methoden zu entwickeln, um ihre Auswirkungen zu minimieren.\\
 \\
-Die Fragestellung der Verzerrung ist besonders relevant, da eine fehlerhafte Inferenz zu falschen Entscheidungen führen kann, die in praktischen Anwendungen schwerwiegende Folgen haben könnten. Durch eine sorgfältige Analyse und Evaluation der gemischten Modellansätze in Verbindung mit latenten Repräsentationen strebt diese Arbeit an, einen Beitrag zur Verbesserung der Modellgenauigkeit und der Verlässlichkeit von Inferenzschlüssen zu leisten.\\
+Das Problem der Verzerrung ist besonders relevant, da eine fehlerhafte Inferenz zu Fehlentscheidungen führen kann, die in praktischen Anwendungen schwerwiegende Folgen haben können. Durch eine sorgfältige Analyse und Bewertung von gemischten Modellansätzen in Verbindung mit latenten Repräsentationen zielt diese Arbeit darauf ab, einen Beitrag zur Verbesserung der Modellgenauigkeit und der Zuverlässigkeit von Inferenzschlüssen zu leisten.\\
 \\
-Diese Arbeit gliedert sich in mehrere Teile, die zunächst die theoretischen Grundlagen der gemischten Modelle und der latenten Repräsentationen behandeln, gefolgt von einer Diskussion der Methoden zur Messung und Korrektur von Verzerrungen. Anhand von experimentellen Studien werden diese Konzepte dann praktisch angewendet und evaluiert, um abschließend Empfehlungen für die Anwendung dieser Techniken in der Forschung und Praxis zu geben.\\
+Die Arbeit gliedert sich in mehrere Teile, die zunächst die theoretischen Grundlagen von gemischten Modellen und latenten Repräsentationen behandeln, gefolgt von einer Diskussion der Methoden zur Messung und Korrektur von Verzerrungen. Anhand von experimentellen Studien werden diese Konzepte dann praktisch angewendet und evaluiert, um abschließend Empfehlungen für die Anwendung dieser Techniken in Forschung und Praxis zu geben.\\
 \\
 \subsection{Motivation}
 
@@ -103,12 +103,12 @@ Diese Arbeit gliedert sich in mehrere Teile, die zunächst die theoretischen Gru
 %%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
 \chapter{Theoretische Grundlagen}
 Definition, Typen und Anwendungsbereiche.\\
-Bevor wir uns die Methodik dieser Arbeit anschauen benötigt es noch eine theoretische Aufarbeitung der behandelten Themen. In diesem Kapitel werden die theoretischen Aspekte dieser Arbeit umfangreich beschrieben und aufgearbeitet. Sowohl lineare gemischte Modelle als auch die Theorie hinter Variational Autoencodern werden eingeführt und beschrieben. Insbesondere wird in diesem Kapitel die Theorie, welche zur Analyse der Modelle notwendig ist, wie zum Beispiel die Likelihood Berechnung und der Likelihood Ratio Test, behandelt
+Bevor auf die Methodik dieser Arbeit eingegangen wird, ist eine theoretische Aufarbeitung der behandelten Themen notwendig. In diesem Kapitel werden die theoretischen Aspekte dieser Arbeit ausführlich beschrieben und behandelt. Sowohl lineare gemischte Modelle als auch die Theorie hinter variablen Autocodern werden eingeführt und beschrieben. Insbesondere wird in diesem Kapitel auf die für die Analyse der Modelle notwendige Theorie, wie z.B. die Likelihood-Berechnung und den Likelihood-Ratio-Test, eingegangen.
 \section{Gemischte Modelle}
-Um die theoretischen Aspekte gemischter Modelle aufzuarbeiten folgen wir den Notierungen in dem Buch \cite{pinheiro2000} Mixed-Effects Models in S and S-Plus  von José C. Pinheiro und Douglas M. Bates \cite{pinheiro2000}.\\
+Um die theoretischen Aspekte der gemischten Modelle zu behandeln, folgen wir dem Buch \cite{pinheiro2000} Mixed-Effects Models in S and S-Plus von José C. Pinheiro und Douglas M. Bates \cite{pinheiro2000}.\\
 \\
-Ein gemischtes Modell (Mixed Modul) ist ein statistisches Datenanalyseverfahren, welches sowohl feste als auch zufällige Effekte (fixed und random Effects) modelliert. Ihre Anwendung finden die gemischten Modelle haupsächlich in der Analyse von Longitudinaldaten und Clusterdaten.\\
-Die parametrisierten festen und zufälligen Effekte berechnen zusammen mit einem Fehlervektor die Antwortvariable. Das lineare gemischte Modell für eine Gruppe wird folgendermaßen definiert.
+Ein gemischtes Modell ist ein statistisches Verfahren zur Datenanalyse, das sowohl feste als auch zufällige Effekte (fixed and random effects) modelliert. Gemischte Modelle werden vor allem bei der Analyse von Längsschnitt- und Clusterdaten eingesetzt.
+Die parametrisierten festen und zufälligen Effekte berechnen zusammen mit einem Fehlervektor die Reaktionsvariable. Das lineare gemischte Modell für eine Gruppe ist wie folgt definiert
 \begin{definition}[Lineares gemischtes Modell für Longitudinal- oder Clusterdaten] 
 	Seien X ($n_i$ x p) und Z ($n_i$ x q) bekannte Designmatrizen für die festen und zufälligen Effekte. Seien $\beta$ ein p-dimensionaler Vektor von p festen Effekten und $b$ ein q-dimensionaler Vektor von q zufälligen Effekten und sei $\epsilon$ ein $n_i$-dimensionaler normalverteilter Fehlervektor.\\
 	\\
@@ -117,9 +117,9 @@ Die parametrisierten festen und zufälligen Effekte berechnen zusammen mit einem
 	$$b_i \sim \mathcal{N}(0,\sum), \epsilon_i \sim \mathcal{N}(0,\sigma^2I)$$
 	definiert.
 \end{definition}\noindent
-Dabei sind die Daten der zufälligen und festen Effekte in einer Designmatrix (Datenmatrix) gespeichert.Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Für die immer auftretenden Messfehler oder unerwartete Einflüsse wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
+Die Daten der zufälligen und festen Effekte werden in einer Designmatrix (Datenmatrix) gespeichert.Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Für immer auftretende Messfehler oder unerwartete Einflüsse wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
 \\
-Die zufälligen Effekte $b_i$ und der Fehlervektor sind unabhängig voneinander in der selben Gruppe und unabhängig von anderen Gruppen. Wie man leicht erkennen kann, ist der Vektor der zufälligen Effekte ausschließlich von seiner Varianz-Kovarianz-Matrix $\sum$ charackterisiert, welche symmetrisch und postiv semidefinit ist.
+Die zufälligen Effekte $b_i$ und der Fehlervektor sind in der gleichen Gruppe unabhängig voneinander und unabhängig von anderen Gruppen. Wie man leicht erkennen kann, ist der Vektor der zufälligen Effekte nur durch seine Varianz-Kovarianz-Matrix $\sum$ charakterisiert, die symmetrisch und positiv semidefinit ist.
 \\
 Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden:
 \begin{definition}[Allgemeines lineares gemischtes Modell]
@@ -144,18 +144,18 @@ Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gem
 	\end{pmatrix}$$
 	gegeben. Dabei sind $X$, bzw $Z$ die Designmatrizen der festen, bzw zufälligen Effekte, $\beta$ und $b$ die Parametervektoren der festen und der zufälligen Effekten und $\epsilon$ der Fehlervektor.
 \end{definition}\noindent
-Die Vektoren $b$ und $\epsilon$ sind also normalverteilt mit Varianz $Var(b) = \sum$ und $Var(\epsilon) = R = \sigma^2I$. Also lässt sich die Varianz von $y$ schreiben als $Var(y) = V = Z \sum Z^t + R.$
+Die Vektoren $b$ und $\epsilon$ sind also normalverteilt mit der Varianz $Var(b) = \sum$ und $Var(\epsilon) = R = \sigma^2I$. Die Varianz von $y$ kann daher geschrieben werden als $Var(y) = V = Z \sum Z^t + R.$
 \section{Likelihood Inferenz}
-Um den Einfluss eines festen Effekts zu testen vergleichen wir ein reduziertes Modell, ohne diesen festen Parameter, mit dem vollständigen Modell. Dazu nutzen wir die Likelihood-Ratio-Test (LRT) Statistik, welche üblicherweise dazu genutzt wird. Wie das Testverfahren genau funktioniert und wie die Implementierung des LRT erfolgt, schauen wir uns später an. Zuvor benötigen wir noch ein bisschen Theorie über die Likelihood-Berechnung. 
+Um den Einfluss eines fixen Effekts zu testen, vergleichen wir ein reduziertes Modell ohne diesen fixen Parameter mit dem vollständigen Modell. Dazu verwenden wir den Likelihood-Ratio-Test (LRT), der üblicherweise für diesen Zweck verwendet wird. Wie das Testverfahren genau funktioniert und wie der LRT durchgeführt wird, werden wir später sehen. Zuvor benötigen wir noch etwas Theorie zur Likelihood-Berechnung. 
 \subsection{Likelihood Berechnung gemischter Modelle}
-In diesem Abschnitt wird die Schätzung der unbekannten Parameter behandelt. Hier folgen wir der Herangehensweise von \cite{fahrmeir2010} .\\
+Dieser Abschnitt befasst sich mit der Schätzung der unbekannten Parameter. Wir folgen hier dem Ansatz von \cite{fahrmeir2010} .\\
 \\
-Wir nutzen die Maximum-Likelihood (ML) Methode zur Berechnung der Schätzer. Eine Alternative dazu wäre die restringierte ML Methode, welche allerdings nicht geeignet für den Likelihood-Ratio-Test ist. Deshalb greifen wir bei unserer Berechnung auf die ML-Methode zurück.\\
+Wir verwenden die Maximum-Likelihood (ML)-Methode zur Berechnung der Schätzer. Eine Alternative wäre die restringierte ML-Methode, die jedoch nicht für den Likelihood-Ratio-Test geeignet ist. Daher verwenden wir für unsere Berechnung die ML-Methode.\\
 \\
-Die Schätzung der Parameter ist in einem gemischten Modell allerdings etwas komplizierter. Es ist nicht nur $\beta$ unbekannt, sondern auch die $b$, $\sum$ und $R$. Es sind also sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter, welche wir mit $\theta$ bezeichnen, in  $\sum$ und $R$ zu schätzen. Dies zwingt uns zu einer verschachtelten Schätzung.\\
+Die Schätzung der Parameter in einem gemischten Modell ist jedoch etwas komplizierter. Nicht nur $\beta$ ist unbekannt, sondern auch $b$, $\sum$ und $R$. Daher müssen sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter, die wir als $\theta$ bezeichnen, in $\sum$ und $R$ geschätzt werden. Dies zwingt uns zu einer geschachtelten Schätzung.\\
 \\
-Nehmen wir erst einmal an, dass $X,V$ und $Z$ bekannt sind.Für die Schätzung von $\beta$, ausgehend vom marginalen Modell,bietet sich der ML-Schätzer $$\hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y$$ an. Setzen wir hier $\hat{V}$ ein erhalten wir den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die festen Effekte. \\
-Für den Schätzer von $b$ nutzen wir den bedingten Erwartungswert $E(b|y)$ von $b$, gegeben die Daten $y$. \\
+Nehmen wir zunächst an, dass $X,V$ und $Z$ bekannt sind.Für die Schätzung von $\beta$ aus dem Randmodell bietet sich der ML-Schätzer $$\hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y$$ an. Setzt man hier $\hat{V}$ ein, so erhält man den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die fixen Effekte. \\
+Für den Schätzer von $b$ verwenden wir den bedingten Erwartungswert $E(b|y)$ von $b$, gegeben die Daten $y$. \\
 Betrachten wir die gemeinsame Verteilung von $b$ und $y$ 
 $$\begin{pmatrix}
 	y \\
@@ -182,16 +182,16 @@ Ersetzt man nun $\beta$ durch den Schätzer $\hat{\beta}$ erhält man den Schät
 	Dann ist $$\hat{\beta} = (X^t \hat{V}^{-1}X)^{-1}X^t \hat{V}^{-1}y$$ ein Schätzer für die festen Effekte und $$ \hat{b} = \hat{\tiny\sum} Z^t\hat{V}^{-1}(y-X\hat{\beta})$$ ein Schätzer für die zufälligen Effekte.
 \end{definition}
 
-Wie schon erwähnt soll $\theta$ der Parametervektor sein, der alle unbekannten Parameter in $V= V(\theta), \sum = \sum(\theta)$ und $R = R (\theta)$ enthält. Falls wir nun einen Schätzer $\hat{\theta}$ haben, können wir die Kovarianzschätzer und somit auch die Schätzer der festen und zufälligen Effekte durch Einsetzen von $\hat{\theta}$ berechnen. 
-Die ML-Methode für $\theta$ basiert auf dem marginalen Modell 
-$$y \sim \mathbf{N}(X\beta,V(\theta))$$.
-Die log-likelihood von $\beta$ und $\theta$ ist gegeben durch
-$$l(\beta,\theta) = - \frac{1}{2} (log(|V|)+(y-X\beta)^tV^{-1}(y-X\beta))$$.
-Maximieren von $l(\beta,\theta)$ bezüglich $\beta$ für festes $\theta$ liefert 
-$$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y $$
-Setzt man nun $\hat{\theta}$ in $l(\beta,\theta)$ ein erhält man die Profil-log-Likelihood 
-$$ l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta}))$$
-Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch maximieren von $l(\theta)_p$ 
+Wie bereits erwähnt, soll $\theta$ der Parametervektor sein, der alle unbekannten Parameter in $V= V(\theta), \sum = \sum(\theta)$ und $R = R(\theta)$ enthält. Wenn wir nun einen Schätzer $\hat{\theta}$ haben, können wir durch Einsetzen von $\hat{\theta}$ die Kovarianzschätzer und damit die Schätzer der festen und zufälligen Effekte berechnen. 
+Die ML-Methode für $\theta$ basiert auf dem Randmodell 
+$$y \sim \mathbf{N}(X\beta,V(\theta)).$$
+Die Log-Likelihood von $\beta$ und $\theta$ ist gegeben durch
+$$l(\beta,\theta) = - \frac{1}{2} (log(|V|)+(y-X\beta)^tV^{-1}(y-X\beta)).$$
+Maximieren von $l(\beta,\theta)$ bezüglich $\beta$ für festes $\theta$ ergibt 
+$$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y.$$
+Setzt man nun $\hat{\theta}$ in $l(\beta,\theta)$ ein, so erhält man die Profil-Log-Wahrscheinlichkeit 
+$$ l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})).$$
+Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von $l(\theta)_p$. 
 \begin{definition}[Kovarianz-Schätzer]
 	Sei $y = X\beta + Zb + \epsilon $ ein lineares gemischtes Modell mit $$\begin{pmatrix}
 		b \\
@@ -221,7 +221,7 @@ Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch maximieren von $
 	$$ l(\sum,R) = -0.5 * (log(|V|)+ r'V^{-1}r + N * log(2\pi))$$
 \end{definition}\noindent
 \subsection{Likelihood-Ratio-Test}
-Mit der vorausgegangen Theorie über die ML-Methode ist die Berechnung der Likelihood Ratio Test (LRT) Statistik relativ einfach. Zur Erinnerung wollen wir ein reduziertes Modell mit dem vollständigen Modell vergleichen, um herauszufinden wie groß der Einfluss einer Störgröße ist. Dafür nutzen wir den LRT. 
+Die Berechnung der Likelihood-Ratio-Test (LRT)-Statistik ist relativ einfach, wenn man sich die Theorie der ML-Methode vergegenwärtigt. Zur Erinnerung: Wir wollen ein reduziertes Modell mit dem vollständigen Modell vergleichen, um herauszufinden, wie groß der Einfluss einer Störgröße ist. Dazu verwenden wir den LRT. 
 \begin{definition}[Likelihood-Ratio-Test (LRT)] 
 	Sei $\mathbf{L}_{full}$ der Likelihood-Wert des vollständigen Modells und $\mathbf{L}_{red}$ der Likelihood-Wert des reduzierten Modells. Sei i die Anzahl der Freiheitsgrade. Dann ist die LRT Statistik gegeben durch 
 	$$ LRT = 2(\mathbf{L}_{full}- \mathbf{L}_{red}) $$ 
@@ -230,10 +230,66 @@ Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ wie in der Definition initialis
 Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ nun schon die Log-Likelihood-Werte der Modelle sind, gilt für die Berechnung der LRT Statistik einfach $2(\mathbf{L}_{full} - \mathbf{L}_{red})$. \\
 %%---------------VAE-------------------------------------------------------
 \section{Variational Autoencoder}
-Ein Variational Autoencoder (VAE) besteht aus einem Encoder und einem Decoder. VAE sind sehr attraktiv für latente Repräsentationen, da sie hoch dimensionale Datensätze durch den Encoder im latenten Raum niedrig dimensional darstellen können. Der Decoder versucht dann aus der Darstellung im latenten Raum den originalen Datensatz zu rekonstruieren.\\ 
-Bedeutung und Anwendung in verschiedenen Bereichen wie Deep Learning, Faktoranalyse etc.
+Für die Anwendung der gemischten Modelle in einer latenten Repräsentation wird ein Variational Auto-Encoder (VAE) verwendet, der für die Methodik dieser Arbeit von Vorteil ist. 
+Ein VAE ist ein künstliches neuronales Netzwerk, bestehend aus einem Encoder $q_\phi(z|x)$ und einem Decoder $p_\theta(x|z)$, das lernt, die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen. Sie sind für latente Repräsentationen sehr interessant, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. In einem niedrigdimensionalen Raum ist die Wahrscheinlichkeit geringer, dass die Modelle übermäßig komplexe oder verzerrte Strukturen lernen.\\ 
+Im Vergleich zu einem üblichen Auto-Encoder, welcher aus dem Encoder im latenten Raum eine Vektordarstellung der Daten liefert, gibt der Encoder des VAE eine dimensionalreduzierte Darstellung der Daten als Wahrscheinlichkeitsverteilung aus. Der Encoder liefert also zwei Vektoren: den Mittelwert $\mu$ und die Standardabweichung $\sigma^2$. Durch diese verbesserte Darstellung ist der VAE im Gegensatz zu normalen Auto-Encodern in der Lage nicht nur den Input-Datensatz zu rekonstruieren, sondern auch andere ähnliche Datensätze.\\
+\\
+\subsection{Training VAE}
+Ein VAE ist ein spezifisches Beispiel einer Variational Inference (VI). Ziel einer VI ist es die Posterior-Verteilung $p(z|x)$ der latenten Variablen gegeben der Input Daten zu berechnen. Diese Verteilung ist besonders bei komplexen Modellen schwer zu berechnen. Aufgrund dessen approximiert der VAE die Posterior-Verteilung durch eine einfachere Verteilung $q_\phi(x)$. Das Ziel von VIs ist es also die Kullback-Leibler-Divergenz zwischen $p(z|x)$ und $q_\phi(x)$ zu minimieren. 
+\begin{definition}[Kullback-Leibler-Divergenz (KL-Divergenz)]
+Sei $q_\phi(z|x)$ die approximierte Posterior-Gauß-Verteilung und $p(z)$ die Prior-Gauß-Verteilung. Dann ist die KL-Divergenz definiert als
+$$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
+\end{definition}\noindent
+Da nun $p(z)$ schwer zu berechnen ist optimieren wir stattdessen die Evidence Lower Bound (ELBO).
+\begin{definition}[Evidence Lower Bound (ELBO)]
+$$ \mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z) - \log q_\phi(z|x)] $$ 
+\end{definition}\noindent
+\begin{definition}[Jensensche Ungleichung]
+	Sei g eine konvexe Funktion und  $x\in \mathcal{L^1}$. Dann gilt
+	$$ \mathbb{E}[g(x)] \geq g(\mathbb{E}[x]) $$ 
+\end{definition} \noindent
+Also gilt $ \mathbb{E}[\log(x)] \geq \log(\mathbb{E}[x]) $.\\
+\\
+Das Objekt der Optimierung im VAE wird also der ELBO sein. \\
+Wir betrachten nun die log-likelihood der Daten.\\
+\begin{align}
+ 	\log p_\theta(x) &= \mathbf{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
+ 	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{p_\theta(z|x)}\right]\right] \\
+ 	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
+ 	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))}
+\end{align}\noindent
+Der zweite Term in der Gleichung ist die nicht-negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen$q_\phi(z|x)$ und $p_\theta(z|x))$. Die KL-Divergenz misst den Unterschied, bzw. die Ähnlichkeit, zweier Wahrscheinlichkeitsverteilungen.
+Der erste Term in Gleichung (2.4) ist der variational lower bound, also der ELBO: 
+$$\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$$
+Wenn wir Gleichung (2.4) umstellen sehen wir, dass der ELBO eine untere Schranke für die log-likelihood der Daten ist, da die KL-Divergenz nicht negativ ist. 
+\begin{align}
+	\mathcal{L}_{\theta,\phi}(x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \\
+	& \leq \log p_\theta(x)
+\end{align}\noindent
+Alternativ mit der Jensenschen Ungleichung:
+\begin{align}
+	\log p_\theta(x) &= \log \int p_\theta(x,z) dz \\
+	&= \log \int p_\theta(x,z) \frac{q_\phi(z|x)}{q_\phi(z|x)} dz \\
+	& = \log \mathbb{E}_{q_\phi(z|x)}\left[\frac{p_\theta(x,z)}{q_\phi(z|x)}\right] \\
+	& \geq \mathbb{E}_{q_\phi(z|x)}\left[\log \frac{p_\theta(x,z)}{q_\phi(z|x)}\right] = \mathcal{L}_{\theta,\phi}(x)
+\end{align}\noindent
+Wenn also der ELBO bzgl. $\theta$ und  $\phi$ maximiert wird, wird die marginale likelihood $p_\theta(x)$ auch maximiert. Unser generatives Modell wird also besser. Gleichzeitig minimieren wir dadurch die KL-Divergenz der Approximation $q_\phi(z|x)$ von dem wahren Vorgänger $p_\theta(z|x)$. Demnach wird $q_\phi(z|x)$ optimiert. 
+Die ELBO kann durch stochastische Gradientenverfahren optimiert werden.\\
+\\
+Wir wollen also den Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich $\theta$ berechnen, was problematisch sein kann. Der übliche Monte Carlo Gradienten-Schätzer ist: 
+$$ \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)})$$
+wobei $z^{(l)} \sim q_\phi(z|x^{(i)})$ ist. 
+Dies ist im Normalfall keine Herausforderung. Allerdings ist unsere Dichtefunktion nun auch abhängig von  $\theta$.  Um dieses Problem zu lösen nutzen wir den Reparameterization Trick.
+
+Die Gradienten werden durch Monte-Carlo-Sampling geschätzt, wobei der Reparametrisierungstrick verwendet wird, um die Gradientenberechnung zu vereinfachen. Der Reparametrisierungstrick transformiert die Zufallsvariable  
+\subsubsection{Reparametrisierungs Trick}
+Der Reparameterisierungs-Trick ermöglicht die Berechnung der Gradienten der ELBO durch eine Transformation der Zufallsvariable zz in eine deterministische Funktion von $\epsilon$, einer Hilfsvariablen:
+$$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ 
+Dadurch wird die ELBO als Funktion der Parameter $\theta$ und $\phi$ differenzierbar und kann mit stochastischen Gradientenverfahren optimiert werden.
 \section{Verzerrung (Bias) und ihre Messung}
 Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
+
+\chapter{Minimierung der Verzerrung}
 
 %%--------------------METHODIK-----------------------------------------------
 \chapter{Methodik}
@@ -267,7 +323,7 @@ Tiefere Analyse der Ergebnisse und ihrer Implikationen.
 Wie sich die Ergebnisse zu bereits veröffentlichten Forschungen verhalten.
 \section{Limitationen und Herausforderungen}
 Kritische Betrachtung der Grenzen der Studie und mögliche Probleme.
-\chapter{Schlussfolgerung und Ausblick}
+\chapter{Fazit}
 Zusammenfassung der wichtigsten Erkenntnisse
 Praktische Implikationen: Wie die Ergebnisse in der Praxis angewendet werden können.
 Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder ergänzende Studien.
