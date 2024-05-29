@@ -102,15 +102,14 @@ Die Arbeit gliedert sich in mehrere Teile, die zunächst die theoretischen Grund
 
 %%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
 \chapter{Theoretische Grundlagen}
-Definition, Typen und Anwendungsbereiche.\\
-Bevor auf die Methodik dieser Arbeit eingegangen wird, ist eine theoretische Aufarbeitung der behandelten Themen notwendig. In diesem Kapitel werden die theoretischen Aspekte dieser Arbeit ausführlich beschrieben und behandelt. Sowohl lineare gemischte Modelle als auch die Theorie hinter variablen Autocodern werden eingeführt und beschrieben. Insbesondere wird in diesem Kapitel auf die für die Analyse der Modelle notwendige Theorie, wie z.B. die Likelihood-Berechnung und den Likelihood-Ratio-Test, eingegangen.
+Bevor auf die Methodik dieser Arbeit eingegangen wird, ist eine theoretische Aufarbeitung der behandelten Themen notwendig. In diesem Kapitel werden die theoretischen Aspekte dieser Arbeit ausführlich beschrieben und behandelt. Sowohl lineare gemischte Modelle als auch die Theorie hinter Variational Autoencodern werden eingeführt und beschrieben. Insbesondere wird in diesem Kapitel auf die für die Analyse der Modelle notwendige Theorie, wie z.B. die Likelihood-Berechnung und den Likelihood-Ratio-Test, eingegangen.
 \section{Gemischte Modelle}
-Um die theoretischen Aspekte der gemischten Modelle zu behandeln, folgen wir dem Buch \cite{pinheiro2000} Mixed-Effects Models in S and S-Plus von José C. Pinheiro und Douglas M. Bates \cite{pinheiro2000}.\\
+Um die theoretischen Aspekte der gemischten Modelle zu behandeln, folgen wir dem Buch Mixed-Effects Models in S and S-Plus von José C. Pinheiro und Douglas M. Bates \cite{pinheiro2000}.\\
 \\
 Ein gemischtes Modell ist ein statistisches Verfahren zur Datenanalyse, das sowohl feste als auch zufällige Effekte (fixed and random effects) modelliert. Gemischte Modelle werden vor allem bei der Analyse von Längsschnitt- und Clusterdaten eingesetzt.
 Die parametrisierten festen und zufälligen Effekte berechnen zusammen mit einem Fehlervektor die Reaktionsvariable. Das lineare gemischte Modell für eine Gruppe ist wie folgt definiert
 \begin{definition}[Lineares gemischtes Modell für Longitudinal- oder Clusterdaten] 
-	Seien X ($n_i$ x p) und Z ($n_i$ x q) bekannte Designmatrizen für die festen und zufälligen Effekte. Seien $\beta$ ein p-dimensionaler Vektor von p festen Effekten und $b$ ein q-dimensionaler Vektor von q zufälligen Effekten und sei $\epsilon$ ein $n_i$-dimensionaler normalverteilter Fehlervektor.\\
+	Seien X ($n_i$\text{x}$p$) und Z ($n_i$\text{x}$q$) bekannte Designmatrizen für die festen und zufälligen Effekte. Seien $\beta$ ein p-dimensionaler Vektor von p festen Effekten und $b$ ein q-dimensionaler Vektor von q zufälligen Effekten und sei $\epsilon$ ein $n_i$-dimensionaler normalverteilter Fehlervektor.\\
 	\\
 	Ein lineares gemischtes Modell für den $n_i$-dimensionalen Antwortvektor der i-ten Gruppe wird durch 
 	$$y_i = X_i * \beta + Z_i * b_i + \epsilon_i$$ 
@@ -230,9 +229,9 @@ Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ wie in der Definition initialis
 Falls $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ nun schon die Log-Likelihood-Werte der Modelle sind, gilt für die Berechnung der LRT Statistik einfach $2(\mathbf{L}_{full} - \mathbf{L}_{red})$. \\
 %%---------------VAE-------------------------------------------------------
 \section{Variational Autoencoder}
-Für die Anwendung der gemischten Modelle in einer latenten Repräsentation wird ein Variational Auto-Encoder (VAE) verwendet, der für die Methodik dieser Arbeit von Vorteil ist. 
+Für die Anwendung der gemischten Modelle in einer latenten Repräsentation wird ein Variational Autoencoder (VAE) verwendet, der für die Methodik dieser Arbeit von Vorteil ist. 
 Ein VAE ist ein künstliches neuronales Netzwerk, bestehend aus einem Encoder $q_\phi(z|x)$ und einem Decoder $p_\theta(x|z)$, das lernt, die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen. Sie sind für latente Repräsentationen sehr interessant, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. In einem niedrigdimensionalen Raum ist die Wahrscheinlichkeit geringer, dass die Modelle übermäßig komplexe oder verzerrte Strukturen lernen.\\ 
-Im Vergleich zu einem üblichen Auto-Encoder, welcher aus dem Encoder im latenten Raum eine Vektordarstellung der Daten liefert, gibt der Encoder des VAE eine dimensionalreduzierte Darstellung der Daten als Wahrscheinlichkeitsverteilung aus. Der Encoder liefert also zwei Vektoren: den Mittelwert $\mu$ und die Standardabweichung $\sigma^2$. Durch diese verbesserte Darstellung ist der VAE im Gegensatz zu normalen Auto-Encodern in der Lage nicht nur den Input-Datensatz zu rekonstruieren, sondern auch andere ähnliche Datensätze.\\
+Im Vergleich zu einem üblichen Autoencoder, welcher aus dem Encoder im latenten Raum eine Vektordarstellung der Daten liefert, gibt der Encoder des VAE eine dimensionalreduzierte Darstellung der Daten als Wahrscheinlichkeitsverteilung aus. Der Encoder liefert also zwei Vektoren: den Mittelwert $\mu$ und die Standardabweichung $\sigma^2$. Durch diese verbesserte Darstellung ist der VAE im Gegensatz zu normalen Auto-Encodern in der Lage nicht nur den Input-Datensatz zu rekonstruieren, sondern auch andere ähnliche Datensätze.\\
 \\
 \subsection{Training VAE}
 Ein VAE ist ein spezifisches Beispiel einer Variational Inference (VI). Ziel einer VI ist es die Posterior-Verteilung $p(z|x)$ der latenten Variablen gegeben der Input Daten zu berechnen. Diese Verteilung ist besonders bei komplexen Modellen schwer zu berechnen. Aufgrund dessen approximiert der VAE die Posterior-Verteilung durch eine einfachere Verteilung $q_\phi(x)$. Das Ziel von VIs ist es also die Kullback-Leibler-Divergenz zwischen $p(z|x)$ und $q_\phi(x)$ zu minimieren. 
@@ -241,30 +240,33 @@ Sei $q_\phi(z|x)$ die approximierte Posterior-Gauß-Verteilung und $p(z)$ die Pr
 $$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
 \end{definition}\noindent
 Da nun $p(z)$ schwer zu berechnen ist optimieren wir stattdessen die Evidence Lower Bound (ELBO).
-\begin{definition}[Evidence Lower Bound (ELBO)]
+\begin{definition}[Evidence Lower Bound (ELBO) für VAEs]
+Sei $q_\phi(z|x)$ das Encoder Modell und $p_\theta(x,z)$ das Decoder Modell. Der ELBO ist definiert durch
 $$ \mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z) - \log q_\phi(z|x)] $$ 
 \end{definition}\noindent
 \begin{definition}[Jensensche Ungleichung]
 	Sei g eine konvexe Funktion und  $x\in \mathcal{L^1}$. Dann gilt
 	$$ \mathbb{E}[g(x)] \geq g(\mathbb{E}[x]) $$ 
 \end{definition} \noindent
-Also gilt $ \mathbb{E}[\log(x)] \geq \log(\mathbb{E}[x]) $.\\
+Aus der Definition folgt direkt $ \mathbb{E}[\log(x)] \geq \log(\mathbb{E}[x]) $.\\
 \\
 Das Objekt der Optimierung im VAE wird also der ELBO sein. \\
 Wir betrachten nun die log-likelihood der Daten.\\
 \begin{align}
- 	\log p_\theta(x) &= \mathbf{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
+ 	\log p_\theta(x) &= \log p_\theta(x) * \overbrace{\int q_\phi(z|x) dz}^{=1} \\
+ 	&= \int \log p_\theta(x) q_\phi(z|x) dz \\
+ 	&= \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
  	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{p_\theta(z|x)}\right]\right] \\
  	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
  	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))}
-\end{align}\noindent
+\end{align}
 Der zweite Term in der Gleichung ist die nicht-negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen$q_\phi(z|x)$ und $p_\theta(z|x))$. Die KL-Divergenz misst den Unterschied, bzw. die Ähnlichkeit, zweier Wahrscheinlichkeitsverteilungen.
 Der erste Term in Gleichung (2.4) ist der variational lower bound, also der ELBO: 
 $$\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$$
 Wenn wir Gleichung (2.4) umstellen sehen wir, dass der ELBO eine untere Schranke für die log-likelihood der Daten ist, da die KL-Divergenz nicht negativ ist. 
 \begin{align}
 	\mathcal{L}_{\theta,\phi}(x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \\
-	& \leq \log p_\theta(x)
+	&\leq 	\log p_\theta(x) 
 \end{align}\noindent
 Alternativ mit der Jensenschen Ungleichung:
 \begin{align}
@@ -273,19 +275,29 @@ Alternativ mit der Jensenschen Ungleichung:
 	& = \log \mathbb{E}_{q_\phi(z|x)}\left[\frac{p_\theta(x,z)}{q_\phi(z|x)}\right] \\
 	& \geq \mathbb{E}_{q_\phi(z|x)}\left[\log \frac{p_\theta(x,z)}{q_\phi(z|x)}\right] = \mathcal{L}_{\theta,\phi}(x)
 \end{align}\noindent
-Wenn also der ELBO bzgl. $\theta$ und  $\phi$ maximiert wird, wird die marginale likelihood $p_\theta(x)$ auch maximiert. Unser generatives Modell wird also besser. Gleichzeitig minimieren wir dadurch die KL-Divergenz der Approximation $q_\phi(z|x)$ von dem wahren Vorgänger $p_\theta(z|x)$. Demnach wird $q_\phi(z|x)$ optimiert. 
+Es ist sofort ersichtlich, dass die log-likelihood $p_\theta(x)$ durch Maximieren der ELBO bzgl. $\theta$ und  $\phi$ selbst maximiert wird.
+Unser generatives Modell wird also besser. Gleichzeitig minimieren wir dadurch die KL-Divergenz der Approximation $q_\phi(z|x)$ von dem wahren Vorgänger $p_\theta(z|x)$. Demnach wird $q_\phi(z|x)$ optimiert. 
 Die ELBO kann durch stochastische Gradientenverfahren optimiert werden.\\
 \\
 Wir wollen also den Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich $\theta$ berechnen, was problematisch sein kann. Der übliche Monte Carlo Gradienten-Schätzer ist: 
-$$ \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)})$$
+\begin{align}
+ \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)})
+\end{align}
 wobei $z^{(l)} \sim q_\phi(z|x^{(i)})$ ist. 
-Dies ist im Normalfall keine Herausforderung. Allerdings ist unsere Dichtefunktion nun auch abhängig von  $\theta$.  Um dieses Problem zu lösen nutzen wir den Reparameterization Trick.
-
-Die Gradienten werden durch Monte-Carlo-Sampling geschätzt, wobei der Reparametrisierungstrick verwendet wird, um die Gradientenberechnung zu vereinfachen. Der Reparametrisierungstrick transformiert die Zufallsvariable  
+Dies ist im Normalfall keine Herausforderung. Allerdings ist $q_\phi(z|x)$ nun auch abhängig von  $\phi$, sodass der Monte Carlo Gradienten-Schätzer nicht direkt berechnet werden kann. \\
+Um dieses Problem zu lösen nutzen wir den Reparameterization Trick, welcher die Zufallsvariable transformiert um die Gradienten-Berechnung zu vereinfachen.  
 \subsubsection{Reparametrisierungs Trick}
-Der Reparameterisierungs-Trick ermöglicht die Berechnung der Gradienten der ELBO durch eine Transformation der Zufallsvariable zz in eine deterministische Funktion von $\epsilon$, einer Hilfsvariablen:
+Der Reparameterisierungs-Trick ermöglicht die Berechnung der Gradienten der ELBO durch eine Transformation der Zufallsvariable z in eine deterministische Funktion von einer Hilfsvariablen $\epsilon$.
+Sei also die latente Variable z, die aus $q_\phi(z|x)$ gezogen wurde, gegeben. Die latente Variable z wird nun als deterministische Funktion einer Hilfsvariablen $\epsilon$, unabhängig von x und $\phi$, ausgedrückt. 
+Die Transformation sieht dann wie folgt aus
+$$ z = g_\phi(\epsilon, x)$$
+$g_\phi(\epsilon,x) $ ist dabei eine differenzierbare Funktion und $\epsilon$ eine Zufallsvariable mit einer bekannten Verteilung (z.B. $\epsilon \sim \mathcal{N}(0,I)$)
+Im Falle einer Gaußverteilung $z \sim \mathcal{N}(\mu, \sigma^2)$ könnte die Umparametrisierung wie folgt aussehen 
 $$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ 
-Dadurch wird die ELBO als Funktion der Parameter $\theta$ und $\phi$ differenzierbar und kann mit stochastischen Gradientenverfahren optimiert werden.
+Dadurch können die Gradienten bezüglich $\mu$ und $\sigma$ effizient berechnet werden.
+\\
+Wir können den Trick direkt auf Gleichung (2.13) anwenden. Es gilt
+$$ \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \nabla_\phi \mathbb{E}_{p(\epsilon)}[g_\phi(\epsilon,x)]$$
 \section{Verzerrung (Bias) und ihre Messung}
 Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
 
