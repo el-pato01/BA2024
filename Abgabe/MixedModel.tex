@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Einführung in Gemischte Modelle}
+\author{Dein Name}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\section{Einführung}
+	Gemischte Modelle, auch bekannt als Hierarchische oder Multilevel-Modelle, sind statistische Modelle, die sowohl feste als auch zufällige Effekte berücksichtigen. Diese Modelle sind nützlich, wenn die Daten hierarchisch strukturiert sind, wie z.B. Schüler innerhalb von Klassen oder Patienten innerhalb von Krankenhäusern.
+	
+	\section{Mathematische Darstellung}
+	Ein gemischtes Modell kann allgemein wie folgt geschrieben werden:
+	
+	\[
+	y_{ij} = \beta_0 + \beta_1 x_{ij1} + \beta_2 x_{ij2} + \ldots + \beta_p x_{ijp} + u_{j} + \epsilon_{ij}
+	\]
+	
+	wobei:
+	\begin{itemize}
+		\item \( y_{ij} \) die Antwortvariable für die \(i\)-te Beobachtung in der \(j\)-ten Gruppe ist,
+		\item \( x_{ijp} \) die \(p\)-te Kovariate für die \(i\)-te Beobachtung in der \(j\)-ten Gruppe ist,
+		\item \( \beta_0, \beta_1, \ldots, \beta_p \) die festen Effekte sind,
+		\item \( u_{j} \) der zufällige Effekt der \(j\)-ten Gruppe ist,
+		\item \( \epsilon_{ij} \) der Residualfehler ist.
+	\end{itemize}
+	
+	\subsection{Feste Effekte}
+	Die festen Effekte (\(\beta_0, \beta_1, \ldots, \beta_p\)) sind Parameter, die für alle Gruppen konstant sind. Diese Parameter werden geschätzt, um den systematischen Einfluss der Kovariaten auf die Antwortvariable zu modellieren.
+	
+	\subsection{Zufällige Effekte}
+	Die zufälligen Effekte (\(u_j\)) variieren zwischen den Gruppen und werden angenommen, dass sie aus einer Normalverteilung stammen:
+	
+	\[
+	u_j \sim \mathcal{N}(0, \sigma_u^2)
+	\]
+	
+	Hier ist \(\sigma_u^2\) die Varianz der zufälligen Effekte. Diese zufälligen Effekte modellieren die Variabilität zwischen den Gruppen.
+	
+	\subsection{Residualfehler}
+	Die Residualfehler (\(\epsilon_{ij}\)) modellieren die Variabilität innerhalb der Gruppen und werden ebenfalls als normalverteilt angenommen:
+	
+	\[
+	\epsilon_{ij} \sim \mathcal{N}(0, \sigma_\epsilon^2)
+	\]
+	
+	\section{Modellschätzung}
+	Die Schätzung der Parameter in gemischten Modellen erfolgt typischerweise mittels Maximum-Likelihood (ML) oder Restricted Maximum-Likelihood (REML) Methoden.
+	
+	\subsection{Maximum-Likelihood (ML)}
+	Die ML-Methode maximiert die Likelihood-Funktion über alle Parameter (\(\beta\), \(\sigma_u^2\), \(\sigma_\epsilon^2\)):
+	
+	\[
+	L(\beta, \sigma_u^2, \sigma_\epsilon^2) = \prod_{j=1}^{J} \prod_{i=1}^{n_j} f(y_{ij}|\beta, \sigma_u^2, \sigma_\epsilon^2)
+	\]
+	
+	\subsection{Restricted Maximum-Likelihood (REML)}
+	Die REML-Methode maximiert die Likelihood der datenbasierten linearen Funktionen der Residuen, was zu weniger verzerrten Schätzungen der Varianzkomponenten führt:
+	
+	\[
+	L_{\text{REML}}(\sigma_u^2, \sigma_\epsilon^2) = \int L(\beta, \sigma_u^2, \sigma_\epsilon^2) d\beta
+	\]
+	
+	\section{Beispiel: Random Intercept Modell}
+	Ein einfaches gemischtes Modell ist das Random Intercept Modell, bei dem nur der Intercept zufällig ist:
+	
+	\[
+	y_{ij} = \beta_0 + \beta_1 x_{ij} + u_{j} + \epsilon_{ij}
+	\]
+	
+	Hier ist \( u_j \) der zufällige Intercept, der die gruppenspezifischen Abweichungen vom globalen Intercept \(\beta_0\) darstellt.
+	
+	\section{Fazit}
+	Gemischte Modelle sind leistungsstarke Werkzeuge zur Analyse von hierarchisch strukturierten Daten, da sie sowohl die Variation innerhalb als auch zwischen den Gruppen modellieren können. Sie sind vielseitig einsetzbar in verschiedenen Bereichen wie Bildungsforschung, Medizin und Sozialwissenschaften.
+	
+\end{document}

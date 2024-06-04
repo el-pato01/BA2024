@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\title{Variational Autoencoder (VAE)}
+\author{Dein Name}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\section{Einführung}
+	Ein Variational Autoencoder (VAE) ist ein generatives Modell, das die Verteilung der Daten in einem latenten Raum lernt. Ein VAE besteht aus zwei Hauptkomponenten: dem Encoder und dem Decoder. Der Encoder komprimiert die Eingabedaten in einen latenten Raum, während der Decoder aus diesen latenten Variablen die Eingabedaten rekonstruiert.
+	
+	\section{Mathematische Grundlagen}
+	Der VAE optimiert die folgende Verlustfunktion:
+	\[
+	\mathcal{L}(\theta, \phi; \mathbf{x}) = \mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{x})} \left[ \log p_{\theta}(\mathbf{x}|\mathbf{z}) \right] - \text{KL}(q_{\phi}(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))
+	\]
+	Dabei sind:
+	\begin{itemize}
+		\item \( p_{\theta}(\mathbf{x}|\mathbf{z}) \) die bedingte Verteilung der Eingabedaten gegeben den latenten Variablen.
+		\item \( q_{\phi}(\mathbf{z}|\mathbf{x}) \) die approximative Posteriorverteilung der latenten Variablen.
+		\item \(\text{KL}(\cdot || \cdot)\) die Kullback-Leibler-Divergenz zwischen zwei Verteilungen.
+	\end{itemize}
+	
+	\subsection{Rekonstruktionsverlust}
+	Der Rekonstruktionsverlust misst, wie gut der Decoder die Eingabedaten rekonstruieren kann:
+	\[
+	\mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{x})} \left[ \log p_{\theta}(\mathbf{x}|\mathbf{z}) \right]
+	\]
+	In der Praxis wird oft die binäre Kreuzentropie verwendet:
+	\[
+	\text{Reconstruction Loss} = -\sum_{i=1}^N \left( x_i \log(\hat{x}_i) + (1 - x_i) \log(1 - \hat{x}_i) \right)
+	\]
+	
+	\subsection{KL-Divergenz}
+	Die KL-Divergenz zwischen der approximativen Posteriorverteilung \( q_{\phi}(\mathbf{z}|\mathbf{x}) \) und der Priorverteilung \( p(\mathbf{z}) \) ist gegeben durch:
+	\[
+	\text{KL}(q_{\phi}(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) = -\frac{1}{2} \sum_{j=1}^d \left( 1 + \log(\sigma_j^2) - \mu_j^2 - \sigma_j^2 \right)
+	\]
+	Dabei sind \( \mu \) und \( \sigma \) die Mittelwert- und Standardabweichungsvektoren, die durch den Encoder vorhergesagt werden.
+	
+	\section{Algorithmus}
+	\begin{enumerate}
+		\item \textbf{Encoder}: Berechne die Parameter \(\mu\) und \(\sigma\) des latenten Raums.
+		\item \textbf{Sampling}: Ziehe eine Stichprobe \(\mathbf{z}\) aus dem latenten Raum.
+		\item \textbf{Decoder}: Rekonstruiere die Eingabedaten aus \(\mathbf{z}\).
+		\item \textbf{Verlustfunktion}: Berechne den Rekonstruktionsverlust und die KL-Divergenz.
+		\item \textbf{Training}: Minimiere die Verlustfunktion.
+	\end{enumerate}
+	
+	\section{Fazit}
+	Ein Variational Autoencoder ist ein leistungsstarkes Modell zur Erzeugung neuer Datenpunkte und zur Erkennung latenter Strukturen in den Daten. Die Kombination aus Rekonstruktionsverlust und KL-Divergenz ermöglicht es dem Modell, realistische und vielfältige Daten zu generieren.
+	
+\end{document}
