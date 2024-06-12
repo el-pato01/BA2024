@@ -1,0 +1,161 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, automata, shapes.geometric}
+
+\begin{document}
+	
+	\section{Schematische Darstellung eines Variational Autoencoders (VAE)}
+	
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}[
+			node distance=1.5cm and 2cm,
+			every node/.style={align=center},
+			box/.style={rectangle, draw, rounded corners, minimum height=2em, minimum width=3em},
+			dot/.style={circle, draw, fill=black, inner sep=0pt, minimum size=3pt},
+			>=Stealth
+			]
+			% Nodes
+			\node[box] (input) {Input $x$};
+			\node[box, below=of input] (encoder) {Encoder $q_\phi(z|x)$};
+			\node[box, below=of encoder] (latent) {Latent $z$\\$p(z) \sim \mathcal{N}(0, I)$};
+			\node[box, below=of latent] (decoder) {Decoder $p_\theta(x|z)$};
+			\node[box, below=of decoder] (reconstructed) {Reconstructed $\hat{x}$};
+			
+			% Arrows
+			\draw[->] (input) -- (encoder);
+			\draw[->] (encoder) -- (latent);
+			\draw[->] (latent) -- (decoder);
+			\draw[->] (decoder) -- (reconstructed);
+			
+			% Descriptions
+			\node[right=0.5cm of encoder] (q) {$q_\phi(z|x) \sim \mathcal{N}(\mu(x), \sigma^2(x))$};
+			\node[right=0.5cm of decoder] (p) {$p_\theta(x|z)$};
+			
+			\draw[->, dashed] (encoder) -- (q);
+			\draw[->, dashed] (decoder) -- (p);
+			
+			% Data points
+			\foreach \i in {-0.6, -0.3, 0, 0.3, 0.6} {
+				\node[dot] at ($(input) + (\i, 0.6)$) {};
+				\node[dot] at ($(reconstructed) + (\i, -0.6)$) {};
+			}
+		\end{tikzpicture}
+		\caption{Schematische Darstellung eines Variational Autoencoders (VAE) mit Datenpunkten}
+		\label{fig:vae}
+	\end{figure}
+	
+	
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2.8cm, semithick]
+		\tikzstyle{every state}=[fill=none,draw=black,text=black]
+		
+		\node[state] (A)                    {$x$};
+		\node[state] (B) [right of=A]       {$q_\phi(z|x)$};
+		\node[state] (C) [right of=B]       {$z$};
+		\node[state] (D) [right of=C]       {$p_\theta(x|z)$};
+		\node[state] (E) [right of=D]       {$\hat{x}$};
+		
+		\path (A) edge node {} (B)
+		(B) edge node {} (C)
+		(C) edge node {} (D)
+		(D) edge node {} (E);
+	\end{tikzpicture}
+	\caption{Schematische Darstellung eines Variational Autoencoders (VAE)}
+	\label{fig:vae}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=3.5cm, semithick]
+		\tikzstyle{every state}=[fill=none,draw=black,text=black]
+		
+		\node[state] (A)                    {Input $x$};
+		\node[state] (B) [right of=A]       {Encoder $q_\phi(z|x)$};
+		\node[state] (C) [right of=B]       {Latent $z = \mu + \sigma \odot \epsilon$};
+		\node[state] (D) [right of=C]       {Decoder $p_\theta(x|z)$};
+		\node[state] (E) [right of=D]       {Output $\hat{x}$};
+		\node[state] (F) [below of=C, node distance=2cm] {Noise $\epsilon \sim \mathcal{N}(0, I)$};
+		
+		\path (A) edge node {} (B)
+		(B) edge node {} (C)
+		(C) edge node {} (D)
+		(D) edge node {} (E);
+		\path[dashed] (F) edge node {} (C);
+	\end{tikzpicture}
+	\caption{Schematische Darstellung des Reparameterization-Tricks in einem Variational Autoencoder (VAE)}
+	\label{fig:reparam_trick}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2.5cm, semithick]
+		\tikzstyle{every state}=[fill=none,draw=black,text=black]
+		
+		\node[state] (A)                    {Input $x$};
+		\node[state] (B) [right of=A]       {Encoder $q_\phi(z|x)$};
+		\node[state] (C) [right of=B]       { $\mu$};
+		\node[state] (D) [below of=C, node distance=1.5cm] { $\sigma$};
+		\node[state] (E) [below of=D, node distance=1.5cm] { $\epsilon \sim \mathcal{N}(0, I)$};
+		\node[state] (F) [right of=C, node distance=2.5cm] { $z = \mu + \sigma \odot \epsilon$};
+		\node[state] (G) [right of=F, node distance=2.5cm] {Decoder $p_\theta(x|z)$};
+		\node[state] (H) [right of=G, node distance=2.5cm] {Rekonstruiertes $\hat{x}$};
+		
+		\path (A) edge node {} (B)
+		(B) edge node {} (C)
+		(C) edge node {} (F)
+		(D) edge node {} (F)
+		(E) edge node {} (F)
+		(F) edge node {} (G)
+		(G) edge node {} (H);
+	\end{tikzpicture}
+	\caption{Schematische Darstellung des Reparameterization-Tricks in einem Variational Autoencoder (VAE)}
+	\label{fig:reparam_trick}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=1.5cm, thick]
+		
+		% Input x
+		\node (x) {$x$};
+		
+		% Encoder block
+		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1cm of x] (encoder) {Encoder\\$E_\phi$};
+		
+		% Mean and standard deviation
+		\node[draw, rectangle, fill=yellow!30, below=0.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (mu) {$\mu$};
+		\node[draw, rectangle, fill=orange!50, below=0.5cm of encoder, right=0.5 of mu, minimum height=1cm, minimum width=1.2cm] (sigma) {$\sigma$};
+		
+		% Latent variable z
+		\node[draw, rectangle, fill=red!50, below=2.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (z) { $z = \mu + \sigma \odot \epsilon$};
+		
+		% Noise epsilon
+		\node[draw, rectangle, fill=orange!70, right=1.5cm of sigma, minimum height=1cm, minimum width=1.2cm] (epsilon) {$\epsilon$};
+		\node[align=center, right=0.5cm of epsilon] {sample\\$N(0,1)$};
+		
+		% Decoder block
+		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1.5cm of z] (decoder) {Decoder\\$D_\theta$};
+		
+		% Output x_hat
+		\node[below=1cm of decoder] (x_hat) {$\hat{x}$};
+				
+		% Connections
+		\draw[->] (x) -- (encoder);
+		\draw[->] (encoder) -- (mu);
+		\draw[->] (encoder) -- (sigma);
+		\draw[->] (mu) -- (z);
+		\draw[->] (sigma) -- (z);
+		\draw[->] (epsilon) -- (z);
+		\draw[->] (z) -- (decoder);
+		\draw[->] (decoder) -- (x_hat);
+		
+
+		
+	\end{tikzpicture}
+	\caption{Schematische Darstellung des Reparameterization-Tricks in einem Variational Autoencoder (VAE)}
+	\label{fig:reparam_trick}
+\end{figure}
+\end{document}

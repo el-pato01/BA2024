@@ -12,7 +12,8 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 
 %\input{settings+/docclass}
 %\input{settings+/settings}
-
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, automata, shapes.geometric}
 %\makeatletter %redefine some labels from the TUM template
 %\provideName{\@tum@examiner@}{Supervisor}{Themensteller} % or `Themenstellerin`
 %\provideName{\@tum@supervisor@}{Advisors}{Betreuer} % or `Advisor` / `Betreuerin`
@@ -105,7 +106,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 	\centering
 	\vspace*{1cm}
 	
-	%\includegraphics[width=0.4\textwidth]{Logo_Uni_alt.pdf}
+	\vfill
 	
 	\textsc{\LARGE Albert-Ludwigs-Universität Freiburg}\\[1.5cm]
 	
@@ -119,22 +120,31 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 		\begin{flushleft} \large
 			\emph{Autor:}\\
 			Yannick Bantel \\
+			\vspace{5pt}
+			\emph{Professor:} \\
+			Prof. Dr. Harald Binder \\
+			\vspace{5pt}
 			\emph{Betreuer:} \\
-			Clemens Schächter
+			Clemens Schächter\\
 
 		\end{flushleft}
 	\end{minipage}
 	\begin{minipage}{0.4\textwidth}
 		\begin{flushright} \large
-			\emph{Betreuer:} \\
-			Clemens Schächter
+			\emph{Abgabedatum:} \\
+			\today
 		\end{flushright}
 	\end{minipage}\\[3cm]
 	
+	\begin{tikzpicture}[remember picture, overlay]
+		\node[anchor=south east, xshift=-2cm, yshift=3cm] at (current page.south east) {
+			\includegraphics[width=0.2\textwidth]{Logo_Uni_alt.pdf}
+		};
+	\end{tikzpicture}
+	
 	\vfill
 	
-	% Bottom of the page
-	{\large Abgabedatum: \today}
+
 	
 \end{titlepage}
 %\frontmatter
@@ -179,12 +189,43 @@ Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufa
 %-----------------------VARIATIONAL-AUTOENCODER------------------------------
 
 %----------------------------------------------------------------------------
-\section{Variational Autoencoder}
+\section{Variational Autoencoder (VAE)}
 Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.\\
+\subsection{Strucktur des VAEs}
 Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder, der die Inputdaten x im latenten Raum als Verteilung kodiert, und einem Decoder, der aus den latenten Daten versucht die Originaldaten zu rekonstruieren. Diese Module lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[node distance=2cm, auto, >=Stealth, thick]
+		
+		% Nodes
+		\node (input) [draw, rectangle, minimum width=2cm, minimum height=1cm] {Input $\mathbf{x}$};
+		\node (encoder) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of input] {Encoder $q_\phi(\mathbf{z}|\mathbf{x})$};
+		\node (latent) [draw, circle, minimum size=1cm, below=of encoder] {Latent $\mathbf{z}$};
+		\node (decoder) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of latent] {Decoder $p_\theta(\mathbf{x}|\mathbf{z})$};
+		\node (output) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of decoder] {Reconstructed $\mathbf{\hat{x}}$};
+		
+		% Arrows
+		\draw[->] (input) -- (encoder);
+		\draw[->] (encoder) -- (latent);
+		\draw[->] (latent) -- (decoder);
+		\draw[->] (decoder) -- (output);
+		
+		% Text for distributions
+		\node [left=0.5cm of latent] (prior) {$p(\mathbf{z}) \sim \mathcal{N}(0, I)$};
+		\node [right=0.5cm of latent] (posterior) {$q_\phi(\mathbf{z}|\mathbf{x}) \sim \mathcal{N}(\mu, \sigma^2)$};
+		
+		% Dotted lines for distributions
+		\draw[dotted, ->] (prior) -- (latent);
+		\draw[dotted, ->] (posterior) -- (latent);
+		
+	\end{tikzpicture}
+	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
+	\label{fig:vae}
+\end{figure}
 VAEs sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht(vgl. \cite{bigdata-insider-vae}).\\
 \\
 \textbf{Latenter Raum}\\
+Variablen, die man nicht direkt messen kann, demnach nicht Teil des erhaltenen Datensatzes sind, bezeichnet man als latente Variablen. Sie werden erst mithilfe der gegebenen Daten erschlossen und ergeben im Verbund den latenten Raum.\\
 Im VAE werden die latenten Variablen z aus der priori-Verteilung $p_\theta(x)$ gezogen, welche eine multivariate Normalverteilung $p_\theta(x) = \mathcal{N}(z;0,I) $ ist. Die latenten Daten werden aus den Inputdaten durch den Encoder  gezogen, welcher die posteriori Verteilung durch eine variable Verteilung $q_\phi(z,x)$ approximiert. Der Encoder erlernt somit zwei Vektoren, nämlich den Mittelwert \( \mu \) und die Standardabweichung \( \sigma^2 \) der Normalverteilung $q_\phi(z,x) = \mathcal{N}(z;\mu(x),\sigma^2(x))$.\\
 Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die likelihood-Verteilung $p_\theta(x|z)$  zu rekonstruieren. Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsentationen generiert wurden, wird durch dieses Modell modelliert. Auch hier wird typischerweise eine Normalverteilung angenommen, sofern die  Daten reellwertig sind. Im Falle binärer Daten wird die Verteilung als Bernoulli-Verteilung modelliert. \\ Für weiterführende Details wird auf die Publikation \cite{Auto-EncodingVariationalBayes} verwiesen.\\
 \subsection{Training VAE}
@@ -233,14 +274,14 @@ wobei $z^{(l)} \sim q_\phi(z|x^{(i)})$ ist.
 In der Regel stellt dies keine Herausforderung dar. Allerdings ist $q_\phi(z|x)$ nun auch abhängig von  $\phi$, sodass der Monte Carlo Gradienten-Schätzer nicht direkt berechnet werden kann. \\
 Zur Lösung dieses Problems wird der sogenannte Reparameterization-Trick eingesetzt, welcher die Zufallsvariable transformiert um die Gradienten-Berechnung zu vereinfachen.  
 \subsubsection{Reparametrisierungs Trick}
-Der Reparameterisierungs-Trick ermöglicht die Berechnung der Gradienten der ELBO durch eine Transformation der Zufallsvariable z in eine deterministische Funktion von einer Hilfsvariablen $\epsilon$.
+Der Reparameterisierungs-Trick ist eine Methode zur Vereinfachung der Gradientenberechnung in Variational-Autoencodern. Er ermöglicht eine effizientere Berechnung der Gradienten der Evidence Lower Bound und somit eine effizientere Optimierung der ELBO. Der Reparameterization Trick transformiert die Zufallsvariable z in eine deterministische Funktion von einer Hilfsvariablen $\epsilon$, was es erleichtert Backpropagation durchzuführen.
 Sei also die latente Variable z, die aus $q_\phi(z|x)$ gezogen wurde, gegeben. Die latente Variable z wird nun als deterministische Funktion einer Hilfsvariablen $\epsilon$, unabhängig von x und $\phi$, ausgedrückt. 
 Die Transformation sieht dann wie folgt aus
 $$ z = g_\phi(\epsilon, x)$$
-$g_\phi(\epsilon,x) $ ist dabei eine differenzierbare Funktion und $\epsilon$ eine Zufallsvariable mit einer bekannten Verteilung (z.B. $\epsilon \sim \mathcal{N}(0,I)$)
+$g_\phi(\epsilon,x) $ ist dabei eine differenzierbare Funktion und $\epsilon$ eine Zufallsvariable mit einer bekannten Verteilung (z.B. $\epsilon \sim \mathcal{N}(0,I)$).\\
 Im Falle einer Gaußverteilung $z \sim \mathcal{N}(\mu, \sigma^2)$ könnte die Umparametrisierung wie folgt aussehen 
-$$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ 
-Dadurch können die Gradienten bezüglich $\mu$ und $\sigma$ effizient berechnet werden.
+$$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ Dies ist in  Abbildung \ref{fig:reparam_trick} veranschaulicht.
+Dadurch können die Gradienten bezüglich $\mu$ und $\sigma$ effizient berechnet werden, da der Erwartungswert über $q_\phi(z|x)$ sich nun als Erwartungswert über $\epsilon$ schreiben lässt.
 \\
 Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (vgl. \cite{MonteCarloEstimation}). Es gilt
 \begin{align}
@@ -248,6 +289,50 @@ Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (v
 	 &= \nabla_\phi \int q_\epsilon(z) f(g_\phi(\epsilon;\phi)) d\epsilon \\
 	 &= \nabla_\phi \mathbb{E}_{q(\epsilon)}[g_\phi(\epsilon,z)]
 \end{align}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=1.0cm, thick]
+		
+		% Input x
+		\node (x) {$x$};
+		
+		% Encoder block
+		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1cm of x] (encoder) {Encoder\\$q_\phi(x|z)$};
+		
+		% Mean and standard deviation
+		\node[draw, rectangle, fill=yellow!30, below=0.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (mu) {$\mu$};
+		\node[draw, rectangle, fill=orange!50, below=0.5cm of encoder, right=0.5 of mu, minimum height=1cm, minimum width=1.2cm] (sigma) {$\sigma$};
+		
+		% Latent variable z
+		\node[draw, rectangle, fill=red!50, below=2.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (z) { $z = \mu + \sigma \odot \epsilon$};
+		
+		% Noise epsilon
+		\node[draw, rectangle, fill=orange!70, right=1.5cm of sigma, minimum height=1cm, minimum width=1.2cm] (epsilon) {$\epsilon$};
+		\node[align=center, right=0.5cm of epsilon] {$\epsilon \sim\mathcal{N}(0,1)$};
+		
+		% Decoder block
+		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1.5cm of z] (decoder) {Decoder\\$p_\theta(z|x)$};
+		
+		% Output x_hat
+		\node[below=1cm of decoder] (x_hat) {$\hat{x}$};
+		
+		% Connections
+		\draw[->] (x) -- (encoder);
+		\draw[->] (encoder) -- (mu);
+		\draw[->] (encoder) -- (sigma);
+		\draw[->] (mu) -- (z);
+		\draw[->] (sigma) -- (z);
+		\draw[->] (epsilon) -- (z);
+		\draw[->] (z) -- (decoder);
+		\draw[->] (decoder) -- (x_hat);
+		
+		
+		
+	\end{tikzpicture}
+	\caption{Der Reparameterization-Trick in einem Variational Autoencoder (VAE)}
+	\label{fig:reparam_trick}
+\end{figure}
 %----------------------------------------------------------------------------
 
 %------------------------GEMISCHTE-MODELLE-----------------------------------
@@ -431,6 +516,7 @@ Sofern die Log-Likelihood-Werte der Modelle bereits als $\mathbf{L}_{full}$ und 
 Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
 
 \chapter{Minimierung der Verzerrung}
+
 
 %%--------------------METHODIK-----------------------------------------------
 \chapter{Methodik}
