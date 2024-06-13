@@ -195,7 +195,7 @@ Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt 
 Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder, der die Inputdaten x im latenten Raum als Verteilung kodiert, und einem Decoder, der aus den latenten Daten versucht die Originaldaten zu rekonstruieren. Diese Module lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
 \begin{figure}[h]
 	\centering
-	\begin{tikzpicture}[node distance=2cm, auto, >=Stealth, thick]
+	\begin{tikzpicture}[node distance=1cm, auto, >=Stealth, thick]
 		
 		% Nodes
 		\node (input) [draw, rectangle, minimum width=2cm, minimum height=1cm] {Input $\mathbf{x}$};
@@ -515,8 +515,40 @@ Sofern die Log-Likelihood-Werte der Modelle bereits als $\mathbf{L}_{full}$ und 
 \section{Verzerrung (Bias) und ihre Messung}
 Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
 
-\chapter{Minimierung der Verzerrung}
+%---------------------------------------------------------------------------
 
+%-------------------MINIMIERUNG-DER-INFERENZ--------------------------------
+
+%---------------------------------------------------------------------------
+
+\chapter{Minimierung der Verzerrung}
+Wir haben nun die nötigen theoretischen Kenntnisse, um die Verzerrung der Inferenz zu messen. Um die Verzerrung zu messen haben wir uns für eine Likelihood-Ratio-Test Statistik entschieden. Dabei fügen wir dem Datensatz einen neuen Parameter hinzu, welcher keinen Einfluss auf die Daten haben sollte. Bei unserem Datensatz haben wir jedem Patienten zufällig ein Geschlecht hinzugefügt. Das Geschlecht hat keinen Einfluss auf die Testergebnisse und demnach auch keinen Einfluss auf die Response-Variable. 
+Nun können wir das vollständige, mit dem Geschlecht ergänzte, Modell mit dem reduzierten, ohne dem Geschlecht, Modell vergleichen, in dem wir den Likelihood-Ratio-Test anwenden. 
+Um einen Richtwert zu haben, haben wir zuerst ein selbst überlegtes Simulationsdesign erstellt, welches einen niedrigdimensionalen medizinischen Datensatz simuliert. Dabei handelt es sich um einen Datensatz der die Herzgesundheit berechnet. Für jeden der n=500 Patienten wird Health-Score basierend auf verschiedensten Einflussfaktoren berechnet. Jeder der Patienten ist erkrankt und erhält nach frühestens drei Jahren eine Behandlung, die den Einfluss der einzelnen Parametern leicht verbessert. Der Start der Behandlung wird zufällig nach drei Jahren ausgemacht. Die Daten werden über 10 Jahre erhoben. Der Heath-Score setzt sich aus dem diastolischen- und systolischen Blutdruck, dem Cholesterinspiegel, dem Triglyceride-Wert, dem Creatininspiegel und dem BMI zusammen. Die Werte werden für jeden Patienten aus einer Normalverteilung gezogen.
+\begin{align*}
+	bp_sys \sim \mathcal{N}(120,10) \\
+	bp_dia \sim \mathcal{N}(80,10) \\
+	cholesterol \sim \mathcal{N}(200,30) \\
+	triglyceride \sim \mathcal{N}(150,20) \\
+	creatinin \sim \mathcal{N}(1,0.2) \\
+	bmi \sim \mathcal{N}(25,4) \\
+\end{align*} \noindent
+Insbesondere wird jedem Patienten ein zufälliges Alter zwischen 30 und 60 Jahren zugeteilt, welches ebenfalls einen minimal negativen Effekt auf den Health-Score hat. Als zusätzlichen Effekt, welcher keinen Einfluss auf die Response-Variable (in diesem Fall der Health-Score) hat, wird jedem Patienten ein Geschlecht zugeteilt. Für immer zufällig auftretende Effekte wird ein Random Slope und ein Random Intercept in den Health-Score hinzugefügt. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
+	\caption{Simulierte Datensätze für 20 zufällig ausgewählte Patienten}
+	\label{fig:sample_image}
+\end{figure} 
+Basierend auf diesem Simulationsdesign, welches einem Gemischten Modell folgt, können wir nun einen Likelihood-Ratio-Test durchführen. Wir trainieren dazu ein vollständiges gemischtes Modell und ein reduziertes gemischtes Modell ohne den Effekt 'Geschlecht'. Mit den log-Likelihood Werten für die trainierten Modelle führen wir den Likelihood-Ratio-Test durch. Nach 500 Wiederholungen ergibt sich ein Histogramm der Likelihood-Ratio-Test Statistik, welches, wie zu erwarten, einer $\chi^2$ Verteilung folgt. Wir wir in Abb sieht folgt das Histogramm der Test Statistik der Roten Kurve, welche die $\chi^2$ Verteilung beschreibt, ohne Verzerrung. Bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, sind die Ergebnisse immer unter der $\chi^2$ Verteilung. Dies war allerdings auch so zu erwarten, da wir ein ganz normales gemischtes Modell betrachtet hatten.
+\subsection{Gemischtes Modell auf latenter Datenwolke mit separatem Training}
+Nun wollen wir das gemischte Modell in einer latenten Repräsentation betrachten. Dazu wählen wir, wie schon angeführt, einen Variational-Autoencoder. Außerdem haben wir nun einen hochdimensionalen medizinischen Datensatz gegeben. Dieser ist einem echten Datensatz bestmöglich nachgebaut, allerdings kann hier aus Datenschutzgründen kein wirklich echter Datensatz benutzt werden. Wir wählen zunächst ein recht simples Encoder-Modell mit zwei Schichten und einer zweidimensionalen latenten Dimension. 
+Wir trainieren zuerst den VAE separat von den gemischten Modellen. Dazu optimieren wir in der Loss-Funktion den Reconstruction Loss und die KL-Divergenz. Das vollständige und reduzierte gemischte Modell trainieren wir dann auf der latenten Datenwolke jeweils nach dem abgeschlossenen Training des VAEs. So erhalten wir wieder zwei log-likelihood Werte welche wir mit dem Likelihood-Ratio-Test auswerten können. Fassen wir alle LRT-Werte gleichermaßen wie zuvor in einem Histogramm zusammen und vergleichen mit der $\chi^2$ Verteilung, so sehen wir, dass eine bedeutende Masse dieses Mal über der $\chi^2$ Verteilung liegt. Wir sehen also, dass es zu einer Verzerrung der Inferenz kommt. 
+\subsection{Gemischtes Modell auf latenter Datenwolke mit gleichzeitigem Training}
+Wenn wir nun versuchen das gemischte Modell zusammen mit dem VAE in einer einzigen Loss-Funktion zu trainieren, sehen wir recht schnell, dass wir so nicht zu einem gewünschten Ergebnis kommen. Bei einem gemeinsamen Training unter der Voraussetzung, dass in der Loss-Funktion alle Parameter gleich gewichtet sind, geht die $\chi^2$ Verteilung komplett verloren. 
+Fügen wir der Lossfunktion auch nur den Mean-Squarred-Error zwischen dem Encoder Output und dem Output des vollständig trainierten gemischten Modells hinzu und gewichten diesen nur minimal, so verlieren wir schon die $\chi^2$-Verteilung. Das bedeutet sobald der Encoder Einfluss auf das gemsischte Modell hat, geht die gewünschte Verteilung verloren.
+Dementsprechend geht die Verteilung auch verloren, wenn wir 
 
 %%--------------------METHODIK-----------------------------------------------
 \chapter{Methodik}
@@ -555,7 +587,6 @@ Zusammenfassung der wichtigsten Erkenntnisse
 Praktische Implikationen: Wie die Ergebnisse in der Praxis angewendet werden können.
 Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder ergänzende Studien.
 \chapter{Anhang}
-\chapter{Literaturverzeichnis}
 \appendix
 \chapter{Appendix}
 \section{Supporting Data}
