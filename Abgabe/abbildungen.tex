@@ -158,4 +158,84 @@
 	\caption{Schematische Darstellung des Reparameterization-Tricks in einem Variational Autoencoder (VAE)}
 	\label{fig:reparam_trick}
 \end{figure}
+\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
+	
+	% Define styles
+	\tikzstyle{latent} = [rectangle, draw, fill=blue!20, text centered, minimum width=1cm, minimum height=2cm]
+	\tikzstyle{input} = [rectangle, text centered]
+	\tikzstyle{output} = [rectangle, text centered]
+	
+	% Nodes
+	\node[input, name=input] (input) {x};
+	\node[latent, right of=input, node distance=6cm, minimum width=1cm, minimum height=2cm] (z) {$Z$};
+	\node[output, right of=z, node distance=6cm] (output) {$\hat{x}$};
+	
+	% Custom trapezoids for encoder and decoder
+	\draw[fill=gray!20] (3,2) -- (3,-2) -- (5,-1) -- (5,1) -- cycle;
+	\node at (3.75, 0) {Encoder};
+	
+	\draw[fill=green!20] (7,1) -- (7,-1) -- (9,-2) -- (9,2) -- cycle;
+	\node at (8, 0) {Decoder};
+	
+	% Arrows
+	\draw[->] (input.east) -- (2.75,0);
+	\draw[->] (5,0) -- (z.west);
+	\draw[->] (z.east) -- (7,0);
+	\draw[->] (9.75,0) -- (output.west);
+	
+	% Labels
+	\node[above of=input, node distance=1cm] {Input};
+	\node[above of=z, node distance=1.5cm] {Latent Space};
+	\node[above of=output, node distance=1cm] {Reconstructed Data};
+	
+	% Additional Text
+	\draw[->, thick] (output.south) |- ++(0, -2.5cm) -| (input.south);
+	\node[below of=z, node distance=3.5cm, text width=6cm, align=center] {Reconstruction Loss};
+	
+\end{tikzpicture}
+
+\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
+	
+	% Define block styles
+	\tikzstyle{block} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum height=3cm, draw, fill=gray!20, text centered]
+	\tikzstyle{block2} = [trapezium, trapezium left angle=110, trapezium right angle=70, minimum height=3cm, draw, fill=green!20, text centered]
+	\tikzstyle{square} = [rectangle, draw, fill=red!20, minimum size=1.5cm, text centered]
+	\tikzstyle{latent} = [rectangle, draw, fill=blue!20, minimum size=1.5cm, text centered]
+	
+	% Nodes	
+	\draw[fill=gray!20] (1,2) -- (1,-2) -- (3,-1) -- (3,1) -- cycle;
+	\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
+	\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered] (input) {$\mathbf{x}$};
+	\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu_{z|x}$};
+	\node[square, below of=mu, node distance=2cm] (sigma) {$\Sigma_{z|x}$};
+	\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{Z}$};
+	\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
+	\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
+	\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
+	
+
+
+	% Arrows
+	\draw[->] (input) -- (1,0);
+	\draw[->] (3,0) -- (mu);
+	\draw[->] (3,0) -- (sigma);
+	\draw[->] (mu) -- (z);
+	\draw[->] (sigma) -- (z);
+	\draw[->] (z) -- (8,0);
+	\draw[->] (10,0) -- (output);
+	
+	% Labels
+	\node[above of=input, node distance=1.75cm] {Input Data};
+	\node[above of=encoder, node distance=0.8cm] {Encoder};
+	\node[above of=z, node distance=1cm] {Latent Space};
+	\node[above of=decoder, node distance=0.8cm] {Decoder};
+	\node[above of=output, node distance=1.75cm] {Reconstructed Image};
+	
+	\node[below of=sigma, node distance=1.2cm] {Standard Deviation};
+	
+	% Additional Text
+	\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
+	\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL Divergence};
+	
+\end{tikzpicture}
 \end{document}

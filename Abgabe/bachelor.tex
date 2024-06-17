@@ -14,6 +14,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 %\input{settings+/settings}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, calc, automata, shapes.geometric}
+\usepackage{pgfplots}
 %\makeatletter %redefine some labels from the TUM template
 %\provideName{\@tum@examiner@}{Supervisor}{Themensteller} % or `Themenstellerin`
 %\provideName{\@tum@supervisor@}{Advisors}{Betreuer} % or `Advisor` / `Betreuerin`
@@ -190,33 +191,96 @@ Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufa
 
 %----------------------------------------------------------------------------
 \section{Variational Autoencoder (VAE)}
-Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.\\
-\subsection{Strucktur des VAEs}
-Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder, der die Inputdaten x im latenten Raum als Verteilung kodiert, und einem Decoder, der aus den latenten Daten versucht die Originaldaten zu rekonstruieren. Diese Module lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
-\begin{figure}[h]
+Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wie es in Abbildung \ref{fig:vae1} dargestellt ist, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.
+\begin{figure}
 	\centering
-	\begin{tikzpicture}[node distance=1cm, auto, >=Stealth, thick]
+	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
+		
+		% Define styles
+		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, text centered, minimum width=1cm, minimum height=2cm]
+		\tikzstyle{input} = [rectangle, draw, fill=yellow!20,text centered, minimum width=1cm, minimum height=3cm]
+		\tikzstyle{output} = [rectangle,draw, fill=yellow!20, text centered, minimum width=1cm, minimum height=3cm]
 		
 		% Nodes
-		\node (input) [draw, rectangle, minimum width=2cm, minimum height=1cm] {Input $\mathbf{x}$};
-		\node (encoder) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of input] {Encoder $q_\phi(\mathbf{z}|\mathbf{x})$};
-		\node (latent) [draw, circle, minimum size=1cm, below=of encoder] {Latent $\mathbf{z}$};
-		\node (decoder) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of latent] {Decoder $p_\theta(\mathbf{x}|\mathbf{z})$};
-		\node (output) [draw, rectangle, minimum width=2cm, minimum height=1cm, below=of decoder] {Reconstructed $\mathbf{\hat{x}}$};
+		\node[input, name=input] (input) {x};
+		\node[latent, right of=input, node distance=6cm, minimum width=1cm, minimum height=2cm] (z) {$Z$};
+		\node[output, right of=z, node distance=6cm] (output) {$\hat{x}$};
+		
+		% Custom trapezoids for encoder and decoder
+		\draw[fill=gray!20] (3,2) -- (3,-2) -- (5,-1) -- (5,1) -- cycle;
+		\node at (3.75, 0) {Encoder};
+		
+		\draw[fill=green!20] (7,1) -- (7,-1) -- (9,-2) -- (9,2) -- cycle;
+		\node at (8, 0) {Decoder};
 		
 		% Arrows
-		\draw[->] (input) -- (encoder);
-		\draw[->] (encoder) -- (latent);
-		\draw[->] (latent) -- (decoder);
-		\draw[->] (decoder) -- (output);
+		\draw[->] (input.east) -- (2.75,0);
+		\draw[->] (5,0) -- (z.west);
+		\draw[->] (z.east) -- (7,0);
+		\draw[->] (9.75,0) -- (output.west);
 		
-		% Text for distributions
-		\node [left=0.5cm of latent] (prior) {$p(\mathbf{z}) \sim \mathcal{N}(0, I)$};
-		\node [right=0.5cm of latent] (posterior) {$q_\phi(\mathbf{z}|\mathbf{x}) \sim \mathcal{N}(\mu, \sigma^2)$};
+		% Labels
+		\node[above of=input, node distance=2cm] {Input};
+		\node[above of=z, node distance=1.5cm] {Latent Space};
+		\node[above of=output, node distance=2cm] {Reconstructed Data};
 		
-		% Dotted lines for distributions
-		\draw[dotted, ->] (prior) -- (latent);
-		\draw[dotted, ->] (posterior) -- (latent);
+		% Additional Text
+		\draw[->, thick] (output.south) |- ++(0, -2.5cm) -| (input.south);
+		\node[below of=z, node distance=3.5cm, text width=6cm, align=center] {Reconstruction Loss};
+		
+		
+	\end{tikzpicture}
+	\caption{Aufbau eines herkömmlichen Autoencoders}
+	\label{fig:autoencoder}
+\end{figure}
+\subsection{Strucktur des VAEs}
+Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder, der die Inputdaten x im latenten Raum als Verteilung kodiert, und einem Decoder, der aus den latenten Daten versucht die Originaldaten zu rekonstruieren. Diese Module lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
+\\
+\begin{figure}
+	\centering
+	
+	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
+		
+		% Define block styles
+		\tikzstyle{block} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum height=3cm, draw, fill=gray!20, text centered]
+		\tikzstyle{block2} = [trapezium, trapezium left angle=110, trapezium right angle=70, minimum height=3cm, draw, fill=green!20, text centered]
+		\tikzstyle{square} = [rectangle, draw, fill=red!20, minimum size=1.5cm, text centered]
+		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, minimum size=1.5cm, text centered]
+		
+		% Nodes		
+		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered] (input) {$\mathbf{x}$};
+		\draw[fill=gray!20] (1,2) -- (1,-2) -- (3,-1) -- (3,1) -- cycle;
+		\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
+		\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu$};
+		\node[square, below of=mu, node distance=2cm] (sigma) {$\sigma$};
+		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{Z}$};
+		\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
+		\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
+		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
+		
+		
+		
+		% Arrows
+		\draw[->] (input) -- (1,0);
+		\draw[->] (3,0) -- (mu);
+		\draw[->] (3,0) -- (sigma);
+		\draw[->] (mu) -- (z);
+		\draw[->] (sigma) -- (z);
+		\draw[->] (z) -- (8,0);
+		\draw[->] (10,0) -- (output);
+		
+		% Labels
+		\node[above of=input, node distance=1.75cm] {Input Data};
+		\node[above of=encoder, node distance=0.8cm] {Encoder};
+		\node[above of=z, node distance=1cm] {Latent Space};
+		\node[above of=decoder, node distance=0.8cm] {Decoder};
+		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
+		
+		\node[below of=sigma, node distance=1.2cm] {Standard Deviation};
+		
+		% Additional Text
+		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
+		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL Divergence};
 		
 	\end{tikzpicture}
 	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
@@ -280,7 +344,7 @@ Die Transformation sieht dann wie folgt aus
 $$ z = g_\phi(\epsilon, x)$$
 $g_\phi(\epsilon,x) $ ist dabei eine differenzierbare Funktion und $\epsilon$ eine Zufallsvariable mit einer bekannten Verteilung (z.B. $\epsilon \sim \mathcal{N}(0,I)$).\\
 Im Falle einer Gaußverteilung $z \sim \mathcal{N}(\mu, \sigma^2)$ könnte die Umparametrisierung wie folgt aussehen 
-$$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ Dies ist in  Abbildung \ref{fig:reparam_trick} veranschaulicht.
+$$z=\mu + \sigma \odot \epsilon \hspace{10pt}\text{mit} \hspace{2pt} \epsilon\sim N(0,I).$$ Dies ist in  Abbildung \ref{fig:vae_reparameterization_trick} veranschaulicht.
 Dadurch können die Gradienten bezüglich $\mu$ und $\sigma$ effizient berechnet werden, da der Erwartungswert über $q_\phi(z|x)$ sich nun als Erwartungswert über $\epsilon$ schreiben lässt.
 \\
 Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (vgl. \cite{MonteCarloEstimation}). Es gilt
@@ -289,50 +353,59 @@ Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (v
 	 &= \nabla_\phi \int q_\epsilon(z) f(g_\phi(\epsilon;\phi)) d\epsilon \\
 	 &= \nabla_\phi \mathbb{E}_{q(\epsilon)}[g_\phi(\epsilon,z)]
 \end{align}
-
-\begin{figure}[h]
+\begin{figure}
 	\centering
-	\begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=1.0cm, thick]
+	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
 		
-		% Input x
-		\node (x) {$x$};
+		% Define block styles
+		\tikzstyle{block} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum height=3cm, draw, fill=gray!20, text centered]
+		\tikzstyle{block2} = [trapezium, trapezium left angle=110, trapezium right angle=70, minimum height=3cm, draw, fill=green!20, text centered]
+		\tikzstyle{square} = [rectangle, draw, fill=red!20, minimum size=1.5cm, text centered]
+		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, minimum size=1.5cm, text centered]
 		
-		% Encoder block
-		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1cm of x] (encoder) {Encoder\\$q_\phi(x|z)$};
+		% Nodes		
+		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered] (input) {$\mathbf{x}$};
+		\draw[fill=gray!20] (1,2) -- (1,-2) -- (3,-1) -- (3,1) -- cycle;
+		\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
+		\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu$};
+		\node[square, below of=mu, node distance=2cm] (sigma) {$\sigma$};
+		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{z = \mu + \sigma \odot \epsilon}$};
+		\node[square, above of=mu, node distance=2cm] (epsilon) {$\epsilon$};
+		\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
+		\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
+		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
 		
-		% Mean and standard deviation
-		\node[draw, rectangle, fill=yellow!30, below=0.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (mu) {$\mu$};
-		\node[draw, rectangle, fill=orange!50, below=0.5cm of encoder, right=0.5 of mu, minimum height=1cm, minimum width=1.2cm] (sigma) {$\sigma$};
 		
-		% Latent variable z
-		\node[draw, rectangle, fill=red!50, below=2.5cm of encoder, minimum height=1cm, minimum width=1.2cm] (z) { $z = \mu + \sigma \odot \epsilon$};
 		
-		% Noise epsilon
-		\node[draw, rectangle, fill=orange!70, right=1.5cm of sigma, minimum height=1cm, minimum width=1.2cm] (epsilon) {$\epsilon$};
-		\node[align=center, right=0.5cm of epsilon] {$\epsilon \sim\mathcal{N}(0,1)$};
-		
-		% Decoder block
-		\node[draw, trapezium, trapezium left angle=60, trapezium right angle=120, minimum height=1.5cm, text width=1.2cm, align=center, below=1.5cm of z] (decoder) {Decoder\\$p_\theta(z|x)$};
-		
-		% Output x_hat
-		\node[below=1cm of decoder] (x_hat) {$\hat{x}$};
-		
-		% Connections
-		\draw[->] (x) -- (encoder);
-		\draw[->] (encoder) -- (mu);
-		\draw[->] (encoder) -- (sigma);
+		% Arrows
+		\draw[->] (input) -- (1,0);
+		\draw[->] (3,0) -- (mu);
+		\draw[->] (3,0) -- (sigma);
 		\draw[->] (mu) -- (z);
 		\draw[->] (sigma) -- (z);
+		\draw[->] (z) -- (8,0);
+		\draw[->] (10,0) -- (output);
 		\draw[->] (epsilon) -- (z);
-		\draw[->] (z) -- (decoder);
-		\draw[->] (decoder) -- (x_hat);
 		
+		% Labels
+		\node[above of=input, node distance=1.75cm] {Input Data};
+		\node[above of=encoder, node distance=0.8cm] {Encoder};
+		\node[above of=z, node distance=1cm] {Latent Space};
+		\node[above of=decoder, node distance=0.8cm] {Decoder};
+		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
 		
+		\node[below of=sigma, node distance=1.2cm] {Standard Deviation};
+		\node[above of=epsilon, node distance=1.2cm] {$\epsilon \sim \mathcal{N}(0,I)$}
+		
+		% Additional Text
+		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
+		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL Divergence};
 		
 	\end{tikzpicture}
-	\caption{Der Reparameterization-Trick in einem Variational Autoencoder (VAE)}
-	\label{fig:reparam_trick}
+	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
+	\label{fig:vae_reparameterization_trick}
 \end{figure}
+
 %----------------------------------------------------------------------------
 
 %------------------------GEMISCHTE-MODELLE-----------------------------------
@@ -494,16 +567,18 @@ Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von 
 	Dann ist $\hat{\theta}_{ML}$ der ML-Schätzer für $\theta$, den man durch maximieren von $$  l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})) $$erhält.
 	Dabei ist $$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y$$
 \end{definition} \noindent
-Mit dem Schätzer $\hat{V}$ lassen sich die Schätzer der festen und zufälligen Effekte nun berechnen.
-Die Definition für den ML Wert folgt 
-\begin{definition}[log-Likelihood-Wert für ein gemischtes Modell]
+Mit dem Schätzer $\hat{V}$ lassen sich die Schätzer der festen und zufälligen Effekte nun berechnen.\\
+Um die Verzerrung der Inferenz messen zu können, müssen wir die  log-Likelihood Werte berechnen können, um diese in den Likelihood-Ratio-Test einzusetzen. Der log-Likelihood Wert eines gemischten Modell ergibt sich aus der Maximum-Likelihood (ML)-Methode und ist folgendermaßen definiert:
+\begin{definition}[log-Likelihood Wert für ein gemischtes Modell]
 	Sei $r = y - X(X^tV^{-1}X)^{-1}X^tV^{-1}y$ und p der Rang von X
 	$$ l_{ML}(Q,R) = -0.5 * (log(|V|)+ r'V^{-1}r + N * log(2\pi))$$
 	$$l_{REML}(Q,R) = -0.5 * (log(|V|)+ X'V^{-1}X + r'V^{-1}r+ (N-p) * log(2\pi))$$
 \end{definition}\noindent
-\
+$l_{REML}(Q,R)$ ist die eingeschränkte log-Likelihood, der sich aus der Methode "Restricted Maximim Likelihood" ergibt und entspricht im Wesentlichen der normalen log-Likelihood mit Ausnahme einer Differenz. Bei der "Restricted Maximim Likelihood" werden im Gegensatz zu der Methode "Maximum Likelihood" die Freiheitsgrade, die für die Schätzung fester Effekte bei der Schätzung von Varianzkomponenten verwendet werden, berücksichtigt. Im Gegensatz zum ursprünglichen Datenvektor basiert die eingeschränkte Maximum-Likelihood-Methode auf linearen Kombinationen der Beobachtungen, die so gewählt sind, dass diese Kombinationen invariant zu den Werten der festen Effektparametern sind. \\
+Diese linearen Kombinationen sind äquivalent zu den Residuen, die nach der Anpassung durch normale kleinste Quadrate (gewichtet bei Angabe einer Regressionsgewichtung) lediglich den festen Effektanteil des Modells berechnen. Das Verfahren führt somit eine Maximierung in einem eingeschränkten Vektorraum durch.
 \subsection{Likelihood-Ratio-Test}
-Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ einfach, sofern die Theorie der ML-Methode vergegenwärtigt wird. Zur Erinnerung: Der Vergleich eines reduziertes Modells mit dem vollständigen Modell dient der Evaluierung des Einflusses einer Störgröße. Zur Durchführung dieser Analyse dient der Likelihood-Ratio-Test.
+Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ einfach, sofern die Theorie der ML-Methode vergegenwärtigt wird. Zur Erinnerung: Der Vergleich eines reduziertes Modells mit dem vollständigen Modell dient der Evaluierung des Einflusses einer Störgröße. Zur Durchführung dieser Analyse dient der Likelihood-Ratio-Test. Er ermöglicht den Vergleich eines einfacheren Modells (Nullmodell) mit einem komplexeren Modell (alternatives Modell), indem er die Likelihoods, bzw. die log-Likelihoods, der beiden Modelle vergleicht. Dies ist zum Beispiel nützlich um den Einfluss eines zusätzlichen Parameters zu beurteilen.\\
+Der Likelihood-Ratio-Test wird wie folgt definiert:\\
 \begin{definition}[Likelihood-Ratio-Test (LRT)] 
 	Sei $\mathbf{L}_{full}$ der Likelihood-Wert des vollständigen Modells sowie $\mathbf{L}_{red}$ der Likelihood-Wert des reduzierten Modells. Es sei i die Anzahl der Freiheitsgrade.\\
 	Dann ist die LRT Statistik gegeben durch 
@@ -511,9 +586,69 @@ Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ e
 \end{definition} \noindent
 Sofern die Größen $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gemäß der Definition initialisiert sind, gilt $\mathbf{L}_{full} > \mathbf{L}_{red}$. Insbesondere gilt $\log(\mathbf{L}_{full}) > \log(\mathbf{L}_{red})$.
 Sofern die Log-Likelihood-Werte der Modelle bereits als $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gegeben sind, lässt sich die LRT-Statistik durch $2(\mathbf{L}_{full} - \mathbf{L}_{red})$ berechnen. \\
+\\
 
-\section{Verzerrung (Bias) und ihre Messung}
-Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
+Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir die LRT-Werte als Histogramm darstellen, und folgt einer $\chi^2$-Verteilung. Eine Chi-Quadrat-Verteilung mit $k$ Freiheitsgraden ist folgendermaßen definiert:
+\begin{definition}[$\chi^2$-Verteilung]
+	Sei \( X_1, X_2, \ldots, X_k \) eine Folge von unabhängigen standardnormalverteilten Zufallsvariablen, also \( X_i \sim N(0, 1) \) für \( i = 1, \ldots, k \). Dann ist die Zufallsvariable 
+	
+	\[
+	Y = \sum_{i=1}^{k} X_i^2
+	\]
+	
+	Chi-Quadrat-verteilt mit \( k \) Freiheitsgraden. Wir schreiben:
+	
+	\[
+	Y \sim \chi^2(k)
+	\]
+	
+	Die Wahrscheinlichkeitsdichtefunktion der $\chi^2$-Verteilung mit \( k \) Freiheitsgraden ist gegeben durch:
+	
+	\[
+	f(x; k) = \begin{cases} 
+		\frac{1}{2^{k/2} \Gamma(k/2)} x^{k/2 - 1} e^{-x/2} & x > 0, \\
+		0 & x \le 0,
+	\end{cases}
+	\]
+	
+	wobei \( \Gamma(\cdot) \) die Gamma-Funktion ist.
+\end{definition} \noindent
+Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der Ergebnisse. Somit können wir feststellen, wie signifikant der Einfluss des zusätzlichen Parameters ist und ob die Anwendung gemischter Modelle im latenten Raum die Inferenz verzerrt. Um dies anschaulich darzustellen legt man das Histogramm der Teststatistik unter die $\chi^2$ Verteilung. Dies erleichtert die Analyse, ob die Inferenz verzerrt ist. Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
+\begin{figure}[h!]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			domain=0:10, 
+			samples=100,
+			ymin=0, ymax=1,
+			xlabel={$x$},
+			ylabel={$\chi^2$ Dichte},
+			axis lines=left,
+			legend style={at={(1,0.5)},anchor=west}
+			]
+			
+			% Definition of chi-square density function with manual gamma values
+			\addplot [blue, thick] {x^(1/2 - 1) * exp(-x/2) / (2^(1/2) * sqrt(pi))};
+			\addlegendentry{$k=1$}
+			
+			\addplot [red, thick] {x^(2/2 - 1) * exp(-x/2) / (2^(2/2) * 1)};
+			\addlegendentry{$k=2$}
+			
+			\addplot [orange, thick] {x^(3/2 - 1) * exp(-x/2) / (2^(3/2) * 0.886226925452758)};
+			\addlegendentry{$k=3$}
+			
+			\addplot [purple, thick] {x^(4/2 - 1) * exp(-x/2) / (2^(4/2) * 1)};
+			\addlegendentry{$k=4$}
+			
+			\addplot [green, thick] {x^(5/2 - 1) * exp(-x/2) / (2^(5/2) * 1.329340388179137)};
+			\addlegendentry{$k=5$}
+			
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Chi-Quadrat-Verteilung für verschiedene Freiheitsgrade $k$.}
+	\label{fig:chi2}
+\end{figure}
+
 
 %---------------------------------------------------------------------------
 
@@ -522,6 +657,17 @@ Erklärung von Verzerrung, wie sie entsteht und wie sie gemessen wird.
 %---------------------------------------------------------------------------
 
 \chapter{Minimierung der Verzerrung}
+
+\section{Datenbeschaffung}
+Quellen und Typen der verwendeten Daten
+\section{Modellierungstechniken}
+Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
+\section{Analysemethoden}
+Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
+
+%%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
+\chapter{Experimente und Ergebnisse}
+
 Wir haben nun die nötigen theoretischen Kenntnisse, um die Verzerrung der Inferenz zu messen. Um die Verzerrung zu messen haben wir uns für eine Likelihood-Ratio-Test Statistik entschieden. Dabei fügen wir dem Datensatz einen neuen Parameter hinzu, welcher keinen Einfluss auf die Daten haben sollte. Bei unserem Datensatz haben wir jedem Patienten zufällig ein Geschlecht hinzugefügt. Das Geschlecht hat keinen Einfluss auf die Testergebnisse und demnach auch keinen Einfluss auf die Response-Variable. 
 Nun können wir das vollständige, mit dem Geschlecht ergänzte, Modell mit dem reduzierten, ohne dem Geschlecht, Modell vergleichen, in dem wir den Likelihood-Ratio-Test anwenden. 
 Um einen Richtwert zu haben, haben wir zuerst ein selbst überlegtes Simulationsdesign erstellt, welches einen niedrigdimensionalen medizinischen Datensatz simuliert. Dabei handelt es sich um einen Datensatz der die Herzgesundheit berechnet. Für jeden der n=500 Patienten wird Health-Score basierend auf verschiedensten Einflussfaktoren berechnet. Jeder der Patienten ist erkrankt und erhält nach frühestens drei Jahren eine Behandlung, die den Einfluss der einzelnen Parametern leicht verbessert. Der Start der Behandlung wird zufällig nach drei Jahren ausgemacht. Die Daten werden über 10 Jahre erhoben. Der Heath-Score setzt sich aus dem diastolischen- und systolischen Blutdruck, dem Cholesterinspiegel, dem Triglyceride-Wert, dem Creatininspiegel und dem BMI zusammen. Die Werte werden für jeden Patienten aus einer Normalverteilung gezogen.
@@ -558,15 +704,6 @@ In den ersten Wochen habe ich mir selbst ein Simulationsdesign für einen longit
 Wir fügen dem gemischten Modell einen festen Effekt hinzu, welcher keinen Einfluss auf die Trajektorie haben soll. In unserem Fall ist dieser feste Effekt das Geschlecht, welches keinen Einfluss auf den Verlauf einer Krankheit haben sollte.\\
 \\
 Mein zweites Projekt ist nun einen hoch dimensionalen medizinischen Datensatz durch den Encoder eines Variational Autoencoders im latenten Raum zu repräsentieren und dort mit einem gemischten Model darzustellen. Ähnlich wie zuvor will ich wieder eine LRT Statistik erhalten, in dem ich ein reduziertes Modell mit dem vollständigen Model vergleiche. Dazu trainiere ich in einer Schleife den Encoder und das gemischte Model für jeden Iterationsschritt neu und vergleiche die negativen Maximum Likelihood-Werte (ML-Werte) durch den Likelihood Ratio Test. Am Ende der Schleife erhalte ich wieder eine LRT Statistik, welche durch ein Histogramm dargestellt wird. Im Optimalfall ähnelt das Histogramm einer Chi-Quadrat-Verteilung mit einem Freiheitsgrad (Da das reduzierte Model nur einen festen Effekt, das Geschlecht, weniger hat).\\
-\section{Datenbeschaffung}
-Quellen und Typen der verwendeten Daten
-\section{Modellierungstechniken}
-Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
-\section{Analysemethoden}
-Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
-
-%%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
-\chapter{Experimente und Ergebnisse}
 \section{Experimentelles Design}
 Aufbau der experimentellen Tests und Simulationen.
 \section{Durchführung}
