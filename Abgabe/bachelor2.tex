@@ -100,7 +100,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 }}}
 
 \begin{document}
-% Title Page
+	% Title Page
 \begin{titlepage}
 	\AddToShipoutPicture*{\BackgroundPic}
 	\AddToShipoutPicture*{\LogoPic}
@@ -191,7 +191,7 @@ Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufa
 
 %----------------------------------------------------------------------------
 \section{Variational Autoencoder (VAE)}
-Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wie es in Abbildung \ref{fig:vae} dargestellt ist, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.
+Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wie es in Abbildung \ref{fig:vae1} dargestellt ist, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
@@ -217,7 +217,7 @@ Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt 
 		\draw[->] (input.east) -- (2.75,0);
 		\draw[->] (5,0) -- (z.west);
 		\draw[->] (z.east) -- (7,0);
-		\draw[->] (9,0) -- (output.west);
+		\draw[->] (9.75,0) -- (output.west);
 		
 		% Labels
 		\node[above of=input, node distance=2cm] {Input};
@@ -253,7 +253,7 @@ Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder,
 		\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
 		\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu$};
 		\node[square, below of=mu, node distance=2cm] (sigma) {$\sigma$};
-		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{z}$};
+		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{Z}$};
 		\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
 		\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
 		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
@@ -272,16 +272,15 @@ Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder,
 		% Labels
 		\node[above of=input, node distance=1.75cm] {Input Data};
 		\node[above of=encoder, node distance=0.8cm] {Encoder};
-		\node[above of=z, node distance=1cm] {Latenter Raum};
+		\node[above of=z, node distance=1cm] {Latent Space};
 		\node[above of=decoder, node distance=0.8cm] {Decoder};
 		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
-
-        \node[above of=mu, node distance=1.2cm] {Mittelwert};
-		\node[below of=sigma, node distance=1.2cm] {Standardabweichung};
+		
+		\node[below of=sigma, node distance=1.2cm] {Standard Deviation};
 		
 		% Additional Text
 		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
-		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL-Divergenz};
+		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL Divergence};
 		
 	\end{tikzpicture}
 	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
@@ -391,19 +390,22 @@ Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (v
 		% Labels
 		\node[above of=input, node distance=1.75cm] {Input Data};
 		\node[above of=encoder, node distance=0.8cm] {Encoder};
+		\node[above of=z, node distance=1cm] {Latent Space};
 		\node[above of=decoder, node distance=0.8cm] {Decoder};
 		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
-	
+		
+		\node[below of=sigma, node distance=1.2cm] {Standard Deviation};
 		\node[above of=epsilon, node distance=1.2cm] {$\epsilon \sim \mathcal{N}(0,I)$}
 		
 		% Additional Text
 		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
-		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL-Divergenz};
+		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL Divergence};
 		
 	\end{tikzpicture}
-	\caption{Architektur eines VAEs mit Reparameterization Trick}
+	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
 	\label{fig:vae_reparameterization_trick}
 \end{figure}
+
 %----------------------------------------------------------------------------
 
 %------------------------GEMISCHTE-MODELLE-----------------------------------
