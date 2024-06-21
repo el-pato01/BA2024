@@ -22,7 +22,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \usepackage{cleveref}% intelligent references
 \usepackage{eso-pic}
 \usepackage{diffcoeff}
-%\usepackage{amsmath}
+\usepackage{amsmath}
 \usepackage{amsthm}
 % Laden von Paketen und Festlegen von Optionen
 \PassOptionsToPackage{autostyle=true,german=quotes}{csquotes}
@@ -34,14 +34,14 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \addbibresource{literature.bib} % Ihre .bib-Datei
 %-------------------------------------------------------------------------------
 \newtheoremstyle{break}
-{\topsep}   % Platz oberhalb
-{\topsep}   % Platz unterhalb
-{\itshape}  % Schriftart im Textkörper
-{0pt}       % Einzug (keiner)
-{\bfseries} % Schriftart im Kopf
-{.}         % Punkt nach Theorem-Name
-{\newline}  % Zeilenabstand nach Theorem-Name
-{}          % Zusätzliche Spezifikation
+	{\topsep}   % Platz oberhalb
+	{\topsep}   % Platz unterhalb
+	{\itshape}  % Schriftart im Textkörper
+	{0pt}       % Einzug (keiner)
+	{\bfseries} % Schriftart im Kopf
+	{.}         % Punkt nach Theorem-Name
+	{\newline}  % Zeilenabstand nach Theorem-Name
+	{}          % Zusätzliche Spezifikation
 
 
 \theoremstyle{break}
@@ -73,9 +73,9 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \date{\today}
 
 %-------------------------------------------------------------------------------
+% Please insert your own packages and macros here
+%-------------------------------------------------------------------------------
 \begin{document}
-
-% Title Page
 \begin{titlepage}
 	\AddToShipoutPicture*{\BackgroundPic}
 	\AddToShipoutPicture*{\LogoPic}
@@ -102,7 +102,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 			\vspace{5pt}
 			\emph{Betreuer:} \\
 			Clemens Schächter\\
-
+			
 		\end{flushleft}
 	\end{minipage}
 	\begin{minipage}{0.4\textwidth}
@@ -120,22 +120,10 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 	
 	\vfill
 	
-
+	
 	
 \end{titlepage}
-\frontmatter
-%\maketitle
-
-\cleardoublepage{}
-
 \tableofcontents
-
-\section{Zusammenfassung}
-Eine kurze Zusammenfassung der Arbeit auf Deutsch.
-
-\section*{Abstract}
-A brief abstract of this thesis in English.
-%\mainmatter{}
 
 %%---------------EINLEITUNG--------------------------------------------------
 \chapter{Einleitung}
@@ -166,103 +154,11 @@ Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufa
 
 %----------------------------------------------------------------------------
 \section{Variational Autoencoder (VAE)}
-Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE).
-VAEs sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Sie sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht(vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
-\begin{figure}
-	\centering
-	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
-		
-		% Define styles
-		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, text centered, minimum width=1cm, minimum height=2cm]
-		\tikzstyle{input} = [rectangle, draw, fill=yellow!20,text centered, minimum width=1cm, minimum height=3cm]
-		\tikzstyle{output} = [rectangle,draw, fill=yellow!20, text centered, minimum width=1cm, minimum height=3cm]
-		
-		% Nodes
-		\node[input, name=input] (input) {x};
-		\node[latent, right of=input, node distance=6cm, minimum width=1cm, minimum height=2cm] (z) {$Z$};
-		\node[output, right of=z, node distance=6cm] (output) {$\hat{x}$};
-		
-		% Custom trapezoids for encoder and decoder
-		\draw[fill=gray!20] (3,2) -- (3,-2) -- (5,-1) -- (5,1) -- cycle;
-		\node at (3.75, 0) {Encoder};
-		
-		\draw[fill=green!20] (7,1) -- (7,-1) -- (9,-2) -- (9,2) -- cycle;
-		\node at (8, 0) {Decoder};
-		
-		% Arrows
-		\draw[->] (input.east) -- (2.75,0);
-		\draw[->] (5,0) -- (z.west);
-		\draw[->] (z.east) -- (7,0);
-		\draw[->] (9,0) -- (output.west);
-		
-		% Labels
-		\node[above of=input, node distance=2cm] {Input};
-		\node[above of=z, node distance=1.5cm] {Latent Space};
-		\node[above of=output, node distance=2cm] {Reconstructed Data};
-		
-		% Additional Text
-		\draw[->, thick] (output.south) |- ++(0, -2.5cm) -| (input.south);
-		\node[below of=z, node distance=3.5cm, text width=6cm, align=center] {Reconstruction Loss};
-		
-		
-	\end{tikzpicture}
-	\caption{Aufbau eines herkömmlichen Autoencoders}
-	\label{fig:autoencoder}
-\end{figure}
+Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE). Variational Auto-Encoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Vergleich zu normalen Autoencoder, welche den latenten Raum durch feste Punkte modellieren, wie es in Abbildung \ref{fig:vae} dargestellt ist, wird der latente Raum in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung) modelliert.
 \subsection{Strucktur des VAEs}
-Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken (einem Encoder Modell und einem Decoder Modell). Der Encoder transformiert die Inputdaten x in eine niedrigdimensionale latente Repräsentation z. Die latenten Variablen werden als Verteilung in Form eines Mittelwerts $\mu$ und einer Standardabweichung $\sigma$ kodiert. Der Decoder versucht aus den latenten Daten die Originaldaten so genau wie möglich zu rekonstruieren. Beide Modelle bestehen jeweils aus mehreren neuronalen Schichten, die jeweils die Transformation durchführen und lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
+Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken: einem Encoder, der die Inputdaten x im latenten Raum als Verteilung kodiert, und einem Decoder, der aus den latenten Daten versucht die Originaldaten zu rekonstruieren. Diese Module lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
 \\
-\begin{figure}
-	\centering
-	
-	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
-		
-		% Define block styles
-		\tikzstyle{block} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum height=3cm, draw, fill=gray!20, text centered]
-		\tikzstyle{block2} = [trapezium, trapezium left angle=110, trapezium right angle=70, minimum height=3cm, draw, fill=green!20, text centered]
-		\tikzstyle{square} = [rectangle, draw, fill=red!20, minimum size=1.5cm, text centered]
-		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, minimum size=1.5cm, text centered]
-		
-		% Nodes		
-		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered] (input) {$\mathbf{x}$};
-		\draw[fill=gray!20] (1,2) -- (1,-2) -- (3,-1) -- (3,1) -- cycle;
-		\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
-		\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu$};
-		\node[square, below of=mu, node distance=2cm] (sigma) {$\sigma$};
-		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{z}$};
-		\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
-		\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
-		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
-		
-		
-		
-		% Arrows
-		\draw[->] (input) -- (1,0);
-		\draw[->] (3,0) -- (mu);
-		\draw[->] (3,0) -- (sigma);
-		\draw[->] (mu) -- (z);
-		\draw[->] (sigma) -- (z);
-		\draw[->] (z) -- (8,0);
-		\draw[->] (10,0) -- (output);
-		
-		% Labels
-		\node[above of=input, node distance=1.75cm] {Input Data};
-		\node[above of=encoder, node distance=0.8cm] {Encoder};
-		\node[above of=z, node distance=1cm] {Latenter Raum};
-		\node[above of=decoder, node distance=0.8cm] {Decoder};
-		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
-
-        \node[above of=mu, node distance=1.2cm] {Mittelwert};
-		\node[below of=sigma, node distance=1.2cm] {Standardabweichung};
-		
-		% Additional Text
-		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
-		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL-Divergenz};
-		
-	\end{tikzpicture}
-	\caption{Darstellung der Architektur eines Variational Autoencoders (VAE)}
-	\label{fig:vae}
-\end{figure}
+VAEs sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht(vgl. \cite{bigdata-insider-vae}).\\
 \\
 \textbf{Latenter Raum}\\
 Variablen, die man nicht direkt messen kann, demnach nicht Teil des erhaltenen Datensatzes sind, bezeichnet man als latente Variablen. Sie werden erst mithilfe der gegebenen Daten erschlossen und ergeben im Verbund den latenten Raum.\\
@@ -271,19 +167,19 @@ Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die likel
 \subsection{Training VAE}
 Ein VAE stellt ein spezifisches Beispiel einer Variational Inference (VI) dar. Die Zielsetzung einer VI besteht in der Berechnung der  Posteriori-Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit von den Input-Daten.  Die Berechnung dieser Verteilung ist besonders bei komplexen Modellen mit Schwierigkeiten verbunden. Infolgedessen approximiert der VAE die Posteriori-Verteilung durch eine einfachere Verteilung $q_\phi(x)$. Das Ziel von VIs besteht folglich in der Minimierung des Rekonstruktionsfehlers sowie der Kullback-Leibler-Divergenz zwischen der tatsächlichen Posteriori-Verteilung $p(z|x)$ und  der approximierten verteilung $q_\phi(x)$. 
 \begin{definition}[Kullback-Leibler-Divergenz (KL-Divergenz)]
-Sei $q_\phi(z|x)$ die approximierte Posteriori-Gauß-Verteilung und $p(z)$ die Priori-Gauß-Verteilung. Dann ist die KL-Divergenz definiert als
-$$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
+	Sei $q_\phi(z|x)$ die approximierte Posteriori-Gauß-Verteilung und $p(z)$ die Priori-Gauß-Verteilung. Dann ist die KL-Divergenz definiert als
+	$$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
 \end{definition}\noindent
 Da die Berechnung von  $p(z)$ mit Schwierigkeiten verbunden ist, wird  stattdessen die Evidence Lower Bound (ELBO) durch Stochastic Gradient Descent (SGD) oder andere ähnliche Verfahren optimiert.\\
 Das Objekt der Optimierung im VAE ist somit der ELBO. \\
 Im Folgenden wird die log-Likelihood der Daten betrachtet, um den ELBO herzuleiten (vgl. \cite{IntroductiontoVAEs}).\\
 \begin{align}
- 	\log p_\theta(x) &= \log p_\theta(x) * \overbrace{\int q_\phi(z|x) dz}^{=1} \\
- 	&= \int \log p_\theta(x) q_\phi(z|x) dz \\
- 	&= \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
- 	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{p_\theta(z|x)}\right]\right] \\
- 	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
- 	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))} \label{ELBO & DKL Gleichung}
+	\log p_\theta(x) &= \log p_\theta(x) * \overbrace{\int q_\phi(z|x) dz}^{=1} \\
+	&= \int \log p_\theta(x) q_\phi(z|x) dz \\
+	&= \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
+	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{p_\theta(z|x)}\right]\right] \\
+	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
+	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))} \label{ELBO & DKL Gleichung}
 \end{align}
 Der zweite Term in der Gleichung ist die nicht negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen $q_\phi(z|x)$ und $p_\theta(z|x))$. Der erste Term in Gleichung \ref{ELBO & DKL Gleichung} stellt den Evidence-Lower-Bound, kurz ELBO, dar: 
 \begin{definition}[Evidence Lower Bound (ELBO) für VAEs]
@@ -308,7 +204,7 @@ Die ELBO kann durch stochastische Gradientenverfahren optimiert werden.\\
 \\
 Die Berechnung des Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich $\theta$ kann problematisch sein. Der Monte-Carlo-Schätzer für Gradienten ist eine gängige Methode und kann wie folgt definiert werden (vgl. \cite{MonteCarloEstimation}): 
 \begin{align}
- \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)}) \label{MonteCarloEstimator}
+	\nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)}) \label{MonteCarloEstimator}
 \end{align}
 wobei $z^{(l)} \sim q_\phi(z|x^{(i)})$ ist. 
 In der Regel stellt dies keine Herausforderung dar. Allerdings ist $q_\phi(z|x)$ nun auch abhängig von  $\phi$, sodass der Monte Carlo Gradienten-Schätzer nicht direkt berechnet werden kann. \\
@@ -325,60 +221,10 @@ Dadurch können die Gradienten bezüglich $\mu$ und $\sigma$ effizient berechnet
 \\
 Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (vgl. \cite{MonteCarloEstimation}). Es gilt
 \begin{align}
-	 \nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)] &= \nabla_\phi \int q_\phi(z) f(z) dz \\
-	 &= \nabla_\phi \int q_\epsilon(z) f(g_\phi(\epsilon;\phi)) d\epsilon \\
-	 &= \nabla_\phi \mathbb{E}_{q(\epsilon)}[g_\phi(\epsilon,z)]
+	\nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)] &= \nabla_\phi \int q_\phi(z) f(z) dz \\
+	&= \nabla_\phi \int q_\epsilon(z) f(g_\phi(\epsilon;\phi)) d\epsilon \\
+	&= \nabla_\phi \mathbb{E}_{q(\epsilon)}[g_\phi(\epsilon,z)]
 \end{align}
-\begin{figure}
-	\centering
-	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
-		
-		% Define block styles
-		\tikzstyle{block} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum height=3cm, draw, fill=gray!20, text centered]
-		\tikzstyle{block2} = [trapezium, trapezium left angle=110, trapezium right angle=70, minimum height=3cm, draw, fill=green!20, text centered]
-		\tikzstyle{square} = [rectangle, draw, fill=red!20, minimum size=1.5cm, text centered]
-		\tikzstyle{latent} = [rectangle, draw, fill=blue!20, minimum size=1.5cm, text centered]
-		
-		% Nodes		
-		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered] (input) {$\mathbf{x}$};
-		\draw[fill=gray!20] (1,2) -- (1,-2) -- (3,-1) -- (3,1) -- cycle;
-		\node[right of=input, node distance=2cm] (encoder) {$q_{\phi}(z \mid x)$};
-		\node[square, right of=encoder, node distance=2.5cm] (mu) {$\mu$};
-		\node[square, below of=mu, node distance=2cm] (sigma) {$\sigma$};
-		\node[latent, right of=mu, node distance=2cm] (z) {$\mathbf{z = \mu + \sigma \odot \epsilon}$};
-		\node[square, above of=mu, node distance=2cm] (epsilon) {$\epsilon$};
-		\draw[fill=green!20] (8,1) -- (8,-1) -- (10,-2) -- (10,2) -- cycle;
-		\node[right of=z, node distance=2.5cm] (decoder) { $p_{\theta}(x \mid z)$};	
-		\node[rectangle, draw, fill=yellow!20, minimum height=3cm, minimum width=1cm, text centered, right of=decoder, node distance=3cm] (output) {$\hat{\mathbf{x}}$};
-		
-		
-		
-		% Arrows
-		\draw[->] (input) -- (1,0);
-		\draw[->] (3,0) -- (mu);
-		\draw[->] (3,0) -- (sigma);
-		\draw[->] (mu) -- (z);
-		\draw[->] (sigma) -- (z);
-		\draw[->] (z) -- (8,0);
-		\draw[->] (10,0) -- (output);
-		\draw[->] (epsilon) -- (z);
-		
-		% Labels
-		\node[above of=input, node distance=1.75cm] {Input Data};
-		\node[above of=encoder, node distance=0.8cm] {Encoder};
-		\node[above of=decoder, node distance=0.8cm] {Decoder};
-		\node[above of=output, node distance=1.75cm] {Reconstructed Data};
-	
-		\node[above of=epsilon, node distance=1.2cm] {$\epsilon \sim \mathcal{N}(0,I)$};
-		
-		% Additional Text
-		\draw[->, thick] (input.south) |- ++(0, -2.5cm) -| (output.south);
-		\node[below of=encoder, node distance=4.5cm, text width=6cm, align=center] {Reconstruction Loss + KL-Divergenz};
-		
-	\end{tikzpicture}
-	\caption{Architektur eines VAEs mit Reparameterization Trick}
-	\label{fig:vae_reparameterization_trick}
-\end{figure}
 %----------------------------------------------------------------------------
 
 %------------------------GEMISCHTE-MODELLE-----------------------------------
@@ -623,152 +469,23 @@ Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der 
 \end{figure}
 
 
-%-------------------------------------------------------------
+%---------------------------------------------------------------------------
 
-%-------------------EMPIRISCHE-ERGEBNISSE---------------------
+%-------------------MINIMIERUNG-DER-INFERENZ--------------------------------
 
-%-------------------------------------------------------------
+%---------------------------------------------------------------------------
 
-\chapter{Empirische Ergebnisse}
-Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, wählen wir wie erwähnt einen Likelihood-Ratio-Test. Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist.
-\section{gemischte Modelle auf simulierten Daten}
-Da im Rahmen der späteren Analyse ein komplexer longitudinaler medizinischer Datensatz verwendet wird, erfolgt für das einfachere Szenario die Wahl eines Simulationsdesigns für einen einfachen longitudinalen medizinischen Datensatz. Im Folgenden wird ein Simulationsdesign für eine Studie präsentiert, welche die Herzgesundheit von Patienten über einen Zeitraum von zehn Jahren analysiert. Die Gewichtung der verschiedenen Parameter auf den sogenannten „Health-Score” ist unterschiedlich.\\
-\\
-\textbf{Simulationsdesign}\\
-Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 und 60 Jahren auf verschiedene Parameter untersucht, die einen Einfluss auf die Herzgesundheit haben. Die Simulationen für jeden Parameter basieren auf einer Normalverteilung und umfassen Daten über den Zeitraum von zehn Jahren. Die in Tabelle \ref{tab:health_score_parameters} dargestellten Einflussfaktoren sind als feste Parameter für die Herzgesundheit zu betrachten. In der Berechnung des Health-Scores wird insbesondere berücksichtigt, dass es zu zufälligen Einflussfaktoren kommen kann, die die Herzgesundheit betreffen. Daher wurde in die Berechnung ein zufälliger Interzept und eine zufällige Steigung integriert. Es wird eine Normalverteilung für den random\_intercept $\sim \mathcal{N}(0,2)$ und den random\_slope $\sim \mathcal{N}(0,0.1)$ angenommen. Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei die Parameter gemäß Tabelle \ref{tab:health_score_parameters} berechnet werden. Insbesondere wird zu einem Zeitpunkt, welcher zufällig zwischen drei und zehn Jahren für jeden Patienten festgelegt wird, die Gewichtung der Parameter angepasst. Dies soll einen Behandlungsstart mit Medikamente simulieren. So wird dann letztendlich mit einer Health-Score Formel $$ y = 150 +  gewichte * feste\_Effekte + random\_slope * jahr + random\_intercept + \epsilon $$ die Testergebnisse nach einem gemischten Modell berechnet. $\epsilon \sim \mathcal{N}(0,0.1)$ ist ein zufälliger Fehlervektor, welcher Messfehler berücksichtigt. Eine Beispielhafte Simulation der Daten ist in \ref{fig:sample_image} für 20 ausgewählte Patienten dargestellt. \\
-\begin{table}[h]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{|l|c|c|c|c|}
-			\hline
-			\textbf{feste Effekte} & \textbf{Mittelwert} & \textbf{Standardabweichung} & \textbf{Gewicht} & \textbf{Gewicht nach Behandlungsstart} \\ \hline
-			Systolischer Blutdruck  & 120 & 10 & -0.1 & -2 \\ \hline
-			Diastolischer Blutdruck & 80 & 10 & -0.1 & -2\\ \hline
-			Cholesterin  & 200 & 30 & -0.2 & -5\\ \hline
-			Triglyceride & 150 & 20 & -0.2 & -3 \\ \hline
-			Kreatinin & 1 & 0.2 & -0.1 &  -0.08\\ \hline
-			Body-Mass-Index (BMI) & 25 & 4 & -0.4 & -0.4\\ \hline
-			Alter & \multicolumn{2}{l|}{} & -0.1 &  \\ \hline
-		\end{tabular}
-	}
-	\caption{Einfluss und Erstellung der Parameter des Health-Scores}
-	\label{tab:health_score_parameters}
-\end{table}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
-	\caption{Simulierte Datensätze für 20 zufällig ausgewählte Patienten}
-	\label{fig:sample_image}
-\end{figure} 
-\\
-\textbf{LRT-Statistik}\\
-Um einen Likelihood-Ratio-Test durchzuführen, damit wir eine Vergleichsstatistik für die spätere Analyse haben, weisen wir jedem Patienten zufällig ein Geschlecht zu. In der Berechnung des Health-Scores gewichten wir das Geschlecht mit Null, sodass es keinen Einfluss auf das Modell haben sollte. \\
-Somit haben wir ein Szenario geschaffen, indem wir ein vollständiges Modell mit dem reduzierten Modell (ohne den Einfluss des Geschlechts) vergleichen können. Für die LRT-Statistik trainieren wir beide Modelle 500 Mal auf einem jeweils neu simulierten Datensatz. Letztendlich werden für jede Simulation die dabei berechneten log-Likelihood Werte in einem Likelihood-Ratio-Test verglichen und das Ergebniss gesammelt. Am Ende ergibt sich ein Histogramm, was zum Abgleich unter eine $\chi^2$-Verteilung gelegt wird.
-\section{gemischte Modelle in latenten Repräsentationen}
-Bisher haben wir das die gemischten Modelle nur auf den echten Daten betrachtet. Nun kommt es zum interessanten Teil, wo wir die gemischten Modelle auf latenten Daten betrachten. Dazu wählen wir, wie bereits erwähnt, einen Variational-Autoencoder. Das Grundszenario auf dem wir unsere Analyse durchführen sieht folgendermaßen aus: 
-Wir betrachten zur Analyse nun einen komplexen longitudinalen medizinischen Datensatz, der durch einen Encoder des VAEs im latenten Raum modelliert wird. Auf dieser latenten Datenwolke wollen wir nun unser gemischtes Modell trainieren, um herauszufinden, ob es zu einer erwartbaren Verzerrung kommt. Dazu schauen wir uns zuerst den gegebenen Datensatz etwas genauer an.
-\subsection{Der Datensatz}
-Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten.\\
-\\
-\textbf{Basisdaten}\\
-Der 'baseline\_df' Datensatz enthält die grundlegenden Informationen der Patienten, welche mit einer eindeutigen Patienten-ID identifiziert werden. Zu jeder Patienten-ID sind folgenden Informationen gegeben: 
-\begin{enumerate}
-	\item 'family\_affected': Gibt an, ob die Familie vorerkrankt ist.
-	\item 'sco\_surg': Chirurgischer Score.
-	\item  '$\leq3$': binäres Merkmal.
-	\item 'onset\_age': Alter bei Eintritt der Krankheit.
-	\item 'presym\_diag': Prä-symptomatische Diagnose (1: Ja, 0: Nein).
-	\item 'presymptomatic': Prä-symptomatischer Zustand (1: Ja, 0: Nein).
-	\item 'stand\_lost': Gibt an, ob Patient Stehfähigkeit verloren hat (1: Ja, 0: Nein).
-	\item 'stand\_gained': Gibt an, ob Patient Stehfähigkeit gewonnen hat (1: Ja, 0: Nein).
-	\item 'stand\_never': Gibt an, ob Patient jemals stehen konnte (1: Ja, 0: Nein).
-	\item 'patient\_id': Eindeutige Patienten-ID.
-\end{enumerate}
-Eine beispielhafter Eintrag im Datensatz ist in Tabelle \ref{table:baseline_df} wiedergegeben. \\
-\begin{table}[ht]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-			\hline
-			patient\_id  & sco\_surg & $\leq$3 & onset\_age & presym\_diag & presymptomatic & stand\_lost & stand\_gained & stand\_never & family\_affected \\
-			\hline
-			0 & 0.0 & 1.0 & 0.039397 & 1.0 & 0.0 & 0.0 & 0.0 & 1.0 & 1.0 \\
-			1 & 0.0 & 0.0 & 2.787249 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 & -1.0 \\
-			2 & 1.0 & 1.0 & 1.471984 & 0.0 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 \\
-			3 & 0.0 & 1.0 & 1.092828 & 0.0 & 0.0 & 0.0 & 0.0 & 1.0 & -1.0 \\
-			4 & 0.0 & 0.0 & 13.150771 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 & -1.0 \\
-			\hline
-		\end{tabular}
-	}
-	\caption{Basisdaten der Patienten für Patient 0 bis 4 (baseline\_df)}
-	\label{table:baseline_df}
-\end{table}
-\\
-\textbf{Testergebnisse}\\
-Der Datensatz 'test\_scores' enthält die Ergebnisse von insgesamt 33 Tests, in denen die Patienten einen Score zwischen 1 und 6 erreichen können. Die Spalte eines Patienten besitzt einen Mobilitäts-Wert und zu jedem Test einen Eintrag (vgl. \ref{table:test_scores}).\\
-\begin{table}[ht]
-	\centering
-	\small
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
-		\hline
-		patient\_id & mobility & test1 & test2 & test3 & test4 & test5 & test6 & test7 & test8 & ... \\
-		\hline
-		0 & 3 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & ... \\
-		0 & 6 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & ... \\
-		0 & 6 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & ... \\
-		0 & 6 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & ... \\
-		0 & 6 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & ... \\
-		\hline
-	\end{tabular}
-	
-	\caption{Testergebnisse von Patient 0 (test\_scores)}
-	\label{table:test_scores}
-\end{table}
-\\
-\textbf{Zeitbezogene Daten} \\
-Der letzte Datensatz 'time\_df' enthält zeitbezogene Informationen, wie das Alter. Des Weiteren gibt er an, seit wann ein Patient behandelt wird ('since\_medication') und wieviel Zeit nach dem letzten Medikamentenwechsel vergangen ist ('since\_switch'). Symbolisch für den Datensatz werden die Daten für die ersten zwei Patienten in Tabelle \ref{table:time_df} erfasst.\\
-\begin{table}[ht]
-	\centering
-	\small
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		patient\_id & since\_medication & since\_switch & age \\
-		\hline
-		0 & 1.467488 & 0.000000 & 4.346177 \\
-		0 & 1.793292 & 0.000000 & 4.671981 \\
-		0 & 2.447639 & 0.000000 & 5.326328 \\
-		0 & 2.773443 & 0.000000 & 5.652132 \\
-		0 & 3.214237 & 0.383299 & 6.092926 \\
-		\hline
-	\end{tabular}
-	\caption{Zeitbezogene Daten von Patient 0 (time\_df)}
-	\label{table:time_df}
-\end{table}
-\\ 
-Diese Datensätze bilden die Grundlage der Analyse dieser Arbeit. Zusammen ergeben sie einen komplexen Datensatz, welcher für 260 Patienten die Ergebnisse von 33 Mobilität-Tests enthält, die mehrmals wiederholt wurden. Somit lässt sich aus diesem Datensatz der Verlauf und die Schwere der Krankheit für jeden Patienten ablesen.
-\subsection{Das VAE-Modell}
-Für den Variational Autoencoder brauchen wir ein Encoder-Modell und ein Decoder-Modell.
+\chapter{Minimierung der Verzerrung}
+
+\section{Datenbeschaffung}
+Quellen und Typen der verwendeten Daten
 \section{Modellierungstechniken}
-
 Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
 \section{Analysemethoden}
 Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
 
 %%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
-\section{Experimente und Ergebnisse}
-
-\subsection{Methodik}
-In den ersten Wochen habe ich mir selbst ein Simulationsdesign für einen longitudinalen medizinischen Datensatz ausgedacht und basierend darauf ein gemischtes Modell gefittet. Mit diesen simulierten Daten habe ich ein reduziertes Model mit dem vollständigen Model verglichen. Die LRT Statistik habe ich dann in einem Histogramm dargestellt.\\
-\\
-Wir fügen dem gemischten Modell einen festen Effekt hinzu, welcher keinen Einfluss auf die Trajektorie haben soll. In unserem Fall ist dieser feste Effekt das Geschlecht, welches keinen Einfluss auf den Verlauf einer Krankheit haben sollte.\\
-\\
-Mein zweites Projekt ist nun einen hoch dimensionalen medizinischen Datensatz durch den Encoder eines Variational Autoencoders im latenten Raum zu repräsentieren und dort mit einem gemischten Model darzustellen. Ähnlich wie zuvor will ich wieder eine LRT Statistik erhalten, in dem ich ein reduziertes Modell mit dem vollständigen Model vergleiche. Dazu trainiere ich in einer Schleife den Encoder und das gemischte Model für jeden Iterationsschritt neu und vergleiche die negativen Maximum Likelihood-Werte (ML-Werte) durch den Likelihood Ratio Test. Am Ende der Schleife erhalte ich wieder eine LRT Statistik, welche durch ein Histogramm dargestellt wird. Im Optimalfall ähnelt das Histogramm einer Chi-Quadrat-Verteilung mit einem Freiheitsgrad (Da das reduzierte Model nur einen festen Effekt, das Geschlecht, weniger hat).\\
-\subsection{Experimentelles Design}
-Aufbau der experimentellen Tests und Simulationen.
-\subsection{Durchführung}
-Beschreibung der durchgeführten Experimente und verwendeten Parameter.
-\subsection{Analyse der Ergebnisse}
-Diskussion der Ergebnisse im Hinblick auf die Verzerrung der Inferenz.
+\chapter{Experimente und Ergebnisse}
 
 Wir haben nun die nötigen theoretischen Kenntnisse, um die Verzerrung der Inferenz zu messen. Um die Verzerrung zu messen haben wir uns für eine Likelihood-Ratio-Test Statistik entschieden. Dabei fügen wir dem Datensatz einen neuen Parameter hinzu, welcher keinen Einfluss auf die Daten haben sollte. Bei unserem Datensatz haben wir jedem Patienten zufällig ein Geschlecht hinzugefügt. Das Geschlecht hat keinen Einfluss auf die Testergebnisse und demnach auch keinen Einfluss auf die Response-Variable. 
 Nun können wir das vollständige, mit dem Geschlecht ergänzte, Modell mit dem reduzierten, ohne dem Geschlecht, Modell vergleichen, in dem wir den Likelihood-Ratio-Test anwenden. 
@@ -783,7 +500,12 @@ Um einen Richtwert zu haben, haben wir zuerst ein selbst überlegtes Simulations
 \end{align*} \noindent
 Insbesondere wird jedem Patienten ein zufälliges Alter zwischen 30 und 60 Jahren zugeteilt, welches ebenfalls einen minimal negativen Effekt auf den Health-Score hat. Als zusätzlichen Effekt, welcher keinen Einfluss auf die Response-Variable (in diesem Fall der Health-Score) hat, wird jedem Patienten ein Geschlecht zugeteilt. Für immer zufällig auftretende Effekte wird ein Random Slope und ein Random Intercept in den Health-Score hinzugefügt. 
 
-
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
+	\caption{Simulierte Datensätze für 20 zufällig ausgewählte Patienten}
+	\label{fig:sample_image}
+\end{figure} 
 Basierend auf diesem Simulationsdesign, welches einem Gemischten Modell folgt, können wir nun einen Likelihood-Ratio-Test durchführen. Wir trainieren dazu ein vollständiges gemischtes Modell und ein reduziertes gemischtes Modell ohne den Effekt 'Geschlecht'. Mit den log-Likelihood Werten für die trainierten Modelle führen wir den Likelihood-Ratio-Test durch. Nach 500 Wiederholungen ergibt sich ein Histogramm der Likelihood-Ratio-Test Statistik, welches, wie zu erwarten, einer $\chi^2$ Verteilung folgt. Wir wir in Abb sieht folgt das Histogramm der Test Statistik der Roten Kurve, welche die $\chi^2$ Verteilung beschreibt, ohne Verzerrung. Bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, sind die Ergebnisse immer unter der $\chi^2$ Verteilung. Dies war allerdings auch so zu erwarten, da wir ein ganz normales gemischtes Modell betrachtet hatten.
 \subsection{Gemischtes Modell auf latenter Datenwolke mit separatem Training}
 Nun wollen wir das gemischte Modell in einer latenten Repräsentation betrachten. Dazu wählen wir, wie schon angeführt, einen Variational-Autoencoder. Außerdem haben wir nun einen hochdimensionalen medizinischen Datensatz gegeben. Dieser ist einem echten Datensatz bestmöglich nachgebaut, allerdings kann hier aus Datenschutzgründen kein wirklich echter Datensatz benutzt werden. Wir wählen zunächst ein recht simples Encoder-Modell mit zwei Schichten und einer zweidimensionalen latenten Dimension. 
@@ -793,10 +515,23 @@ Wenn wir nun versuchen das gemischte Modell zusammen mit dem VAE in einer einzig
 Fügen wir der Lossfunktion auch nur den Mean-Squarred-Error zwischen dem Encoder Output und dem Output des vollständig trainierten gemischten Modells hinzu und gewichten diesen nur minimal, so verlieren wir schon die $\chi^2$-Verteilung. Das bedeutet sobald der Encoder Einfluss auf das gemsischte Modell hat, geht die gewünschte Verteilung verloren.
 Dementsprechend geht die Verteilung auch verloren, wenn wir 
 
-
+%%--------------------METHODIK-----------------------------------------------
+\chapter{Methodik}
+\section{Vorgehen}
+In den ersten Wochen habe ich mir selbst ein Simulationsdesign für einen longitudinalen medizinischen Datensatz ausgedacht und basierend darauf ein gemischtes Modell gefittet. Mit diesen simulierten Daten habe ich ein reduziertes Model mit dem vollständigen Model verglichen. Die LRT Statistik habe ich dann in einem Histogramm dargestellt.\\
+\\
+Wir fügen dem gemischten Modell einen festen Effekt hinzu, welcher keinen Einfluss auf die Trajektorie haben soll. In unserem Fall ist dieser feste Effekt das Geschlecht, welches keinen Einfluss auf den Verlauf einer Krankheit haben sollte.\\
+\\
+Mein zweites Projekt ist nun einen hoch dimensionalen medizinischen Datensatz durch den Encoder eines Variational Autoencoders im latenten Raum zu repräsentieren und dort mit einem gemischten Model darzustellen. Ähnlich wie zuvor will ich wieder eine LRT Statistik erhalten, in dem ich ein reduziertes Modell mit dem vollständigen Model vergleiche. Dazu trainiere ich in einer Schleife den Encoder und das gemischte Model für jeden Iterationsschritt neu und vergleiche die negativen Maximum Likelihood-Werte (ML-Werte) durch den Likelihood Ratio Test. Am Ende der Schleife erhalte ich wieder eine LRT Statistik, welche durch ein Histogramm dargestellt wird. Im Optimalfall ähnelt das Histogramm einer Chi-Quadrat-Verteilung mit einem Freiheitsgrad (Da das reduzierte Model nur einen festen Effekt, das Geschlecht, weniger hat).\\
+\section{Experimentelles Design}
+Aufbau der experimentellen Tests und Simulationen.
+\section{Durchführung}
+Beschreibung der durchgeführten Experimente und verwendeten Parameter.
+\section{Analyse der Ergebnisse}
+Diskussion der Ergebnisse im Hinblick auf die Verzerrung der Inferenz.
 
 %%------------DISKUSSION-----------------------------------------------------
-\chapter{Diskussion und Fazit}
+\chapter{Diskussion}
 \section{Interpretation der Ergebnisse}
 Tiefere Analyse der Ergebnisse und ihrer Implikationen.
 \section{Vergleich mit bestehenden Arbeiten}
@@ -812,19 +547,4 @@ Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder
 \chapter{Appendix}
 \section{Supporting Data}
 \section{Some Code Listings}
-
-\backmatter{}
-\listoffigures% may be removed
-\listoftables% may be removed
-\printbibliography{} % print bibliography
-
 \end{document}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-engine: default
-%%% TeX-command-extra-options: "-shell-escape"
-%%% ispell-local-dictionary: "american"
-%%% eval: (setenv "TEXINPUTS" ".//:")
-%%% TeX-master: t
-%%% End:
