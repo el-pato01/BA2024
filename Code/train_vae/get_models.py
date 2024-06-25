@@ -247,9 +247,9 @@ class CovarianceMatrix(nn.Module):
             Phi = torch.mm(L, L.t())
         
         elif self.mode == 'diagonal':
-            Phi = torch.diag(torch.nn.functional.softplus(self.L_param))
+            Phi = torch.diag(self.L_param.exp())
             
-        return Phi, torch.nn.functional.softplus(self.log_sigma)
+        return Phi, self.log_sigma.exp()
     
     
 def thermometer_encode_column(df, col):
