@@ -17,6 +17,7 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, calc, automata, shapes.geometric}
 \usepackage{pgfplots}
+\usepackage{float}
 \usepackage{lipsum}
 \usepackage{booktabs}% for more beautiful tables
 \usepackage{cleveref}% intelligent references
@@ -158,16 +159,24 @@ Im Anschluss werden die zuvor theoretisch erörterten Konzepte anhand von empiri
 
 %%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
 \chapter{Theoretische Grundlagen}
-Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufarbeitung der behandelten Themen unabdingbar. In diesem Kapitel erfolgt eine ausführliche Beschreibung und Behandlung der theoretischen Aspekte dieser Arbeit. Es werden sowohl lineare gemischte Modelle als auch die Theorie hinter Variational Autoencodern eingeführt und beschrieben. Im Folgenden wird insbesondere auf die für die Analyse der Modelle notwendige Theorie eingegangen, wie beispielsweise die Likelihood-Berechnung und der Likelihood-Ratio-Test.
+Im Vorfeld der Erörterung der Methodik dieser Arbeit ist eine theoretische Aufarbeitung der behandelten Themen unabdingbar. Dieses Kapitel widmet sich den theoretischen Grundlagen, die für das Verständnis und die Analyse von Verzerrungen in der Inferenz erforderlich sind, wenn gemischte Modelle in latenten Repräsentationen zum Einsatz kommen.\\
+\\
+Das vorliegende Kapitel beginnt mit einer detaillierten Einführung in Variational Autoencoder (VAE). VAEs sind generative Modelle, die es ermöglichen, hochdimensionale Daten in niedrigdimensionale latente Repräsentationen zu überführen. Die Modelle reduzieren die Komplexität der Daten und sind in der Lage, sowohl die zugrunde liegende Struktur der Daten zu erfassen als auch neue Daten zu generieren, die ähnliche Merkmale wie die Trainingsdaten aufweisen. Die Architektur und das Training von VAEs werden detailliert beschrieben, um ein fundiertes Verständnis ihrer Funktionsweise zu vermitteln.\\
+\\
+Im zweiten Teil des Kapitels erfolgt eine Behandlung von gemischten Modellen. Die Modelle kombinieren feste und zufällige Effekte, um die Variabilität in den Daten zu erfassen. Ihre Anwendung ist insbesondere bei der Analyse longitudinaler und Cluster-Daten von Vorteil, wie sie in den Bereichen Medizin, Sozialwissenschaften und Ökonomie häufig auftreten. Die Grundlagen gemischter Modelle, einschließlich der Annahmen und mathematischen Formulierungen, werden ausführlich erörtert.\\
+\\
+Ein zentrales Element der theoretischen Grundlagen ist die Likelihood-Inferenz. Im Folgenden wird die Schätzung der Parameter von gemischten Modellen unter Verwendung der Maximum-Likelihood-Methode erörtert. Es wird insbesondere dargelegt, wie die Likelihood-Funktion zur Schätzung der festen und zufälligen Effekte maximiert wird und wie der Likelihood-Ratio-Test (LRT) zur Evaluierung der Modelle zum Einsatz kommt. Der Likelihood-Ratio-Test (LRT) erlaubt die Bestimmung der Signifikanz zusätzlicher Parameter sowie die Identifikation potenzieller Verzerrungen in der Inferenz.\\
+\\
+In diesem Kapitel wird die theoretische Basis für die nachfolgenden empirischen Untersuchungen dargelegt. Der vorliegende Abschnitt bietet eine umfassende Darstellung der relevanten Methoden und Konzepte, welche erforderlich sind, um die Verzerrung der Inferenz bei der Verwendung gemischter Modelle in latenten Repräsentationen zu verstehen und zu analysieren.\\
 
 %----------------------------------------------------------------------------
 
 %-----------------------VARIATIONAL-AUTOENCODER------------------------------
 
 %----------------------------------------------------------------------------
-\section{Variational Autoencoder (VAE)}
-Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt mittels Variational Auto-Encoder (VAE).
-VAEs sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe des Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Sie sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht(vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
+\section{Einführung in Variational Autoencoder (VAE)}
+Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt,wie bereits erwähnt, mittels Variational Autoencoder (VAE).
+Variational Autoencoder sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe ihres Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Sie sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht (vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
@@ -179,7 +188,7 @@ VAEs sind für die Modellierung latenter Repräsentationen von großem Interesse
 		
 		% Nodes
 		\node[input, name=input] (input) {x};
-		\node[latent, right of=input, node distance=6cm, minimum width=1cm, minimum height=2cm] (z) {$Z$};
+		\node[latent, right of=input, node distance=6cm, minimum width=1cm, minimum height=2cm] (z) {$z$};
 		\node[output, right of=z, node distance=6cm] (output) {$\hat{x}$};
 		
 		% Custom trapezoids for encoder and decoder
@@ -384,7 +393,7 @@ Wir können den Trick direkt auf Gleichung \ref{MonteCarloEstimator} anwenden (v
 %------------------------GEMISCHTE-MODELLE-----------------------------------
 
 %----------------------------------------------------------------------------
-\section{Gemischte Modelle}
+\section{Grundlagen Gemischte Modelle}
 Ein gemischtes Modell stellt ein statistisches Verfahren zur Datenanalyse dar, welches sowohl feste als auch zufällige Effekte (fixed and random effects) modelliert. Gemischte Modelle finden insbesonder bei der Analyse von longitudinalen und cluster-spezifischen Daten Anwendung, welche aus zeitlich wiederholten Beobachtungen $(y_{it}, x_{it}), t = 1,..., T_i$ für jedes Individuum $ i = 1,...,n$ bestehen. Die Variable $y$ kennzeichnet dabei eine Antwortvariable, während $x$ ein Vektor von Kovariablen darstellt. Ein Beispiel für einen solchen Datensatz ist ein medizinischer Datensatz,\\
 $$(y_i,x_i)= (y_{i1},...,y_{iT_i},x_{i1},...,x_{iT_i})$$
 bei dem $y_{ij}$ eine Beobachtung an Individuum $i$ zum Zeitpunkt $t_{ij}$ bezeichnet und $T_i$ ist die Anzahl an Beobachtungen.\\
@@ -460,7 +469,7 @@ wobei $\epsilon^* = Zb + \epsilon$ ist mit $\epsilon^* \sim \mathcal{N}(0,V)$ un
 %------------------------LIKELIHOOD-INFERENZ---------------------------------
 
 %----------------------------------------------------------------------------
-\section{Likelihood Inferenz}
+\section{Likelihood Inferenz und Verzerrung}
 Um die Verzerrung der Inferenz messen zu können, ist es zunächst erforderlich, die Theorie zur Likelihood-Inferenz von gemischten Modellen einzuführen. Dies umfasst sowohl die Schätzung der Parameter der zufälligen Effekte $b_i$ als auch die Schätzung der Parameter $\beta$, $\sigma_\epsilon$ und $Q$. Um die Verzerrung zu quantifizieren, werden wir ein vollständiges gemischtes Modell mit einem reduzierten Modell ohne einen festen Effekt vergleichen. Dazu wird üblicherweise der sogenannte Likelihood-Ratio-Test (LRT) verwendet.
 Wie dieser Test genau funktioniert und wie der LRT durchgeführt wird, werden wir später erläutern. Zuvor benötigen wir noch etwas Theorie zur Likelihood-Berechnung.
 \subsection{Likelihood Berechnung gemischter Modelle}
@@ -622,7 +631,6 @@ Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der 
 	\label{fig:chi2}
 \end{figure}
 
-
 %-------------------------------------------------------------
 
 %-------------------EMPIRISCHE-ERGEBNISSE---------------------
@@ -630,12 +638,12 @@ Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der 
 %-------------------------------------------------------------
 
 \chapter{Empirische Ergebnisse}
-Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, wählen wir wie erwähnt einen Likelihood-Ratio-Test. Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist.
+Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, fällt die Wahl im Rahmen dieser Arbeit auf einen Likelihood-Ratio-Test. Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist.
 \section{gemischte Modelle auf simulierten Daten}
-Da im Rahmen der späteren Analyse ein komplexer longitudinaler medizinischer Datensatz verwendet wird, erfolgt für das einfachere Szenario die Wahl eines Simulationsdesigns für einen einfachen longitudinalen medizinischen Datensatz. Im Folgenden wird ein Simulationsdesign für eine Studie präsentiert, welche die Herzgesundheit von Patienten über einen Zeitraum von zehn Jahren analysiert. Die Gewichtung der verschiedenen Parameter auf den sogenannten „Health-Score” ist unterschiedlich.\\
+Da im Rahmen der späteren Analyse ein komplexer longitudinaler medizinischer Datensatz verwendet wird, erfolgt für das einfachere Szenario die Wahl eines Simulationsdesigns für einen einfachen longitudinalen medizinischen Datensatz, welchem wir dann eine Variable hinzufügen, die keinen Einfluss auf die Testergebnisse haben soll. Im Folgenden wird ein Simulationsdesign für eine Studie präsentiert, welche die Herzgesundheit von Patienten über einen Zeitraum von zehn Jahren analysiert. Die Gewichtung der verschiedenen Parameter auf den sogenannten „Health-Score” ist unterschiedlich.\\
 \\
 \textbf{Simulationsdesign}\\
-Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 und 60 Jahren auf verschiedene Parameter untersucht, die einen Einfluss auf die Herzgesundheit haben. Die Simulationen für jeden Parameter basieren auf einer Normalverteilung und umfassen Daten über den Zeitraum von zehn Jahren. Die in Tabelle \ref{tab:health_score_parameters} dargestellten Einflussfaktoren sind als feste Parameter für die Herzgesundheit zu betrachten. In der Berechnung des Health-Scores wird insbesondere berücksichtigt, dass es zu zufälligen Einflussfaktoren kommen kann, die die Herzgesundheit betreffen. Daher wurde in die Berechnung ein zufälliger Interzept und eine zufällige Steigung integriert. Es wird eine Normalverteilung für den random\_intercept $\sim \mathcal{N}(0,2)$ und den random\_slope $\sim \mathcal{N}(0,0.1)$ angenommen. Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei die Parameter gemäß Tabelle \ref{tab:health_score_parameters} berechnet werden. Insbesondere wird zu einem Zeitpunkt, welcher zufällig zwischen drei und zehn Jahren für jeden Patienten festgelegt wird, die Gewichtung der Parameter angepasst. Dies soll einen Behandlungsstart mit Medikamente simulieren. So wird dann letztendlich mit einer Health-Score Formel $$ y = 150 +  gewichte * feste\_Effekte + random\_slope * jahr + random\_intercept + \epsilon $$ die Testergebnisse nach einem gemischten Modell berechnet. $\epsilon \sim \mathcal{N}(0,0.1)$ ist ein zufälliger Fehlervektor, welcher Messfehler berücksichtigt. Eine Beispielhafte Simulation der Daten ist in \ref{fig:sample_image} für 20 ausgewählte Patienten dargestellt. \\
+Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 und 60 Jahren auf verschiedene Parameter untersucht, die einen Einfluss auf die Herzgesundheit haben. Die Simulationen für jeden Parameter basieren auf einer Normalverteilung und umfassen Daten über den Zeitraum von zehn Jahren. Die in Tabelle \ref{tab:health_score_parameters} dargestellten Einflussfaktoren sind als feste Parameter für die Herzgesundheit zu betrachten. In der Berechnung des Health-Scores wird insbesondere berücksichtigt, dass es zu zufälligen Einflussfaktoren kommen kann, die die Herzgesundheit betreffen. Daher wurde in die Berechnung ein zufälliger Interzept und eine zufällige Steigung integriert. Es wird eine Normalverteilung für den random\_intercept $\sim \mathcal{N}(0,2)$ und den random\_slope $\sim \mathcal{N}(0,0.1)$ angenommen. Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei die Parameter gemäß Tabelle \ref{tab:health_score_parameters} berechnet werden. Insbesondere wird zu einem Zeitpunkt, welcher zufällig zwischen drei und zehn Jahren für jeden Patienten festgelegt wird, die Gewichtung der Parameter angepasst. Dies soll einen Behandlungsstart mit Medikamenten simulieren. So werden dann letztendlich mit einer Health-Score Formel $$ y = 150 +  gewichte * feste\_Effekte + random\_slope * jahr + random\_intercept + \epsilon $$ die Testergebnisse nach einem gemischten Modell berechnet. $\epsilon \sim \mathcal{N}(0,0.1)$ ist ein zufälliger Fehlervektor, welcher Messfehler berücksichtigt. Eine Beispielhafte Simulation der Daten ist in \ref{fig:sample_image} für 20 ausgewählte Patienten dargestellt. \\
 \begin{table}[h]
 	\centering
 	\resizebox{\textwidth}{!}{%
@@ -654,21 +662,28 @@ Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 u
 	\caption{Einfluss und Erstellung der Parameter des Health-Scores}
 	\label{tab:health_score_parameters}
 \end{table}
+\\
+\textbf{LRT-Statistik}\\
+Um einen Likelihood-Ratio-Test durchzuführen, der eine Vergleichsstatistik für die spätere Analyse liefert, wird jedem Patienten zufällig ein Geschlecht zugewiesen. Das Geschlecht sollte keinen Einfluss auf die Testergebnisse haben und wird deswegen in der Berechnung des Health-Scores mit Null gewichtet. \\
+Nun wurde ein Szenario entwickelt, in dem ein vollständiges Modell mit einem reduzierten Modell (ohne den Einfluss des Geschlechts) verglichen werden kann. Für die LRT-Statistik erfolgt ein Training beider Modelle jeweils 500 Mal auf einem neu simulierten Datensatz. Im Anschluss erfolgt ein Vergleich der bei jeder Simulation berechneten log-Likelihood-Werte mittels Likelihood-Ratio-Test, wobei das Ergebnis der Vergleichsanalyse zusammengetragen wird. Das Resultat wird in Form eines Histogramms, was zum Abgleich unter eine $\chi^2$-Verteilung gelegt wird, in Abbildung \ref{fig:LRT_Hist_MM} dargestellt. Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, alle Ergebnisse des LRT-Statistik, wie zu erwarten, unter der $\chi^2$-Verteilung bleiben.
 \begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{plots/LRT_Hist_healthscore500.png}
+	\caption{Histogramm der LRT-Statistik für vollständiges und reduziertes gemischtes Modell auf simulierten Daten}
+	\label{fig:LRT_Hist_MM}
+\end{figure} 
+
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
 	\caption{Simulierte Datensätze für 20 zufällig ausgewählte Patienten}
 	\label{fig:sample_image}
-\end{figure} 
-\\
-\textbf{LRT-Statistik}\\
-Um einen Likelihood-Ratio-Test durchzuführen, damit wir eine Vergleichsstatistik für die spätere Analyse haben, weisen wir jedem Patienten zufällig ein Geschlecht zu. In der Berechnung des Health-Scores gewichten wir das Geschlecht mit Null, sodass es keinen Einfluss auf das Modell haben sollte. \\
-Somit haben wir ein Szenario geschaffen, indem wir ein vollständiges Modell mit dem reduzierten Modell (ohne den Einfluss des Geschlechts) vergleichen können. Für die LRT-Statistik trainieren wir beide Modelle 500 Mal auf einem jeweils neu simulierten Datensatz. Letztendlich werden für jede Simulation die dabei berechneten log-Likelihood Werte in einem Likelihood-Ratio-Test verglichen und das Ergebniss gesammelt. Am Ende ergibt sich ein Histogramm, was zum Abgleich unter eine $\chi^2$-Verteilung gelegt wird.
+\end{figure}
 \section{gemischte Modelle in latenten Repräsentationen}
-Bisher haben wir das die gemischten Modelle nur auf den echten Daten betrachtet. Nun kommt es zum interessanten Teil, wo wir die gemischten Modelle auf latenten Daten betrachten. Dazu wählen wir, wie bereits erwähnt, einen Variational-Autoencoder. Das Grundszenario auf dem wir unsere Analyse durchführen sieht folgendermaßen aus: 
-Wir betrachten zur Analyse nun einen komplexen longitudinalen medizinischen Datensatz, der durch einen Encoder des VAEs im latenten Raum modelliert wird. Auf dieser latenten Datenwolke wollen wir nun unser gemischtes Modell trainieren, um herauszufinden, ob es zu einer erwartbaren Verzerrung kommt. Dazu schauen wir uns zuerst den gegebenen Datensatz etwas genauer an.
+In der bisherigen Betrachtung wurden die gemischten Modelle lediglich auf Basis der realen Daten evaluiert. Im Folgenden wird die Betrachtung der gemischten Modelle auf latenten Daten vorgenommen. Zur Analyse der gemischten Modelle auf latenten Daten wird ein Variational-Autoencoder verwendet. Die Grundlage unserer Analyse bildet das folgende Grundszenario: 
+Im Folgenden wird zur Analyse nun einen komplexen longitudinalen medizinischen Datensatz betrachtet, der durch einen Encoder des VAEs im latenten Raum modelliert wird. Das Ziel ist es nun, das gemischtes Modell auf dieser latenten Datenwolke zu trainieren, um herauszufinden, ob es zu einer erwartbaren Verzerrung kommt. Dazu wird im Folgenden zuerst eine detaillierte Betrachtung des vorliegenden Datensatzes vorgenommen.
 \subsection{Der Datensatz}
-Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten.\\
+Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten. Der Datensatz wurde aus datenschutzrechtlichen Gründen einem originellen Datensatz nachgebaut.\\
 \\
 \textbf{Basisdaten}\\
 Der 'baseline\_df' Datensatz enthält die grundlegenden Informationen der Patienten, welche mit einer eindeutigen Patienten-ID identifiziert werden. Zu jeder Patienten-ID sind folgenden Informationen gegeben: 
@@ -746,12 +761,35 @@ Der letzte Datensatz 'time\_df' enthält zeitbezogene Informationen, wie das Alt
 \end{table}
 \\ 
 Diese Datensätze bilden die Grundlage der Analyse dieser Arbeit. Zusammen ergeben sie einen komplexen Datensatz, welcher für 260 Patienten die Ergebnisse von 33 Mobilität-Tests enthält, die mehrmals wiederholt wurden. Somit lässt sich aus diesem Datensatz der Verlauf und die Schwere der Krankheit für jeden Patienten ablesen.
-\subsection{Das VAE-Modell}
-Für den Variational Autoencoder brauchen wir ein Encoder-Modell und ein Decoder-Modell.
+\subsection{Gemischtes Modell auf latenter Datenwolke}
+\textbf{Das VAE-Modell}\\
+Für den Variational Autoencoder benötigt es ein Encoder-Modell und ein Decoder-Modell. Für das Encoder- und Decoder-Modell wird ein vielseitig anpassbares Modell gewählt, welches allerdings recht einfach gehalten wird. Die latente Dimension wird dabei standardmäßig auf zwei gesetzt und der Encoder wird erstmal mit zwei Schichten und einer versteckten Dimension von 150 initialisiert. In der Verlustfunktion des VAEs wird der Reconstruction-Loss und die Kullback-Leibler-Divergenz optimiert. \\
+\\
+Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, trainieren wir einen VAE und im Anschluss auf den latenten Daten das vollständige und das reduzierte gemischte Modell. \\
+\\
+\textbf{Das gemischte Modell}\\
+Für die Berechnung der Schätzer benötigt es natürlich die Designmatrizen für die festen und die zufälligen Effekte. \\
+Die festen Effekte des vorgestellten Datensatzes sind alle in Tabelle \ref{table:baseline_df} aufgezählten Parameter und der künstlich hinzugefügte Parameter 'Geschlecht'. Aus den Werten der festen Effekte setzt sich die Designmatrix der festen Effekte für das vollständige gemischte Modell zusammen. Dementsprechend setzt sich die Designmatrix für die festen Effekte des reduzierten Modells nur aus den Effekten aus Tabelle \ref{table:baseline_df}.\\
+Die Designmatrizen für die zufälligen Effekte beider Modelle setzten sich aus den Werten der zufälligen Effekte 'since\_medication', 'since\_switch' und 'intercept' zusammen.\\ 
+Der Antwortvektor ist in diesem Szenario nun nicht durch den aus dem gemischten Modell berechneten Antwortvektor gegeben, sondern durch die aus dem Encoder gewonnene latente Datenwolke.\\
+\\
+Wenn nun beide gemischte Modelle nach der vorangegangenen Theorie auf der latenten Datenwolke trainiert werden, können die Ergebnisse mit dem Likelihood-Ratio-Test analysiert werden. 
+Für 100 Simulationen dieses Szenarios entsteht somit eine LRT-Statistik, welche wieder in Abbildung \ref{fig:LRT_Hist_MM_latentData} unter eine $\chi^2$-Verteilung gelegt wird. Wie man sieht ist schon für 100 Simulationen eine Verzerrung erkennbar. Die Daten erstrecken sich über einen größeren Bereich und liegen für geringere Werte nicht mehr unter der $\chi^2$-Verteilung.\\
+\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{plots/VAE_ohneMM_100its_chi2.png}
+	\caption{Histogramm der LRT-Statistik für vollständiges und reduziertes gemischtes Modell auf latenter Datenwolke}
+	\label{fig:LRT_Hist_MM_latentData}
+\end{figure} 
+
 \section{Modellierungstechniken}
 
 Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
 \section{Analysemethoden}
+
+\subsection{Post-Selection-Inferenz}
+Post-Selection Inference (PSI) bezieht sich auf statistische Methoden, die die Tatsache berücksichtigen, dass eine Hypothese oder ein Modell aufgrund der Daten ausgewählt wurde. Traditionelle statistische Inferenzmethoden setzen oft voraus, dass das Modell oder die Hypothese a priori festgelegt wurde, was in der Praxis selten der Fall ist. Bei PSI werden die statistischen Eigenschaften angepasst, um die zusätzliche Unsicherheit durch den Selektionsprozess zu reflektieren. Dies ist besonders wichtig in Bereichen wie maschinellem Lernen und Data Mining, wo oft zahlreiche Modelle getestet und das beste ausgewählt wird. Durch PSI können zuverlässigeren Konfidenzintervalle und p-Werte berechnet werden, die die Selektion berücksichtigen, was zu robusteren und aussagekräftigeren Ergebnissen führt.
 Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
 
 %%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
