@@ -282,19 +282,19 @@ Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die likel
 \subsection{Training VAE}
 Das Training eines Variational Autoencoder basiert auf den Prinzipien der Variationsinferenz, einer Methode zur Approximation komplexer posterior Verteilungen. Die Berechnung der posterior Verteilung ist besonders bei komplexen Modellen mit Schwierigkeiten verbunden. Infolgedessen wird bei der Variationsinferenz eine einfachere Verteilung verwendet, um die wahre posteriore Verteilung zu approximieren, wodurch Berechnungen effizienter und skalierbarer werden.
 Im Kontext eines VAE wird die wahre posterior Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit der Input-Daten, durch eine einfachere Verteilung $q_\phi(x)$ approximiert. Das Ziel ist es die Parameter dieser Verteilung so zu optimieren, dass $q_\phi(x)$ so nah wie möglich an $p(z|x)$ liegt. Diese Annäherung wird durch die Maximierung des Evidence Lower Bound (ELBO) erreicht, der eine untere Schranke der Datenloglikelihood darstellt. \\
-Zur Effizienten Berechnung wird der Reparametrisierungs Trick verwendet, welcher die Anwendung von Gradientenverfahren zur Optimierung der Modellparameter.\\
+Zur Effizienten Berechnung wird der Reparametrisierungs Trick verwendet, welcher die Anwendung von Gradientenverfahren zur Optimierung der Modellparameter ermöglicht.\\
 \\
 In diesem Abschnitt werden die wesentlichen mathematischen Aspekte hinter dem Training des VAE erläutert und beschrieben.\\
 \\
-Das Training eines Variational Autoencoders (VAE) umfasst folglich mehrere Schritte, deren Ziel es ist, die Parameter des Modells so anzupassen, dass der Evidence Lower Bound (ELBO) maximiert wird. Der Prozess lässt sich in drei Hauptkomponenten unterteilen: die Definition des ELBO, die Anwendung des Reparameterization Trick und die Optimierung des Modells mittels stochastischer Gradientenverfahren.\\
+Das Training eines Variational Autoencoders (VAE) umfasst mehrere Schritte, deren Ziel es ist, die Parameter des Modells so anzupassen, dass der Evidence Lower Bound (ELBO) maximiert wird. Der Prozess lässt sich in drei Hauptkomponenten unterteilen: die Definition des ELBO, die Anwendung des Reparameterization Trick und die Optimierung des Modells mittels stochastischer Gradientenverfahren.\\
 \\
-Der ELBO lässt sich aus dem Rekonstruktionsverlust (Reconstruction Loss) und der Kullback-Leibler-Divergenz zusammensetzten. Die Kullback-Leibler-Divergenz quantifiziert die Differenz zwischen der approximierten posterior Verteilung und der prior Verteilung und ist folgendermaßen definiert.\\
+Der ELBO lässt sich aus dem Rekonstruktionsverlust (Reconstruction Loss) und der Kullback-Leibler-Divergenz zusammensetzten. Die Kullback-Leibler-Divergenz quantifiziert die Differenz zwischen der approximierten posterior Verteilung und der prior Verteilung und ist folgendermaßen definiert:\\
 \begin{definition}[Kullback-Leibler-Divergenz (KL-Divergenz)]
 Sei $q_\phi(z|x)$ die approximierte Posteriori-Gauß-Verteilung und $p(z)$ die Priori-Gauß-Verteilung. Dann ist die KL-Divergenz definiert als
 $$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
 \end{definition}\noindent
 Der Rekonstruktionsverlust misst, wie gut der Decoder die Input Daten rekonstruiert hat. Er wird als log-Likelihood der rekonstruierten Daten angegeben.
-Aus der log-Likelihood der Daten lässt sich dann der ELBO herleiten (vgl. \cite{IntroductiontoVAEs}). \\
+Aus der sich auch der ELBO herleiten lässt(vgl. \cite{IntroductiontoVAEs}). \\
 \begin{align}
  	\log p_\theta(x) &= \log p_\theta(x) * \overbrace{\int q_\phi(z|x) dz}^{=1} \\
  	&= \int \log p_\theta(x) q_\phi(z|x) dz \\
@@ -303,14 +303,15 @@ Aus der log-Likelihood der Daten lässt sich dann der ELBO herleiten (vgl. \cite
  	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
  	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))} \label{ELBO & DKL Gleichung}
 \end{align}
-Der zweite Term in der Gleichung ist nach Definition die nicht negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen $q_\phi(z|x)$ und $p_\theta(z|x))$ und der erste Term in Gleichung \ref{ELBO & DKL Gleichung} stellt den Evidence Lower Bound (ELBO) dar.
+Der zweite Term in Gleichung \ref{ELBO & DKL Gleichung} ist nach Definition die nicht negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen $q_\phi(z|x)$ und $p_\theta(z|x))$ und der erste Term in Gleichung \ref{ELBO & DKL Gleichung} stellt den Evidence Lower Bound (ELBO) dar.\\
+Dieser wird wir folgt definiert:\\
 \begin{definition}[Evidence Lower Bound (ELBO) für VAEs]
 	Sei $q_\phi(z|x)$ das Encoder Modell und $p_\theta(x,z)$ das Decoder Modell. Der ELBO ist definiert durch
 	$$ \mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z) - \log q_\phi(z|x)] $$ 
 \end{definition}\noindent
-Es ist leicht zu sehen, dass durch Umstellen der Gleichung \ref{ELBO & DKL Gleichung} sich die ELBO aus dem Rekonstruktionsverlust und der KL-Divergenz ergibt. Insbesondere ist zu erkennen, dass der ELBO, dadurch dass die KL-Divergenz nicht negativ ist, eine untere Schranke für die log-Likelihood der Daten darstellt. 
+Es ist leicht zu sehen, dass durch Umstellen der Gleichung \ref{ELBO & DKL Gleichung} sich die ELBO aus dem Rekonstruktionsverlust und der KL-Divergenz ergibt (Vgl. Gleichung \ref{ELBO=RECLOSS&KLDIV}). Insbesondere ist zu erkennen, dass der ELBO, dadurch dass die KL-Divergenz nicht negativ ist, eine untere Schranke für die log-Likelihood der Daten darstellt. 
 \begin{align}
-	\mathcal{L}_{\theta,\phi}(x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \\
+	\mathcal{L}_{\theta,\phi}(x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \label{ELBO=RECLOSS&KLDIV}\\
 	&\leq 	\log p_\theta(x) 
 \end{align}\noindent
 Alternativ kann dies mit der Jensenschen Ungleichung (vgl. \cite{JensenscheUngleichung}) hergeleitet werden:
@@ -322,20 +323,27 @@ Alternativ kann dies mit der Jensenschen Ungleichung (vgl. \cite{JensenscheUngle
 \end{align}\noindent
 Es ist sofort ersichtlich, dass die log-likelihood $p_\theta(x)$ durch Maximieren der ELBO bzgl. $\theta$ und  $\phi$ selbst maximiert wird und somit die Qualität unseres generatives Modells verbessert wird. Gleichzeitig minimiert sich dadurch die KL-Differenz zwischen der approximativen Verteilung $q_\phi(z|x)$ und den wahren posterior Verteilung $p_\theta(z|x)$. Durch die Maximierung der ELBO wird also die Approximation $q_\phi(z|x)$ an die posterior Verteilung optimiert. \\
 \\
-Die Maximierung der ELBO kann durch stochastische Gradientenverfahren wie Stochastic Gradient Descent (SGD) oder andere fortschrittliche Verfahren erfolgen. Die Berechnung der Gradienten des ELBOs bzgl. $\theta$ stellt keine Probleme dar. Mit dem für solche Methoden üblichen Monte-Carlo Schätzer lassen sich die Gradienten einfach berechnen.\\
-Der Monte-Carlo-Schätzer für Gradienten ist eine gängige Methode und kann wie folgt definiert werden (vgl. \cite{MonteCarloEstimation}): 
+Die Maximierung der ELBO kann durch stochastische Gradientenverfahren wie Stochastic Gradient Descent (SGD) oder andere fortschrittliche Verfahren erfolgen. Die Berechnung der Gradienten des ELBOs bzgl. $\theta$ stellt keine Probleme dar. Mit dem für solche Methoden üblichen Monte-Carlo Schätzer (Gleichung \ref{MC-Schätzer}) lassen sich die Gradienten bzgl. $\theta$ einfach berechnen, wie man in den folgenden Gleichungen sehen kann.\\
+\begin{align}
+	\nabla_\theta \mathcal{L}_{\phi, \theta}(x) &=\nabla_\theta \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)] \\
+	&=  \mathbb{E}_{q_\phi(z|x)}[\nabla_\theta (\log p_\theta(x,z)-\log q_\phi(z|x))] \\
+	&\approx \nabla_\theta  (\log p_\theta(x,z)-\log q_\phi(z|x))\\
+	&= \nabla_\theta  \log p_\theta(x,z) \label{MC-Schätzer}
+\end{align}
+Der Monte-Carlo-Schätzer für Gradienten ist eine gängige Methode. Der Erwartungswert einer Funktion $f(z)$ unter einer Wahrscheinlichkeitsverteilung $p_\theta(x)$ kann mittels Monte-Carlo Schätzung wie folgt angenähert werden 
+(vgl. \cite{MonteCarloEstimation}): 
 \begin{align}
 	\nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)}) \label{MonteCarloEstimator}
 \end{align}
 wobei $z^{(l)} \sim q_\phi(z|x)$ ist.\\
 Allerdings ist die Berechnung
-der Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich des Variationsparameters $\phi$ problematisch, da der Erwartungswert des ELBO bzgl. $q_\phi(z|x)$ genommen wird und $q_\phi(z|x)$ eine Funktion von$\phi$ ist. 
+der Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich des Variationsparameters $\phi$ problematisch, da der Erwartungswert des ELBO bzgl. $q_\phi(z|x)$ genommen wird und $q_\phi(z|x)$ eine Funktion von $\phi$ ist. 
 \begin{align}
 	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) &= 	\nabla_\phi \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] \\
 	& \neq \mathbb{E}_{q_\phi(z|x)}\left[\nabla_\phi(\log p_\theta(x,z)- \log q_\phi(z|x))\right]
 \end{align}
  \\
-Zur Lösung dieses Problems wird der sogenannte Reparameterization-Trick eingesetzt, welcher die Zufallsvariable transformiert um die Gradienten-Berechnung zu vereinfachen.  
+Zur Lösung dieses Problems wird der sogenannte Reparameterization-Trick eingesetzt, welcher die Zufallsvariable transformiert, um die Gradienten-Berechnung zu vereinfachen.  
 \subsubsection{Reparametrisierungs Trick}
 Der Reparameterisierungs-Trick ist eine Methode zur Vereinfachung der Gradientenberechnung in Variational-Autoencodern. Er ermöglicht eine effizientere Berechnung der Gradienten der Evidence Lower Bound und somit eine effizientere Optimierung dessen. Der Reparameterization Trick transformiert die Zufallsvariable z in eine andere von z unabhängige deterministische Funktion von einer in eine  von z unabhängigen Hilfsvariablen $\epsilon$.
 Sei also die latente Variable z, die aus $q_\phi(z|x)$ gezogen wurde, gegeben. Sie wird nun als deterministische Funktion einer Hilfsvariablen $\epsilon$ unabhängig von $\phi$ ausgedrückt. 
