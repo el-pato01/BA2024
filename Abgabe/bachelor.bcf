@@ -2350,14 +2350,15 @@
     <bcf:citekey order="4">JensenscheUngleichung</bcf:citekey>
     <bcf:citekey order="5">MonteCarloEstimation</bcf:citekey>
     <bcf:citekey order="6">MonteCarloEstimation</bcf:citekey>
-    <bcf:citekey order="7">fahrmeir-2001-multivariate</bcf:citekey>
-    <bcf:citekey order="8">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="9">pinheiro2000</bcf:citekey>
-    <bcf:citekey order="10">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="11">KQ-Schätzer</bcf:citekey>
-    <bcf:citekey order="12">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="7">MonteCarloEstimation</bcf:citekey>
+    <bcf:citekey order="8">fahrmeir-2001-multivariate</bcf:citekey>
+    <bcf:citekey order="9">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="10">pinheiro2000</bcf:citekey>
+    <bcf:citekey order="11">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="12">KQ-Schätzer</bcf:citekey>
     <bcf:citekey order="13">fahrmeir-2011-regression</bcf:citekey>
     <bcf:citekey order="14">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="15">fahrmeir-2011-regression</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="anyt">

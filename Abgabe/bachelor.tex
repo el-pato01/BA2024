@@ -330,14 +330,21 @@ Die Maximierung der ELBO kann durch stochastische Gradientenverfahren wie Stocha
 	&\approx \nabla_\theta  (\log p_\theta(x,z)-\log q_\phi(z|x))\\
 	&= \nabla_\theta  \log p_\theta(x,z) \label{MC-Schätzer}
 \end{align}
-Der Monte-Carlo-Schätzer für Gradienten ist eine gängige Methode. Der Erwartungswert einer Funktion $f(z)$ unter einer Wahrscheinlichkeitsverteilung $p_\theta(x)$ kann mittels Monte-Carlo Schätzung wie folgt angenähert werden 
+Der Monte-Carlo-Schätzer für Gradienten ist eine gängige Methode, die verwendet wird um die notwendigen Gradienten zu berechnen, die zur Optimierung der Variationsparameter $\phi$ führen. Der Erwartungswert einer Funktion $f(x)$ unter einer Wahrscheinlichkeitsverteilung $p_\theta(x)$ kann mittels Monte-Carlo Schätzung wie folgt angenähert werden 
 (vgl. \cite{MonteCarloEstimation}): 
 \begin{align}
-	\nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]= \mathbb{E}_{q_\phi(z)}[f(z)\nabla_{q_\phi(z)}\log q_\phi(z)] \approx \frac{1}{L} \sum_{l=1}^{L}f(z)\nabla_{q_\phi(z^{(l)})}\log q_\phi(z^{(l)}) \label{MonteCarloEstimator}
+	\mathbb{E}_{p_\theta(x)}[f(x)] \approx \frac{1}{N} \sum_{n=1}^{N}f(\hat{x}^{(n)}),
 \end{align}
-wobei $z^{(l)} \sim q_\phi(z|x)$ ist.\\
+wobei $\hat{x^{(n)}}$ unabhängige Stichproben sind, die aus der Verteilung $p_\theta(x)$ gezogen wurden.\\
+Im Falle der Variationsinferenz im VAE kann der Gradient des Erwartungswert mit dem Monte-Carlo Schätzer approximiert werden.\\
+\begin{align}
+	\nabla_\phi \mathbb{E}_{q_\phi(z|x)}[f(z)]= \mathbb{E}_{q_\phi(z|x)}[\nabla_{\phi} f(z)] \approx \frac{1}{N} \sum_{n=1}^{N}\nabla_{q_\phi}f(z^{(n)})) \label{MonteCarloEstimator}
+\end{align}
+wobei $z^{(n)} \sim q_\phi(z|x)$ ist.\\
 Allerdings ist die Berechnung
-der Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich des Variationsparameters $\phi$ problematisch, da der Erwartungswert des ELBO bzgl. $q_\phi(z|x)$ genommen wird und $q_\phi(z|x)$ eine Funktion von $\phi$ ist. 
+der Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right]$ bezüglich des Variationsparameters $\phi$ problematisch, da der Erwartungswert des ELBO bzgl. $q_\phi(z|x)$ genommen wird und die Funktion $q_\phi(z|x)$  von $\phi$ abhängt. 
+
+
 \begin{align}
 	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) &= 	\nabla_\phi \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] \\
 	& \neq \mathbb{E}_{q_\phi(z|x)}\left[\nabla_\phi(\log p_\theta(x,z)- \log q_\phi(z|x))\right]
@@ -359,11 +366,16 @@ Dabei sind $\mu$ und $\sigma$ die Inferenzparameter $\phi$.  Durch die Umparamet
 	&= \nabla_\phi \mathbb{E}_{p(\epsilon)}[f(g(\epsilon,x, \phi))] \\
 	& = \mathbb{E}_{p(\epsilon)}[\nabla_\phi f(g(\epsilon,x, \phi))]
 \end{align}
+Die Erwartung des ELBO lässt sich demnach ebenso umschreiben zu: 
+$$  \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] =  \mathbb{E}_{p(\epsilon)}\left[\log p_\theta(x,g(\epsilon,x, \phi))- \log q_\phi(g(\epsilon,x, \phi)|x)\right] $$
 Der Reparameterisierungstrick bietet somit eine effiziente und flexible Methode zur Berechnung von Gradienten in Modellen mit latenten Variablen und ermöglicht die Anwendung leistungsstarker Optimierungsmethoden wie SGD auf komplexe probabilistische Modelle. Wie der Reparametrisierungstrick in einem VAE aussieht ist in  Abbildung \ref{fig:vae_reparameterization_trick} veranschaulicht.
 \\
-Der Gradient der ELBO kann nun geschrieben werden als 
+Mit der neuen Darstellung kann der Gradient des ELBO berechnet werden als:
 $$	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) =
- \mathbb{E}_{p(\epsilon)}\left[\nabla_\phi(\log p_\theta(x,z)- \log q_\phi(z|x))\right] $$ mit $z = g(\epsilon, x, \phi)$. Für die Optimierung des ELBO werden stochastische Gradientenverfahren verwendet. Die Wahl fällt im Rahmen dieser Arbeit auf das Verfahren Stochastic Gradient Descent (SGD).
+ \mathbb{E}_{p(\epsilon)}\left[\nabla_\phi(\log p_\theta(x,g(\epsilon,x, \phi))- \log q_\phi(g(\epsilon,x, \phi)|x))\right] $$ mit $z = g(\epsilon, x, \phi)$. 
+Die Erwartung auf der rechten Seite wird durch Monte-Carlo-Sampling approximiert, indem man mehrere Stichproben von $\epsilon$ zieht, die entsprechende Transformation anwendet und dann den Durchschnitt der Gradienten bildet: 
+$$ \nabla_\phi \mathcal{L}_{\theta,\phi}(x) \approx \frac{1}{N} \sum_{n=1}^{N} \nabla_{\phi} (\log p_\theta(x,g(\epsilon_n,x, \phi))- \log q_\phi(g(\epsilon_n,x, \phi)|x)) $$
+Hier sind $\epsilon_n$ die unabhängigen Stichproben aus der Verteilung p($\epsilon$) (vgl. \cite{MonteCarloEstimation}).
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
@@ -420,27 +432,29 @@ $$	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) =
 
 %----------------------------------------------------------------------------
 \section{Grundlagen Gemischte Modelle}
-Ein gemischtes Modell stellt ein statistisches Verfahren zur Datenanalyse dar, welches sowohl feste als auch zufällige Effekte (fixed and random effects) modelliert. Gemischte Modelle finden insbesonder bei der Analyse von longitudinalen und cluster-spezifischen Daten Anwendung, welche aus zeitlich wiederholten Beobachtungen $(y_{it}, x_{it}), t = 1,..., T_i$ für jedes Individuum $ i = 1,...,n$ bestehen. Die Variable $y$ kennzeichnet dabei eine Antwortvariable, während $x$ ein Vektor von Kovariablen darstellt. Ein Beispiel für einen solchen Datensatz ist ein medizinischer Datensatz,\\
+Das Ziel der Arbeit ist es die Anwendung gemischter Modelle in latenten Repräsentationen auf eine mögliche Verzerrung zu untersuchen. Die nötige Theorie der latenten Repräsentation ist nun in Form eines VAE gegeben. Im folgenden Kapitel werden nun die mathematischen Grundlagen zu gemischten Modellen eingeführt.\\
+\\
+Ein gemischtes Modell stellt ein statistisches Verfahren zur Datenanalyse dar, welches sowohl feste als auch zufällige Effekte (fixed and random effects) modelliert. Gemischte Modelle finden insbesondere bei der Analyse von longitudinalen und Cluster spezifischen Daten, welche aus zeitlich wiederholten Beobachtungen $(y_{it}, x_{it}), t = 1,..., T_i$ für jedes Individuum $ i = 1,...,n$ bestehen, ihre Anwendung. Die Variable $y$ kennzeichnet dabei eine Antwortvariable, während $x$ einen Vektor von Kovariablen darstellt. Ein Beispiel für einen solchen Datensatz könnte ein medizinischer Datensatz sein,\\
 $$(y_i,x_i)= (y_{i1},...,y_{iT_i},x_{i1},...,x_{iT_i})$$
-bei dem $y_{ij}$ eine Beobachtung an Individuum $i$ zum Zeitpunkt $t_{ij}$ bezeichnet und $T_i$ ist die Anzahl an Beobachtungen.\\
+bei dem $y_{ij}$ eine Beobachtung an Individuum $i$ zum Zeitpunkt $t_{ij}$ bezeichnet und $T_i$ die Anzahl an Beobachtungen ist.\\
 \\
 Zur Einführung der gemischten Modelle folgen wir den Notationen in \cite{fahrmeir-2001-multivariate} und \cite{fahrmeir-2011-regression}.
-Longitudinal und cluster-spezifische Daten weisen zwei Ebenen auf. Im Folgenden betrachten wir das Beispiel des medizinischen Datensatzes. Die erste Ebene bezieht sich dabei auf die Daten innerhalb einer Gruppe oder eines Individuums. In diesem Fall umfasst die erste Ebene den Patienten als Individuum mit seinen unterschiedlichen Werten für die Tests entlang der Zeitreihe $T_i$ . Auf der allgemeineren zweiten Ebene erfolgt eine Betrachtung aller Patienten. \\
+Longitudinal und Cluster spezifische Daten weisen zwei Ebenen auf. Im Folgenden betrachten wir das Beispiel eines medizinischen Datensatzes. Die erste Ebene bezieht sich dabei auf die Daten innerhalb einer Gruppe oder eines Individuums. In diesem Fall umfasst die erste Ebene den Patienten als Individuum mit seinen unterschiedlichen Werten für die Tests entlang der Zeitreihe $T_i$. Auf der allgemeineren zweiten Ebene erfolgt eine Betrachtung aller Patienten. \\
 \\
-Im Rahmen eines gemischten Modells wird auf der ersten Ebene angenommen, dass die Antwortvariablen linear von den unbekannten bevölkerungsspezifischen festen Effekten $\beta$ und den unbekannten cluster-spezifischen zufälligen Effekten $b_i$ abhängen.\\
-Die folgende Gleichung beschreibt das Modell:
+Im Rahmen eines gemischten Modells wird auf der ersten Ebene angenommen, dass die Antwortvariablen linear von den unbekannten bevölkerungsspezifischen festen Effekten $\beta$ und den unbekannten Cluster spezifischen zufälligen Effekten $b_i$ abhängen.\\
+Die folgende Gleichung beschreibt ein gemischtes Modell für ein Individuum $i$ zum Zeitpunkt $t$:
 \begin{align} 
 	y_{it} = x^t_{it}\beta + z^t_{it}b_i + \epsilon_{it} \label{ClusterMM}
 \end{align} \noindent
-Innerhalb des Modells werden die Designvektoren $z_{it}$ und $w_{it}$ als unabhängige Variablen definiert, wobei $z_{it}$ beispielsweise die Testwerte in einem medizinischen Datensatz repräsentiert.Die Zufallsvariable  $\epsilon_{it}$ hingegen ist unkorreliert und folgt einer normalverteilten Wahrscheinlichkeitsdichte mit Erwartungswert $ \mathbb{E}(\epsilon_{it}) = 0$ und Varianz $Var(\epsilon_{it}) = \sigma^2$.  Der Ausdruck $a^t$ bezeichnet den transponierten Vektor, bzw. die transponierte Matrix $a$.\\
+Innerhalb des Modells werden die Designvektoren $z_{it}$ und $w_{it}$ als unabhängige Variablen definiert, wobei $z_{it}$ beispielsweise die Testwerte in einem medizinischen Datensatz repräsentiert. Die Zufallsvariable $\epsilon_{it}$ hingegen ist unkorreliert und folgt einer normalverteilten Wahrscheinlichkeitsdichte mit Erwartungswert $ \mathbb{E}(\epsilon_{it}) = 0$ und Varianz $Var(\epsilon_{it}) = \sigma^2$.  Der Ausdruck $a^t$ bezeichnet den transponierten Vektor, bzw. die transponierte Matrix von $a$.\\
 \\
-Betrachtet man nun die zweite Ebene, so werden die zufälligen Effekte $b_i$ zwischen den verschiedenen Individuen gemäß einer Mischverteilung mit $ \mathbb{E}(b_i)=0$ unabhängig variieren. Es wird angenommen, dass die zufälligen Effekte $b_i$ unabhängig und identisch normalverteilt sind,
+Betrachtet man nun die zweite Ebene, so werden die zufälligen Effekte $b_i$ zwischen den verschiedenen Individuen gemäß einer Mischverteilung mit $ \mathbb{E}(b_i)=0$ unabhängig variieren. Es wird angenommen, dass die zufälligen Effekte $b_i$ unabhängig und identisch normalverteilt sind.
 \begin{align}
 	b_i \sim \mathcal{N}(0,Q)
 \end{align}\noindent
-mit der (q x q) Kovarianzmatrix $Cov(b_i) = Q > 0$, welche symmetrisch und positiv semi-definit ist. Eine ausführliche Beschreibung findet sich in \cite{pinheiro2000} (Kapitel 2.2.1).
+Dabei ist $Cov(b_i) = Q > 0$ die (q x q) Kovarianzmatrix, welche symmetrisch und positiv semi-definit ist. Eine ausführliche Beschreibung findet sich in \cite{pinheiro2000} (Kapitel 2.2.1).
 \\
-Aufgrund dieser Überlegungen lässt sich nun das Model \ref{ClusterMM} in einer allgemeineren Form beschreiben:
+Aufgrund dieser Überlegungen lässt sich nun das Model \ref{ClusterMM} in eine allgemeinere Form bringen:
 \begin{definition}[Lineares gemischtes Modell für Longitudinal- oder Clusterdaten] \label{LMM für longitudinale Daten}
 	Seien $X_i = (x_{i1}, ..., z_{iT_i})$  und $Z_i = (z_{i1},...,z_{iT_i})$ bekannte Designmatrizen für die festen und zufälligen Effekte. Seien $\beta$ ein p-dimensionaler Vektor von festen Effekten und $b_i$ ein q-dimensionaler Vektor von zufälligen Effekten und sei $\epsilon_i = (\epsilon_{i1},...,\epsilon_{iT_i})$ der normalverteilte Fehlervektor.\\
 	\\
@@ -449,7 +463,7 @@ Aufgrund dieser Überlegungen lässt sich nun das Model \ref{ClusterMM} in einer
 	$$b_i \sim \mathcal{N}(0,Q), \epsilon_i \sim \mathcal{N}(0,R = \sigma^2_\epsilon I)$$
 	definiert.
 \end{definition}\noindent
-Die Daten der zufälligen und festen Effekte werden in einer Designmatrix (Datenmatrix) gespeichert.Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Um auch für immer auftretende Messfehler oder unerwartete Einflüsse gewappnet zu sein, wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
+Die Daten der zufälligen und festen Effekte werden in einer Designmatrix (Datenmatrix) gespeichert. Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Um auch für immer auftretende Messfehler oder unerwartete Einflüsse gewappnet zu sein, wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
 \\
 Aufgrund des normalverteilten Fehlervektors können nun auch ein marginales Modell als multivariates heteroskedastisches lineares Regressionsmodell definiert werden. Dieses Modell ist für die Berechnung der Likelihood-Inferenz von entscheidender Bedeutung. 
 \begin{definition}[Marginales gemischtes Modell]
@@ -462,7 +476,7 @@ Aufgrund des normalverteilten Fehlervektors können nun auch ein marginales Mode
 		\epsilon_i^* \sim \mathcal{N}(0,V_i), \hspace{12pt}\text{mit} \hspace{8pt}V_i = \sigma_\epsilon^2I + Z_i Q Z_i^t 
 	\end{align}
 \end{definition} \noindent
-Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden.
+Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden, welches wie folgt definiert wird:
 \begin{definition}[Allgemeines lineares gemischtes Modell]
 	Ein lineares gemischtes Modell ist definiert durch
 	$$y = X\beta + Zb + \epsilon $$
@@ -496,19 +510,19 @@ wobei $\epsilon^* = Zb + \epsilon$ ist mit $\epsilon^* \sim \mathcal{N}(0,V)$ un
 
 %----------------------------------------------------------------------------
 \section{Likelihood Inferenz und Verzerrung}
-Um die Verzerrung der Inferenz messen zu können, ist es zunächst erforderlich, die Theorie zur Likelihood-Inferenz von gemischten Modellen einzuführen. Dies umfasst sowohl die Schätzung der Parameter der zufälligen Effekte $b_i$ als auch die Schätzung der Parameter $\beta$, $\sigma_\epsilon$ und $Q$. Um die Verzerrung zu quantifizieren, werden wir ein vollständiges gemischtes Modell mit einem reduzierten Modell ohne einen festen Effekt vergleichen. Dazu wird üblicherweise der sogenannte Likelihood-Ratio-Test (LRT) verwendet.
-Wie dieser Test genau funktioniert und wie der LRT durchgeführt wird, werden wir später erläutern. Zuvor benötigen wir noch etwas Theorie zur Likelihood-Berechnung.
+Um die Verzerrung der Inferenz messen zu können, ist es zunächst erforderlich, die Theorie zur Likelihood-Inferenz von gemischten Modellen einzuführen. Dies umfasst sowohl die Schätzung der Parameter der zufälligen Effekte $b_i$ als auch die Schätzung der Parameter $\beta$, $\sigma_\epsilon$ und $Q$. Um die Verzerrung zu quantifizieren, werden wir ein vollständiges gemischtes Modell mit einem reduzierten Modell, das einen festen Effekt weglässt, vergleichen. Dazu wird üblicherweise der sogenannte Likelihood-Ratio Test (LRT) verwendet.
+Wie dieser Test genau funktioniert und wie der Likelihood-Ratio Test durchgeführt wird, werden wir später erläutern. Zuvor benötigen wir noch etwas Theorie zur Likelihood-Berechnung.
 \subsection{Likelihood Berechnung gemischter Modelle}
 Im Folgenden wird die Schätzung der unbekannten Parameter erörtert. Der Vorliegende Ansatz basiert auf den Ausführungen von \cite{fahrmeir-2011-regression}.\\
 \\
-Die Berechnung der Schätzer erfolgt mittels Maximum-Likelihood-Methode. Als Alternative kann die restringierte ML-Methode heran gezogen werden, die jedoch nicht für den Likelihood-Ratio-Test geeignet ist. Daher erfolgt die Berechnung der Parameter mittels der ML-Methode.\\
+Die Berechnung der Schätzer erfolgt mittels der Maximum-Likelihood Methode. Als Alternative kann die restringierte ML-Methode heran gezogen werden, die jedoch nicht für den Likelihood-Ratio Test geeignet ist. Daher wird die Berechnung der Parameter bei der ML-Methode belassen.\\
 Die Schätzung der Parameter in einem gemischten Modell ist jedoch mit gewissen Schwierigkeiten verbunden. Neben dem $\beta$ sind auch $b_i$, $Q$ und $\sigma_\epsilon$ unbekannt. Daher ist es erforderlich, sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter in $Q$ und $\sigma_\epsilon$, die wir als $\theta$ bezeichnen, zu schätzen. Dies bedingt eine geschachtelte Schätzung.\\
 \\
 Im Folgenden wird zunächst angenommen, dass die Kovarianzen $R$, bzw. $\sigma_\epsilon$, und  $Q$ bekannt sind. In diesem Zusammenhang ist auch $V$ gemäß \ref{marginales Modell} bekannt. Für die Schätzung von $\beta$, ausgehend vom marginalen Modell, bietet sich 
 \begin{align}
 	\hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y \label{KQ-Schätzerfürbeta}
 \end{align} an.
-Dieser Kleinste-Quadrate-Schätzer für $\beta$ ergibt sich aus dem verallgemeinertem Kleinste-Quadrate-Kriterium (vgl. \cite{KQ-Schätzer}), welches folgenden Term
+Dieser Kleinste-Quadrate-Schätzer (KQ-Schätzer) für $\beta$ ergibt sich aus dem verallgemeinertem Kleinste-Quadrate Kriterium (vgl. \cite{KQ-Schätzer}), welches folgenden Term
 $$(y-X\beta)^tV^{-1}(y-X\beta)$$ 
 bezüglich $\beta$ minimiert. Siehe hierzu auch \cite{fahrmeir-2011-regression} (Kap. 3).\\
 Der KQ-Schätzer ist gleichzeitig der log-Likelihood Schätzer unter der Normalverteilungsannahme.\\
@@ -520,7 +534,7 @@ Siehe hierzu auch \cite{fahrmeir-2011-regression} (Kap. 3).\\
 \\
 Gemäß dem Gauß-Markov-Theorem stellt $\hat{\beta}$ den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die fixen Effekte dar. Zur Ermittlung des Schätzers ist lediglich eine Schätzung der Parameter in $V$ sowie der Einsatz des Schätzers $\hat{V} $ von $V$ in $\hat{\beta}$ erforderlich. \\
 Für den Schätzer von $b$ verwenden wir den bedingten Erwartungswert $E(b|y)$ von $b$, gegeben die Daten $y$, welcher unter der Normalverteilungsannahme der beste Schätzer ist (vgl. \cite{fahrmeir-2011-regression} Kap. 6.3.1). \\
-Betrachtet man nun die gemeinsame Verteilung von $b$ und $y$, welche folgendermaßen dargestellt wird:
+Im Folgenden wird nun die gemeinsame Verteilung von $b$ und $y$ betrachtet, welche folgendermaßen dargestellt wird:
 $$\begin{pmatrix}
 	y \\
 	b \\
@@ -539,7 +553,7 @@ $$\begin{pmatrix}
 \end{pmatrix}$$
 In Anbetracht dessen erhalten wir $E(b|y) = Q Z^tV^{-1}(y-X\beta)$. \\
 Ersetzt man nun $\beta$ durch den Schätzer $\hat{\beta}$ erhält man den Schätzer für die zufälligen Effekte $$\hat{b} = \hat{Q} Z^t\hat{V}^{-1}(y-X\hat{\beta}).$$ Der Schätzer $\hat{b}$ ist der beste lineare unverzerrte Schätzer (BLUP, best linear unbiased prediction)\\
-
+Die Schätzer für die festen und zufälligen Effekte lassen sich demnach folgendermaßen definieren:
 \begin{definition}[Schätzer für feste und zufällige Effekte]
 	Sei $y = X\beta + Zb + \epsilon$ ein lineares gemischtes Modell und $y=X\beta + \epsilon^*$ das zugehörige Marginale nach \ref{marginales Modell}.
 	Dann ist $$\hat{\beta} = (X^t \hat{V}^{-1}X)^{-1}X^t \hat{V}^{-1}y$$ ein Schätzer für die festen Effekte und $$ \hat{b} = \hat{Q} Z^t\hat{V}^{-1}(y-X\hat{\beta})$$ ein Schätzer für die zufälligen Effekte.
@@ -553,7 +567,7 @@ Maximieren von $l(\beta,\theta)$ bezüglich $\beta$ für festes $\theta$ ergibt
 $$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y.$$
 Setzt man nun $\hat{\theta}$ in $l(\beta,\theta)$ ein, so erhält man die Profil-Log-Wahrscheinlichkeit 
 $$ l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})).$$
-Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von $l(\theta)_p$. 
+Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von $l(\theta)_p$, welcher wie folgt definiert wird:
 \begin{definition}[Kovarianz-Schätzer]
 	Sei $y = X\beta + Zb + \epsilon $ ein lineares gemischtes Modell mit $$\begin{pmatrix}
 		b \\
@@ -582,11 +596,11 @@ Um die Verzerrung der Inferenz messen zu können, müssen wir die  log-Likelihoo
 	$$ l_{ML}(Q,R) = -0.5 * (log(|V|)+ r'V^{-1}r + N * log(2\pi))$$
 	$$l_{REML}(Q,R) = -0.5 * (log(|V|)+ X'V^{-1}X + r'V^{-1}r+ (N-p) * log(2\pi))$$
 \end{definition}\noindent
-$l_{REML}(Q,R)$ ist die eingeschränkte log-Likelihood, der sich aus der Methode "Restricted Maximim Likelihood" ergibt und entspricht im Wesentlichen der normalen log-Likelihood mit Ausnahme einer Differenz. Bei der "Restricted Maximim Likelihood" werden im Gegensatz zu der Methode "Maximum Likelihood" die Freiheitsgrade, die für die Schätzung fester Effekte bei der Schätzung von Varianzkomponenten verwendet werden, berücksichtigt. Im Gegensatz zum ursprünglichen Datenvektor basiert die eingeschränkte Maximum-Likelihood-Methode auf linearen Kombinationen der Beobachtungen, die so gewählt sind, dass diese Kombinationen invariant zu den Werten der festen Effektparametern sind. \\
+$l_{REML}(Q,R)$ ist die eingeschränkte log-Likelihood, der sich aus der Methode "Restricted Maximum Likelihood" ergibt und entspricht im Wesentlichen der normalen log-Likelihood mit Ausnahme einer Differenz. Bei der "Restricted Maximum Likelihood" werden im Gegensatz zu der Methode "Maximum Likelihood" die Freiheitsgrade, die für die Schätzung fester Effekte bei der Schätzung von Varianzkomponenten verwendet werden, berücksichtigt. Im Gegensatz zum ursprünglichen Datenvektor basiert die eingeschränkte Maximum-Likelihood-Methode auf linearen Kombinationen der Beobachtungen, die so gewählt sind, dass diese Kombinationen invariant zu den Werten der festen Effektparametern sind. \\
 Diese linearen Kombinationen sind äquivalent zu den Residuen, die nach der Anpassung durch normale kleinste Quadrate (gewichtet bei Angabe einer Regressionsgewichtung) lediglich den festen Effektanteil des Modells berechnen. Das Verfahren führt somit eine Maximierung in einem eingeschränkten Vektorraum durch.
 \subsection{Likelihood-Ratio-Test}
 Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ einfach, sofern die Theorie der ML-Methode vergegenwärtigt wird. Zur Erinnerung: Der Vergleich eines reduziertes Modells mit dem vollständigen Modell dient der Evaluierung des Einflusses einer Störgröße. Zur Durchführung dieser Analyse dient der Likelihood-Ratio-Test. Er ermöglicht den Vergleich eines einfacheren Modells (Nullmodell) mit einem komplexeren Modell (alternatives Modell), indem er die Likelihoods, bzw. die log-Likelihoods, der beiden Modelle vergleicht. Dies ist zum Beispiel nützlich um den Einfluss eines zusätzlichen Parameters zu beurteilen.\\
-Der Likelihood-Ratio-Test wird wie folgt definiert:\\
+Der Likelihood-Ratio Test wird wie folgt definiert:\\
 \begin{definition}[Likelihood-Ratio-Test (LRT)] 
 	Sei $\mathbf{L}_{full}$ der Likelihood-Wert des vollständigen Modells sowie $\mathbf{L}_{red}$ der Likelihood-Wert des reduzierten Modells. Es sei i die Anzahl der Freiheitsgrade.\\
 	Dann ist die LRT Statistik gegeben durch 
@@ -595,7 +609,6 @@ Der Likelihood-Ratio-Test wird wie folgt definiert:\\
 Sofern die Größen $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gemäß der Definition initialisiert sind, gilt $\mathbf{L}_{full} > \mathbf{L}_{red}$. Insbesondere gilt $\log(\mathbf{L}_{full}) > \log(\mathbf{L}_{red})$.
 Sofern die Log-Likelihood-Werte der Modelle bereits als $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gegeben sind, lässt sich die LRT-Statistik durch $2(\mathbf{L}_{full} - \mathbf{L}_{red})$ berechnen. \\
 \\
-
 Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir die LRT-Werte als Histogramm darstellen, und folgt einer $\chi^2$-Verteilung. Eine Chi-Quadrat-Verteilung mit $k$ Freiheitsgraden ist folgendermaßen definiert:
 \begin{definition}[$\chi^2$-Verteilung]
 	Sei \( X_1, X_2, \ldots, X_k \) eine Folge von unabhängigen standardnormalverteilten Zufallsvariablen, also \( X_i \sim N(0, 1) \) für \( i = 1, \ldots, k \). Dann ist die Zufallsvariable 
@@ -621,7 +634,7 @@ Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir
 	
 	wobei \( \Gamma(\cdot) \) die Gamma-Funktion ist.
 \end{definition} \noindent
-Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der Ergebnisse. Somit können wir feststellen, wie signifikant der Einfluss des zusätzlichen Parameters ist und ob die Anwendung gemischter Modelle im latenten Raum die Inferenz verzerrt. Um dies anschaulich darzustellen legt man das Histogramm der Teststatistik unter die $\chi^2$ Verteilung. Dies erleichtert die Analyse, ob die Inferenz verzerrt ist. Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
+Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der Ergebnisse. Somit kann festgestellt werden, wie signifikant der Einfluss des zusätzlichen Parameters ist und ob die Anwendung gemischter Modelle im latenten Raum die Inferenz verzerrt. Um dies anschaulich darzustellen legt man das Histogramm der Teststatistik unter die $\chi^2$ Verteilung. Dies erleichtert die Analyse, ob die Inferenz verzerrt ist. Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
 \begin{figure}[h!]
 	\centering
 	\begin{tikzpicture}
