@@ -2359,6 +2359,7 @@
     <bcf:citekey order="13">fahrmeir-2011-regression</bcf:citekey>
     <bcf:citekey order="14">fahrmeir-2011-regression</bcf:citekey>
     <bcf:citekey order="15">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="16">KL-Div</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="anyt">

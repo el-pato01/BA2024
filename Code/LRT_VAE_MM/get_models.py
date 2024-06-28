@@ -223,7 +223,7 @@ class Decoder(nn.Module):
         n_log_likeli = - log_probs.mean(0).sum()
         return n_log_likeli
 
-    def forward(self, input, data):       
+    def forward(self, input, data):
         probs = self.decode(input)
         rec_loss = self.calc_rec_loss(probs, data)
         return rec_loss, probs

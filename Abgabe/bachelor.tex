@@ -275,43 +275,57 @@ Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken (einem Encoder 
 \\
 \textbf{Latenter Raum}\\
 Variablen, die man nicht direkt messen kann, demnach nicht Teil des erhaltenen Datensatzes sind, bezeichnet man als latente Variablen. Sie werden erst mithilfe der gegebenen Daten erschlossen und ergeben im Verbund den latenten Raum.\\
-Im VAE werden die latenten Variablen z aus der priori-Verteilung $p_\theta(x)$ gezogen, welche eine multivariate Normalverteilung $p_\theta(x) = \mathcal{N}(z;0,I) $ ist. Die latenten Daten werden aus den Inputdaten durch den Encoder  gezogen, welcher die posteriori Verteilung durch eine variable Verteilung $q_\phi(z,x)$ approximiert. Der Encoder erlernt somit zwei Vektoren, nämlich den Mittelwert \( \mu \) und die Standardabweichung \( \sigma^2 \) der Normalverteilung $q_\phi(z,x) = \mathcal{N}(z;\mu(x),\sigma^2(x))$.\\
-Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die likelihood-Verteilung $p_\theta(x|z)$  zu rekonstruieren. Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsentationen generiert wurden, wird durch dieses Modell modelliert. Auch hier wird typischerweise eine Normalverteilung angenommen, sofern die  Daten reellwertig sind. Im Falle binärer Daten wird die Verteilung als Bernoulli-Verteilung modelliert. \\ Für weiterführende Details wird auf die Publikation \cite{Auto-EncodingVariationalBayes} verwiesen.\\
+Im VAE werden die latenten Variablen z aus der prior-Verteilung $p(z)$ gezogen, welche eine multivariate Normalverteilung $p(z) = \mathcal{N}(0,I) $ ist. Die latenten Daten sind der Output aus dem Encoder Modell, welches die  approximierte posterior Verteilung $q_\phi(z|x)$ parametrisiert, wobei $\phi$ der Parametervektor des Encoders ist. Dieser erlernt somit zwei Vektoren, nämlich den Mittelwert \( \mu_\phi \) und die Standardabweichung \( \sigma_\phi \) der Normalverteilung $q_\phi(z|x) = \mathcal{N}(\mu_\phi(x),\sigma_\phi^2(x))$.\\
+Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die Likelihood-Verteilung $p_\theta(x|z)$  zu rekonstruieren. Die Likelihood-Verteilung der Daten gegeben die latenten Daten wird durch den Parametervektor $\theta$ des Decoders parametrisiert. Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsentationen generiert wurden, wird durch dieses Decoder-Modell modelliert. Auch hier wird typischerweise eine Normalverteilung angenommen, sofern die  Daten reellwertig sind. Im Falle binärer Daten wird die Verteilung als Bernoulli-Verteilung modelliert. \\ Für weiterführende Details wird auf die Publikation \cite{Auto-EncodingVariationalBayes} verwiesen.\\
 
 
 \subsection{Training VAE}
 Das Training eines Variational Autoencoder basiert auf den Prinzipien der Variationsinferenz, einer Methode zur Approximation komplexer posterior Verteilungen. Die Berechnung der posterior Verteilung ist besonders bei komplexen Modellen mit Schwierigkeiten verbunden. Infolgedessen wird bei der Variationsinferenz eine einfachere Verteilung verwendet, um die wahre posteriore Verteilung zu approximieren, wodurch Berechnungen effizienter und skalierbarer werden.
-Im Kontext eines VAE wird die wahre posterior Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit der Input-Daten, durch eine einfachere Verteilung $q_\phi(x)$ approximiert. Das Ziel ist es die Parameter dieser Verteilung so zu optimieren, dass $q_\phi(x)$ so nah wie möglich an $p(z|x)$ liegt. Diese Annäherung wird durch die Maximierung des Evidence Lower Bound (ELBO) erreicht, der eine untere Schranke der Datenloglikelihood darstellt. \\
+Im Kontext eines VAE wird die wahre posterior Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit der Input-Daten, durch eine einfachere Verteilung $q_\phi(z|x)$ approximiert. Das Ziel ist es die Parameter dieser Verteilung so zu optimieren, dass $q_\phi(z|x)$ so nah wie möglich an $p(z|x)$ liegt. Diese Annäherung wird durch die Maximierung des Evidence Lower Bound (ELBO) erreicht, der eine untere Schranke der Datenloglikelihood darstellt. \\
 Zur Effizienten Berechnung wird der Reparametrisierungs Trick verwendet, welcher die Anwendung von Gradientenverfahren zur Optimierung der Modellparameter ermöglicht.\\
 \\
 In diesem Abschnitt werden die wesentlichen mathematischen Aspekte hinter dem Training des VAE erläutert und beschrieben.\\
 \\
 Das Training eines Variational Autoencoders (VAE) umfasst mehrere Schritte, deren Ziel es ist, die Parameter des Modells so anzupassen, dass der Evidence Lower Bound (ELBO) maximiert wird. Der Prozess lässt sich in drei Hauptkomponenten unterteilen: die Definition des ELBO, die Anwendung des Reparameterization Trick und die Optimierung des Modells mittels stochastischer Gradientenverfahren.\\
+Eine im Rahmen dieser Arbeit und auch im Bereich Machine Learning wichtige Verteilung ist die Normal- oder auch Gauß-Verteilung. Diese wird als erste Definition in dieser Arbeit eingeführt:
+\begin{definition}[Normal-/Gaußverteilung]
+	Seien $\mu, \sigma \in \mathbb{R}$ mit $\sigma > 0$.
+	Die Zufallsvariable X ist normalverteilt mit Erwartungswert $\mu$ und Standardabweichung $\sigma$ bzw. Varianz $\sigma^2$, falls X die folgende Wahrscheinlichkeitsdichte hat: 
+	$$ p(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}$$
+	Notation: $X \sim \mathcal{N}(\mu, \sigma^2)$
+	\label{def:Normalverteilung}
+\end{definition}\noindent
+Ein wichtiges Beispiel der Normalverteilung ist die Standardnormalverteilung, welche eine Normalverteilung mit den Parametern $\mu = 0$ und  $\sigma^2 = 1$ ist ($X \sim \mathcal{N}(0,1)$). Eine solche Standardnormalverteilung hat die Dichtefunktion\\
+$$p(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2}.$$
 \\
 Der ELBO lässt sich aus dem Rekonstruktionsverlust (Reconstruction Loss) und der Kullback-Leibler-Divergenz zusammensetzten. Die Kullback-Leibler-Divergenz quantifiziert die Differenz zwischen der approximierten posterior Verteilung und der prior Verteilung und ist folgendermaßen definiert:\\
 \begin{definition}[Kullback-Leibler-Divergenz (KL-Divergenz)]
-Sei $q_\phi(z|x)$ die approximierte Posteriori-Gauß-Verteilung und $p(z)$ die Priori-Gauß-Verteilung. Dann ist die KL-Divergenz definiert als
-$$D_{KL}(q_\phi(z|x)||p(z))= \int q_\phi(z|x) \log \left(\frac{q_\phi(z|x)}{p(z)} \right)dz$$
+Seien Q und P zwei Wahrscheinlichkeitsverteilungen. 
+Sei dabei P die wahre Verteilung mit Dichtefunktion p(x) und Q die approximierte Verteilung mit Dichtefunktion q(x). Dann ist die KL-Divergenz zwischen Q und P definiert als
+$$D_{KL}(P||Q)= \int p(x) \log \left(\frac{p(x)}{q(x)} \right)dx$$
 \end{definition}\noindent
-Der Rekonstruktionsverlust misst, wie gut der Decoder die Input Daten rekonstruiert hat. Er wird als log-Likelihood der rekonstruierten Daten angegeben.
-Aus der sich auch der ELBO herleiten lässt(vgl. \cite{IntroductiontoVAEs}). \\
+Der Rekonstruktionsverlust misst, wie gut der Decoder die Input Daten rekonstruiert hat. Er wird in einem Variational Autoencoder als negativer log-Likelihood der Daten x gegeben die latenten Daten z angegeben. Er ist durch 
+$$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] $$ gegeben. Betrachtet man nun die konstante log-Likelihood der Daten unabhängig von z, so kann man aus ihr den ELBO herleiten (vgl. \cite{IntroductiontoVAEs}):\\
 \begin{align}
  	\log p_\theta(x) &= \log p_\theta(x) * \overbrace{\int q_\phi(z|x) dz}^{=1} \\
  	&= \int \log p_\theta(x) q_\phi(z|x) dz \\
  	&= \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)] \\
  	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{p_\theta(z|x)}\right]\right] \\
  	&= \mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)q_\phi(z|x)}{q_\phi(z|x)p_\theta(z|x)}\right]\right] \\
- 	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}_{\theta,\phi}(x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))} \label{ELBO & DKL Gleichung}
+ 	&= \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{p_\theta(x,z)}{q_\phi(z|x)}\right]\right]}_{\substack{\text{$= \mathcal{L}(\theta,\phi;x)$}\\\text{(ELBO)}}} + \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right]}_{=D_{KL}(q_\phi(z|x)||p_\theta(z|x))} \label{ELBO & DKL Gleichung}
 \end{align}
 Der zweite Term in Gleichung \ref{ELBO & DKL Gleichung} ist nach Definition die nicht negative Kullback-Leibler-Divergenz (KL-Divergenz) zwischen $q_\phi(z|x)$ und $p_\theta(z|x))$ und der erste Term in Gleichung \ref{ELBO & DKL Gleichung} stellt den Evidence Lower Bound (ELBO) dar.\\
 Dieser wird wir folgt definiert:\\
 \begin{definition}[Evidence Lower Bound (ELBO) für VAEs]
-	Sei $q_\phi(z|x)$ das Encoder Modell und $p_\theta(x,z)$ das Decoder Modell. Der ELBO ist definiert durch
-	$$ \mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z) - \log q_\phi(z|x)] $$ 
+	Sei z die latente Zufallsvariable und seien x die Input Daten.
+	Sei $q_\phi(z|x)$ das Verteiilung von z gegeben x und $p_\theta(x,z)$ die gemeinsame Verteilung von z und x. Der ELBO ist definiert durch
+	$$ \mathcal{L}(\theta,\phi;x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z) - \log q_\phi(z|x)] $$ 
 \end{definition}\noindent
-Es ist leicht zu sehen, dass durch Umstellen der Gleichung \ref{ELBO & DKL Gleichung} sich die ELBO aus dem Rekonstruktionsverlust und der KL-Divergenz ergibt (Vgl. Gleichung \ref{ELBO=RECLOSS&KLDIV}). Insbesondere ist zu erkennen, dass der ELBO, dadurch dass die KL-Divergenz nicht negativ ist, eine untere Schranke für die log-Likelihood der Daten darstellt. 
+Die ELBO kann auch durch den Rekonstruktionsfehler und der KL-Divergenz definiert.
+Die ELBO zielt darauf ab, die log-Likelihood $\log p_\theta(x)$ zu maximieren. 
+Es ist leicht zu sehen, dass durch Umstellen der Gleichung \ref{ELBO & DKL Gleichung} die ELBO, da die KL-Divergenz nicht negativ ist, eine untere Schranke der Log-Likelihood bietet (Vgl. Gleichung \ref{ELBO=RECLOSS&KLDIV}).
 \begin{align}
-	\mathcal{L}_{\theta,\phi}(x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \label{ELBO=RECLOSS&KLDIV}\\
+	\mathcal{L}(\theta,\phi;x) &= \log p_\theta(x) - D_{KL}(q_\phi(z|x)||p_\theta(z|x)) \label{ELBO=RECLOSS&KLDIV}\\
 	&\leq 	\log p_\theta(x) 
 \end{align}\noindent
 Alternativ kann dies mit der Jensenschen Ungleichung (vgl. \cite{JensenscheUngleichung}) hergeleitet werden:
@@ -319,13 +333,13 @@ Alternativ kann dies mit der Jensenschen Ungleichung (vgl. \cite{JensenscheUngle
 	\log p_\theta(x) &= \log \int p_\theta(x,z) dz \\
 	&= \log \int p_\theta(x,z) \frac{q_\phi(z|x)}{q_\phi(z|x)} dz \\
 	& = \log \mathbb{E}_{q_\phi(z|x)}\left[\frac{p_\theta(x,z)}{q_\phi(z|x)}\right] \\
-	& \overset{Jensen}{\geq} \mathbb{E}_{q_\phi(z|x)}\left[\log \frac{p_\theta(x,z)}{q_\phi(z|x)}\right] = \mathcal{L}_{\theta,\phi}(x)
+	& \overset{Jensen}{\geq} \mathbb{E}_{q_\phi(z|x)}\left[\log \frac{p_\theta(x,z)}{q_\phi(z|x)}\right] = \mathcal{L}(\theta,\phi;x)
 \end{align}\noindent
 Es ist sofort ersichtlich, dass die log-likelihood $p_\theta(x)$ durch Maximieren der ELBO bzgl. $\theta$ und  $\phi$ selbst maximiert wird und somit die Qualität unseres generatives Modells verbessert wird. Gleichzeitig minimiert sich dadurch die KL-Differenz zwischen der approximativen Verteilung $q_\phi(z|x)$ und den wahren posterior Verteilung $p_\theta(z|x)$. Durch die Maximierung der ELBO wird also die Approximation $q_\phi(z|x)$ an die posterior Verteilung optimiert. \\
 \\
 Die Maximierung der ELBO kann durch stochastische Gradientenverfahren wie Stochastic Gradient Descent (SGD) oder andere fortschrittliche Verfahren erfolgen. Die Berechnung der Gradienten des ELBOs bzgl. $\theta$ stellt keine Probleme dar. Mit dem für solche Methoden üblichen Monte-Carlo Schätzer (Gleichung \ref{MC-Schätzer}) lassen sich die Gradienten bzgl. $\theta$ einfach berechnen, wie man in den folgenden Gleichungen sehen kann.\\
 \begin{align}
-	\nabla_\theta \mathcal{L}_{\phi, \theta}(x) &=\nabla_\theta \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)] \\
+	\nabla_\theta \mathcal{L}(\phi, \theta;x) &=\nabla_\theta \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)] \\
 	&=  \mathbb{E}_{q_\phi(z|x)}[\nabla_\theta (\log p_\theta(x,z)-\log q_\phi(z|x))] \\
 	&\approx \nabla_\theta  (\log p_\theta(x,z)-\log q_\phi(z|x))\\
 	&= \nabla_\theta  \log p_\theta(x,z) \label{MC-Schätzer}
@@ -346,7 +360,7 @@ der Gradienten von $\mathcal{L}_{\theta,\phi}(x) = \mathbb{E}_{q_\phi(z|x)}\left
 
 
 \begin{align}
-	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) &= 	\nabla_\phi \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] \\
+	\nabla_\phi \mathcal{L}(\theta,\phi;x) &= 	\nabla_\phi \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] \\
 	& \neq \mathbb{E}_{q_\phi(z|x)}\left[\nabla_\phi(\log p_\theta(x,z)- \log q_\phi(z|x))\right]
 \end{align}
  \\
@@ -371,10 +385,10 @@ $$  \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z)- \log q_\phi(z|x)\right] = 
 Der Reparameterisierungstrick bietet somit eine effiziente und flexible Methode zur Berechnung von Gradienten in Modellen mit latenten Variablen und ermöglicht die Anwendung leistungsstarker Optimierungsmethoden wie SGD auf komplexe probabilistische Modelle. Wie der Reparametrisierungstrick in einem VAE aussieht ist in  Abbildung \ref{fig:vae_reparameterization_trick} veranschaulicht.
 \\
 Mit der neuen Darstellung kann der Gradient des ELBO berechnet werden als:
-$$	\nabla_\phi \mathcal{L}_{\theta,\phi}(x) =
+$$	\nabla_\phi \mathcal{L}(\theta,\phi;x) =
  \mathbb{E}_{p(\epsilon)}\left[\nabla_\phi(\log p_\theta(x,g(\epsilon,x, \phi))- \log q_\phi(g(\epsilon,x, \phi)|x))\right] $$ mit $z = g(\epsilon, x, \phi)$. 
 Die Erwartung auf der rechten Seite wird durch Monte-Carlo-Sampling approximiert, indem man mehrere Stichproben von $\epsilon$ zieht, die entsprechende Transformation anwendet und dann den Durchschnitt der Gradienten bildet: 
-$$ \nabla_\phi \mathcal{L}_{\theta,\phi}(x) \approx \frac{1}{N} \sum_{n=1}^{N} \nabla_{\phi} (\log p_\theta(x,g(\epsilon_n,x, \phi))- \log q_\phi(g(\epsilon_n,x, \phi)|x)) $$
+$$ \nabla_\phi \mathcal{L}(\theta,\phi;x) \approx \frac{1}{N} \sum_{n=1}^{N} \nabla_{\phi} (\log p_\theta(x,g(\epsilon_n,x, \phi))- \log q_\phi(g(\epsilon_n,x, \phi)|x)) $$
 Hier sind $\epsilon_n$ die unabhängigen Stichproben aus der Verteilung p($\epsilon$) (vgl. \cite{MonteCarloEstimation}).
 \begin{figure}
 	\centering
@@ -670,12 +684,53 @@ Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der 
 	\label{fig:chi2}
 \end{figure}
 
+
+\chapter{Das eigene Modell}
+
+Wir bekommen aus dem Encoder-Modell $q_\phi(z|x)$ $\mu$ und $\log \sigma$. 
+
+Mit dem Reparametrisierungstrick im Encoder werden die latenten Daten $z = \mu + \exp(\log(\sigma)) \odot \epsilon$ mit $\epsilon \sim \mathbf{N}(0,I)$ erzeugt. Auf diesen Daten wird das gemischte Modell gefittet: 
+$$z = X\beta + Zb + \epsilon $$
+mit 
+$$\begin{pmatrix}
+		b \\
+		\epsilon \\
+\end{pmatrix}
+\sim
+\mathcal{N}
+\begin{pmatrix}
+\begin{pmatrix}		
+	0 \\
+	0 \\
+\end{pmatrix},
+\begin{pmatrix}
+	Q & 0 \\
+	0 & R = \sigma_\epsilon^2I \\
+\end{pmatrix}
+\end{pmatrix}$$
+Für die Berechnung der KL-Divergenz im Kontext des VAE-Modells werden die beiden Verteilungen $q_\phi(z|x)$ und $p_\theta(z|x)$ als mehrdimensionale Normalverteilungen angenommen. \\
+Die Wahrscheinlichkeitsdichte für eine Normalverteilung wurde bereits in Definition \ref{def:Normalverteilung} definiert. Wird nun in die KL-Divergenz zwischen $q_\phi(z|x)$ und $p_\theta(z|x)$, wie sie in Gleichung \ref{ELBO & DKL Gleichung} definiert ist, die Wahrscheinlichkeitsdichtefunktion eingesetzt, so erhält man folgende Gleichung:
+\begin{align}
+	\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right] &=\mathbb{E}_{q_\phi(z|x)}\left[\log\left(\frac{1}{\sigma\sqrt{2\mu}}\right)- \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 - \log\left(\frac{1}{\sqrt{2\pi}}\right)+ \frac{1}{2}(x)^2\right] \\
+	&=\mathbb{E}_{q_\phi(z|x)}\left[\log\left(\frac{1}{\sigma\sqrt{2\mu}}\right) - \log\left(\frac{1}{\sqrt{2\pi}}\right)\right] + \mathbb{E}_{q_\phi(z|x)}\left[ \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right] + \mathbb{E}_{q_\phi(z|x)}\left[\frac{1}{2}(x)^2\right] 
+\end{align}
+Der Term lässt sich durch einfache mathematische Umformungen weiter vereinfachen. Für eine genauere Herleitung siehe \cite{KL-Div}.
+\begin{align}
+	\mathbb{E}_{q_\phi(z|x)}\left[\log\left(\frac{1}{\sigma\sqrt{2\mu}}\right) - \log\left(\frac{1}{\sqrt{2\pi}}\right)\right] &+ \mathbb{E}_{q_\phi(z|x)}\left[ \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right] + \mathbb{E}_{q_\phi(z|x)}\left[\frac{1}{2}(x)^2\right] \\
+	&= (-\frac{1}{2}\log(\sigma^2)) + (-\frac{1}{2}) + (\frac{1}{2}\sigma^2 + \mu^2) \\
+	&= (\frac{1}{2})[-\log(\sigma^2)-1+\sigma^2+\mu^2] \\
+	&= (\frac{1}{2})[-2*\log(\sigma)-1+ \exp(2* \log(\sigma))+\mu^2]
+\end{align}
+Der Rekonstruktionsverlust des Variational Autoencoder wird durch die Differenz zwischen den Rekonstruierten Daten und den Input Daten berechnet. Dieser wird durch den Decoder berechnet und zusammen mit der KL-Divergenz in der Loss-Funktion berücksichtigt. 
+
+Die Loss-Funktion für das Grundlegende VAE-Modell im Rahmen dieser Arbeit wird wie folgt berechnet:\\
+$$ \mathcal{L} = \alpha * D_{KL}(q_\phi(z|x)||p_\theta(z|x)) + \gamma * RECLOSS $$
+Dabei sind $\alpha$ und $\gamma$ standardgemäß auf den Wert 1 ($\alpha=1, \gamma=1$) gesetzt. Somit entspricht die Loss-Funktion im Standardfall der negativen ELBO.
 %-------------------------------------------------------------
 
 %-------------------EMPIRISCHE-ERGEBNISSE---------------------
 
 %-------------------------------------------------------------
-
 \chapter{Empirische Ergebnisse}
 Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, fällt die Wahl im Rahmen dieser Arbeit auf den bereits eingeführten Likelihood-Ratio Test. Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist. Für dieses Szenario wird die Teststatistik nicht auf der latenten Repräsentation sondern auf den wahren Daten durchgeführt. Später fährt die Analyse auf einem komplexen medizinischen Datensatz in einer latenten Repräsentation fort.
 \section{gemischte Modelle auf simulierten Daten}
