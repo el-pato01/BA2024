@@ -122,7 +122,6 @@ class Encoder(nn.Module):
                  use_bn=False,
                  use_ln=False,
                  dropout=0.0,
-                 additional_layers_dims=False
                  ):
         super(Encoder, self).__init__()
 
@@ -132,21 +131,9 @@ class Encoder(nn.Module):
                                       use_ln=use_ln,
                                       dropout=dropout,
                                       )
-        
-        # Zusätzliche Schichten
-        if additional_layers_dims:
-            self.additional_layers = create_structure(neurons=[hidden_dims[-1]]+additional_layers_dims,
-                                                      act=act,
-                                                      use_bn=use_bn,
-                                                      use_ln=use_ln,
-                                                      dropout=dropout,
-                                                      )
-        else:
-            self.additional_layers = nn.Identity()  # Falls keine zusätzlichen Schichten definiert sind
 
-        final_hidden_dim = additional_layers_dims[-1] if additional_layers_dims else hidden_dims[-1]
-        self.mu = nn.Linear(final_hidden_dim, output_dim)
-        self.log_sig = nn.Linear(final_hidden_dim, output_dim)
+        self.mu = nn.Linear(hidden_dims[-1], output_dim)
+        self.log_sig = nn.Linear(hidden_dims[-1], output_dim)
 
         self.prior = Normal(
             torch.zeros(torch.Size([output_dim])), 
@@ -154,7 +141,6 @@ class Encoder(nn.Module):
 
     def encode(self, input):
         x = self.model(input)
-        x = self.additional_layers(x)
         mu = self.mu(x)
         log_sig = self.log_sig(x)
         return mu, log_sig
@@ -173,7 +159,6 @@ class Encoder(nn.Module):
         kl_div = self.calc_kl_div(mu, log_sig)
         z = self.sample(mu, log_sig)
         return z, mu, kl_div
-    
 
 class Exp_CumSum(nn.Module):
     def __init__(self):
