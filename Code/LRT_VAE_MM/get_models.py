@@ -122,31 +122,29 @@ class Encoder(nn.Module):
                  use_bn=False,
                  use_ln=False,
                  dropout=0.0,
-                 additional_layers_dims=False
+                 additional_layers=False  # Neuer Parameter für zusätzliche Schicht
                  ):
         super(Encoder, self).__init__()
 
+        # Modellstruktur erstellen
         self.model = create_structure(neurons=[input_dim]+hidden_dims, 
                                       act=act,
                                       use_bn=use_bn,
                                       use_ln=use_ln,
                                       dropout=dropout,
                                       )
-        
-        # Zusätzliche Schichten
-        if additional_layers_dims:
-            self.additional_layers = create_structure(neurons=[hidden_dims[-1]]+additional_layers_dims,
-                                                      act=act,
-                                                      use_bn=use_bn,
-                                                      use_ln=use_ln,
-                                                      dropout=dropout,
-                                                      )
-        else:
-            self.additional_layers = nn.Identity()  # Falls keine zusätzlichen Schichten definiert sind
 
-        final_hidden_dim = additional_layers_dims[-1] if additional_layers_dims else hidden_dims[-1]
-        self.mu = nn.Linear(final_hidden_dim, output_dim)
-        self.log_sig = nn.Linear(final_hidden_dim, output_dim)
+        # Zusätzliche Schicht hinzufügen, falls aktiviert
+        if additional_layers:
+            self.additional_layer = nn.Linear(hidden_dims[-1], hidden_dims[-1])
+            self.model = nn.Sequential(
+                self.model,
+                self.additional_layer,
+                act if act is not None else nn.Identity()
+            )
+
+        self.mu = nn.Linear(hidden_dims[-1], output_dim)
+        self.log_sig = nn.Linear(hidden_dims[-1], output_dim)
 
         self.prior = Normal(
             torch.zeros(torch.Size([output_dim])), 
@@ -154,7 +152,6 @@ class Encoder(nn.Module):
 
     def encode(self, input):
         x = self.model(input)
-        x = self.additional_layers(x)
         mu = self.mu(x)
         log_sig = self.log_sig(x)
         return mu, log_sig
