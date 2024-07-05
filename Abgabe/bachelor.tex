@@ -19,20 +19,45 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \usepackage{pgfplots}
 \usepackage{float}
 \usepackage{lipsum}
+\usepackage{algorithm2e}
 \usepackage{booktabs}% for more beautiful tables
 \usepackage{cleveref}% intelligent references
 \usepackage{eso-pic}
 \usepackage{diffcoeff}
 \usepackage{amsthm}
 \usepackage{amsmath}
+
 % Laden von Paketen und Festlegen von Optionen
-\PassOptionsToPackage{autostyle=true,german=quotes}{csquotes}
-\PassOptionsToPackage{backend=biber,style=alphabetic}{biblatex}
+%\PassOptionsToPackage{autostyle=true,german=quotes}{csquotes}
+%\PassOptionsToPackage{backend=biber,style=numeric}{biblatex}
 
 % Pakete laden
 \usepackage{csquotes}
-\usepackage{biblatex}
+%\usepackage{biblatex}
+\usepackage[backend=biber,style=alphabetic,citestyle=authoryear]{biblatex}
 \addbibresource{literature.bib} % Ihre .bib-Datei
+
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+	language=Python,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{green},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	stepnumber=1,
+	numbersep=5pt,
+	showstringspaces=false,
+	breaklines=true,
+	frame=lines,
+	captionpos=b,
+	tabsize=2,
+	morekeywords={self}
+}
 %-------------------------------------------------------------------------------
 \newtheoremstyle{break}
 {\topsep}   % Platz oberhalb
@@ -72,10 +97,12 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \title{Dies ist der Titel der Arbeit}
 \author{Max Mustermann}
 \date{\today}
+\pagenumbering{arabic}
 
 %-------------------------------------------------------------------------------
 \begin{document}
-
+	
+\pagenumbering{arabic}
 % Title Page
 \begin{titlepage}
 	\AddToShipoutPicture*{\BackgroundPic}
@@ -125,37 +152,41 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 	
 \end{titlepage}
 \frontmatter
+\pagenumbering{arabic}
 %\maketitle
 
 \cleardoublepage{}
 
 \tableofcontents
 
+\cleardoublepage{}
+
 \section{Zusammenfassung}
 Eine kurze Zusammenfassung der Arbeit auf Deutsch.
 
 \section*{Abstract}
-A brief abstract of this thesis in English.
-%\mainmatter{}
-
+This thesis examines the potential for bias in inference when utilising mixed models in latent representations. The research primarily focuses on the application of Variational Autoencoders (VAE) combined with mixed models to analyse high-dimensional medical datasets. The study investigates the extent to which inference results may be biased and evaluates the robustness of the models used. The objective of this study is to examine the likelihood-ratio test statistics and compare them across different model configurations in order to gain insights into the reliability of using VAEs in conjunction with mixed models for statistical analysis.
+\mainmatter{}
+\pagenumbering{arabic}
 %%---------------EINLEITUNG--------------------------------------------------
 \chapter{Einleitung}
-
-In der modernen Datenanalyse spielen gemischte Modelle eine zentrale Rolle, da sie es ermöglichen, sowohl feste als auch zufällige Effekte zu berücksichtigen. Dies macht sie besonders in den Bereichen der Biostatistik, der Sozialwissenschaften und der ökonomischen Modellierung populär.\\ 
-Im Rahmen dieser Arbeit werden gemischte Modelle auf die Analyse medizinischer Daten angewendet. Mit dem Aufkommen von Big Data und komplexen Datenstrukturen hat sich der Fokus zunehmend auf die effiziente und genaue Extraktion von Informationen aus großen und oft unübersichtlichen Datensätzen verlagert.\\ 
-In diesem Zusammenhang gewinnen latente Repräsentationen an Bedeutung, da sie es ermöglichen, inhärente Strukturen innerhalb der Daten zu identifizieren und zu nutzen, um tiefere Einblicke zu gewinnen.\\
+Die Anwendung gemischter Modelle in latenten Repräsentationen hat in den letzten Jahren stark an Bedeutung gewonnen, besonders im Bereich des maschinellen Lernens und der Datenanalyse. Diese Modelle kombinieren feste und zufällige Effekte, um die Variabilität in den Daten besser abzubilden und somit präzisere Vorhersagen und Inferenz zu ermöglichen. Eine vielversprechende Methode zur Erstellung solcher latenten Repräsentationen ist der Variational Autoencoder (VAE). VAEs sind generative Modelle, die hochdimensionale Daten in einen niedrigdimensionalen latenten Raum transformieren, um die zugrunde liegenden Struktur zu erfassen und neue Daten zu generieren, die ähnliche Merkmale wie die Trainingsdaten aufweisen. Sie sind eine verbesserte Erweiterung der normalen Autoencoder. \\
 \\
-Die Integration von gemischten Modellen in latente Repräsentationen birgt jedoch das Risiko einer Verzerrung der Inferenzergebnisse, was die Genauigkeit und Zuverlässigkeit der aus den Daten gezogenen Schlussfolgerungen erheblich beeinträchtigen kann.\\ 
-Die vorliegende Arbeit widmet sich der Untersuchung von Verzerrungen, die bei der Anwendung gemischter Modelle auf latente Repräsentationen auftreten können. Das Ziel dieser Arbeit ist es, die Mechanismen zu verstehen, die zu diesen Verzerrungen führen, sowie Methoden zu entwickeln, um ihre Auswirkungen zu minimieren.\\
+\textbf{Problemstellung und Motivation}\\
+Gemischte Modelle auf hochdimensionalen Datensätzen und komplexen Datenstrukturen sind oft schwer zu handhaben und mit hohen rechnerischen Leistungen verbunden. Variational Autoencoder bieten eine dimensionsreduzierte Möglichkeit Datenstrukturen in einem latenten Raum darzustellen. Die Anwendung gemischter Modelle auf einer latenten Repräsentation, wie sie der latente Raum eines Variational Autoencoder ist, würde demnach eine effizientere Berechnung und eine erleichterte Handhabung ermöglichen.\\
+Allerdings kann die Anwendung auch zu Problemen führen. Bei der Verwendung gemischter Modelle in der latenten Repräsentation von Variational Autoencodern machen sowohl das gemischte Modell als auch der VAE Annahmen über Verteilungen über die Verteilung der Daten und der latenten Variablen. Falls die Verteilungsannahmen der Modelle verletzt werden, kommt es wiederum zu einer verzerrten Schätzung der Parameter und/oder Optimierungsgrößen. Aus diesen Gründen kann es zu einer Verzerrung der Inferenz bei Verwendung gemischter Modelle in latenten Repräsentationen kommen.\\
 \\
-Das Problem der Verzerrung ist von besonderer Relevanz, da eine fehlerhafte Inferenz zu Fehlentscheidungen führen kann, die in praktischen Anwendungen schwerwiegende Konsequenzen haben können.\\
-Die Arbeit zielt darauf ab, durch eine sorgfältige Analyse und Bewertung von gemischten Modellansätzen in Verbindung mit latenten Repräsentationen einen Beitrag zur Verbesserung der Modellgenauigkeit und der Zuverlässigkeit von Inferenzschlüssen zu leisten.\\
+\textbf{Ziel der Arbeit}\\
+Das Ziel dieser Arbeit ist es, die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen. Besonders wird analysiert, wie die Kombination von VAE und gemischten Modellen die statistischen Eigenschaften der Inferenz beeinflusst. Eine verzerrte Inferenz kann zu fehlerhaften Schlussfolgerungen führen, was die Validität der Modelle und deren praktische Anwendung beeinträchtigt.\\
 \\
-Die Arbeit ist in mehrere Teile gegliedert, die zunächst die theoretischen Grundlagen von gemischten Modellen und latenten Repräsentationen behandeln. Im Anschluss erfolgt eine Diskussion der Methoden zur Messung und Korrektur von Verzerrungen. \\
-Im Anschluss werden die zuvor theoretisch erörterten Konzepte anhand von empirischen Studien praktisch angewendet und evaluiert. Auf Basis der gewonnenen Erkenntnisse werden abschließend Empfehlungen für die Anwendung dieser Techniken in Forschung und Praxis gegeben.\\
+Im ersten Teil der Arbeit werden die theoretischen Grundlagen von Variational Autoencodern  und gemischten Modellen erläutert. Variational Autoencoder (VAE) ermöglichen es, die Struktur hochdimensionaler Daten zu erfassen und ähnliche neue Daten zu erzeugen. Die Architektur und das Training von VAEs werden detailliert beschrieben, um ein tiefes Verständnis ihrer Funktionsweise zu vermitteln.\\
 \\
-\subsection{Motivation}
-
+Anschließend werden gemischte Modelle beschrieben, die feste und zufällige Effekte kombinieren, um die Variabilität in den Daten zu erfassen. Diese Modelle sind besonders nützlich bei der Analyse von Längsschnitt- und Cluster-Daten, wie sie in der Medizin, den Sozialwissenschaften und der Ökonomie häufig vorkommen. Ein zentrales Element der gemischten Modelle ist die Likelihood-Inferenz, bei der die Parameter durch Maximum-Likelihood-Schätzung bestimmt werden.\\
+\\
+Im empirischen Teil der Arbeit wird ein komplexer,  medizinischer Datensatz verwendet, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle auf latente Repräsentationen zu untersuchen. Die Analyse basiert auf der Likelihood-Ratio-Test Statistik, die zwischen einem vollständigen und einem reduzierten gemischten Modell unterscheidet. Durch wiederholtes Training und Evaluierung dieser Modelle auf der latenten Datenwolke des VAE wird die Verzerrung quantifiziert und bewertet.\\
+\\
+Die Ergebnisse dieser Untersuchung tragen dazu bei, die Zuverlässigkeit von Inferenzmethoden in Kombination mit VAEs zu bewerten und liefern wertvolle Erkenntnisse für die praktische Anwendung solcher Modelle. Abschließend werden die Implikationen der Ergebnisse diskutiert und Empfehlungen für zukünftige Forschungen gegeben.\\
+\\
 
 %%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
 \chapter{Theoretische Grundlagen}
@@ -176,7 +207,8 @@ In diesem Kapitel wird die theoretische Basis für die nachfolgenden empirischen
 %----------------------------------------------------------------------------
 \section{Einführung in Variational Autoencoder (VAE)}
 Die Anwendung der gemischten Modelle auf einer latenten Repräsentation erfolgt,wie bereits erwähnt, mittels Variational Autoencoder (VAE).
-Variational Autoencoder sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe ihres Encoders im latenten Raum niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Sie sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren. Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht (vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
+Variational Autoencoder sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe ihres Encoders im latenten Raum  niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht es, gemischte Modelle effizienter und genauer zu betreiben. Sie sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren.\\
+Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Inhalte, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht (vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[auto, thick, node distance=2cm, >=stealth]
@@ -219,7 +251,8 @@ Variational Autoencoder sind für die Modellierung latenter Repräsentationen vo
 	\label{fig:autoencoder}
 \end{figure}
 \subsection{Strucktur des VAEs}
-Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken (einem Encoder Modell und einem Decoder Modell). Der Encoder ist ein neuroanles Netzwerk, das die hochdimensionalen Eingabedaten x durch mehrere Schichten hindurch in eine niedrigdimensionale latente Repräsentation z transformiert. Diese Transformation ermöglicht es, die zugrunde liegende Struktur der Daten zu erfassen und in einer komprimierten Form darzustellen. Die latenten Variablen werden als Verteilung in Form eines Mittelwerts $\mu$ und einer Standardabweichung $\sigma$ kodiert. Der Decoder transformiert die latenten Daten so genau wie möglich zurück in die ursprünglichen Eingabedaten. Dies ermöglicht es, neue Datenpunkte zu generieren, die ähnliche Eigenschaften wie die Trainingsdaten aufweisen. Beide Modelle bestehen jeweils aus mehreren neuronalen Schichten, die jeweils die Transformation durchführen und lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
+Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken (einem Encoder Modell und einem Decoder Modell). Der Encoder ist ein neuroanles Netzwerk, das die hochdimensionalen Eingabedaten x durch mehrere Schichten hindurch in eine niedrigdimensionale latente Repräsentation z transformiert. Diese Transformation ermöglicht es, die zugrunde liegende Struktur der Daten zu erfassen und in einer komprimierten Form darzustellen.\\
+Die latenten Variablen werden als Verteilung in Form eines Mittelwerts $\mu$ und einer Standardabweichung $\sigma$ kodiert. Der Decoder transformiert die latenten Daten so genau wie möglich zurück in die ursprünglichen Eingabedaten. Dies ermöglicht es, neue Datenpunkte zu generieren, die ähnliche Eigenschaften wie die Trainingsdaten aufweisen. Beide Modelle bestehen jeweils aus mehreren neuronalen Schichten, die jeweils die Transformation durchführen und lernen die wesentlichen Merkmale der Eingabedaten zu extrahieren und eine komprimierte Version dieser Daten zu erzeugen.\\
 \\
 \begin{figure}
 	\centering
@@ -276,7 +309,8 @@ Die Architektur eines VAE basiert auf zwei neuronalen Netzwerken (einem Encoder 
 \textbf{Latenter Raum}\\
 Variablen, die man nicht direkt messen kann, demnach nicht Teil des erhaltenen Datensatzes sind, bezeichnet man als latente Variablen. Sie werden erst mithilfe der gegebenen Daten erschlossen und ergeben im Verbund den latenten Raum.\\
 Im VAE werden die latenten Variablen z aus der prior-Verteilung $p(z)$ gezogen, welche eine multivariate Normalverteilung $p(z) = \mathcal{N}(0,I) $ ist. Die latenten Daten sind der Output aus dem Encoder Modell, welches die  approximierte posterior Verteilung $q_\phi(z|x)$ parametrisiert, wobei $\phi$ der Parametervektor des Encoders ist. Dieser erlernt somit zwei Vektoren, nämlich den Mittelwert \( \mu_\phi \) und die Standardabweichung \( \sigma_\phi \) der Normalverteilung $q_\phi(z|x) = \mathcal{N}(\mu_\phi(x),\sigma_\phi^2(x))$.\\
-Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die Likelihood-Verteilung $p_\theta(x|z)$  zu rekonstruieren. Die Likelihood-Verteilung der Daten gegeben die latenten Daten wird durch den Parametervektor $\theta$ des Decoders parametrisiert. Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsentationen generiert wurden, wird durch dieses Decoder-Modell modelliert. Auch hier wird typischerweise eine Normalverteilung angenommen, sofern die  Daten reellwertig sind. Im Falle binärer Daten wird die Verteilung als Bernoulli-Verteilung modelliert. \\ Für weiterführende Details wird auf die Publikation \cite{Auto-EncodingVariationalBayes} verwiesen.\\
+Der Decoder versucht aus den latenten Variablen die Inputdaten x durch die Likelihood-Verteilung $p_\theta(x|z)$  zu rekonstruieren. Die Likelihood-Verteilung der Daten gegeben die latenten Daten wird durch den Parametervektor $\theta$ des Decoders parametrisiert.\\
+Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsentationen generiert wurden, wird durch dieses Decoder-Modell modelliert. Auch hier wird typischerweise eine Normalverteilung angenommen, sofern die  Daten reellwertig sind. Im Falle binärer Daten wird die Verteilung als Bernoulli-Verteilung modelliert. \\ Für weiterführende Details wird auf die Publikation \cite{Auto-EncodingVariationalBayes} verwiesen.\\
 
 
 \subsection{Training VAE}
@@ -453,7 +487,7 @@ $$(y_i,x_i)= (y_{i1},...,y_{iT_i},x_{i1},...,x_{iT_i})$$
 bei dem $y_{ij}$ eine Beobachtung an Individuum $i$ zum Zeitpunkt $t_{ij}$ bezeichnet und $T_i$ die Anzahl an Beobachtungen ist.\\
 \\
 Zur Einführung der gemischten Modelle folgen wir den Notationen in \cite{fahrmeir-2001-multivariate} und \cite{fahrmeir-2011-regression}.
-Longitudinal und Cluster spezifische Daten weisen zwei Ebenen auf. Im Folgenden betrachten wir das Beispiel eines medizinischen Datensatzes. Die erste Ebene bezieht sich dabei auf die Daten innerhalb einer Gruppe oder eines Individuums. In diesem Fall umfasst die erste Ebene den Patienten als Individuum mit seinen unterschiedlichen Werten für die Tests entlang der Zeitreihe $T_i$. Auf der allgemeineren zweiten Ebene erfolgt eine Betrachtung aller Patienten. \\
+Longitudinal und Cluster spezifische Daten weisen zwei Ebenen auf. Im Folgenden betrachten wir das Beispiel des oben eingeführten medizinischen Datensatzes. Die erste Ebene bezieht sich dabei auf die Daten innerhalb einer Gruppe oder eines Individuums. In diesem Fall umfasst die erste Ebene den Patienten als Individuum mit seinen unterschiedlichen Werten für die Tests entlang der Zeitreihe $T_i$. Auf der allgemeineren zweiten Ebene erfolgt eine Betrachtung aller Patienten. \\
 \\
 Im Rahmen eines gemischten Modells wird auf der ersten Ebene angenommen, dass die Antwortvariablen linear von den unbekannten bevölkerungsspezifischen festen Effekten $\beta$ und den unbekannten Cluster spezifischen zufälligen Effekten $b_i$ abhängen.\\
 Die folgende Gleichung beschreibt ein gemischtes Modell für ein Individuum $i$ zum Zeitpunkt $t$:
@@ -462,11 +496,11 @@ Die folgende Gleichung beschreibt ein gemischtes Modell für ein Individuum $i$ 
 \end{align} \noindent
 Innerhalb des Modells werden die Designvektoren $x_{it}$ und $w_{it}$ als unabhängige Variablen definiert, wobei $x_{it}$ beispielsweise die Testwerte in einem medizinischen Datensatz repräsentiert. Die Zufallsvariable $\epsilon_{it}$ hingegen ist unkorreliert und folgt einer normalverteilten Wahrscheinlichkeitsdichte mit Erwartungswert $ \mathbb{E}(\epsilon_{it}) = 0$ und Varianz $Var(\epsilon_{it}) = \sigma^2$.  Der Ausdruck $a^t$ bezeichnet den transponierten Vektor, bzw. die transponierte Matrix von $a$.\\
 \\
-Betrachtet man nun die zweite Ebene, so werden die zufälligen Effekte $b_i$ zwischen den verschiedenen Individuen gemäß einer Mischverteilung mit $ \mathbb{E}(b_i)=0$ unabhängig variieren. Es wird angenommen, dass die zufälligen Effekte $b_i$ unabhängig und identisch normalverteilt sind.
+Betrachtet man nun die zweite Ebene, so werden die zufälligen Effekte $b_i$ zwischen den verschiedenen Individuen gemäß einer Mischverteilung mit Erwartungswert $ \mathbb{E}(b_i)=0$ unabhängig variieren. Es wird angenommen, dass die zufälligen Effekte $b_i$ unabhängig und identisch normalverteilt sind.
 \begin{align}
 	b_i \sim \mathcal{N}(0,Q)
 \end{align}\noindent
-Dabei ist $Cov(b_i) = Q > 0$ die (q x q) Kovarianzmatrix, welche symmetrisch und positiv semi-definit ist. Eine ausführliche Beschreibung findet sich in \cite{pinheiro2000} (Kapitel 2.2.1).
+Dabei ist $Cov(b_i) = Q > 0$ die (q x q) Kovarianzmatrix, welche symmetrisch und positiv semi-definit ist. Die Größe q beschreibt dabei die Anzahl der zufälligen Effekte. Eine ausführliche Beschreibung findet sich in \cite{pinheiro2000} (Kapitel 2.2.1).
 \\
 Aufgrund dieser Überlegungen lässt sich nun das Model \ref{ClusterMM} in eine allgemeinere Form bringen:
 \begin{definition}[Lineares gemischtes Modell für Longitudinal- oder Clusterdaten] \label{LMM für longitudinale Daten}
@@ -477,9 +511,9 @@ Aufgrund dieser Überlegungen lässt sich nun das Model \ref{ClusterMM} in eine 
 	$$b_i \sim \mathcal{N}(0,Q), \epsilon_i \sim \mathcal{N}(0,R = \sigma^2_\epsilon I)$$
 	definiert.
 \end{definition}\noindent
-Die Daten der zufälligen und festen Effekte werden in einer Designmatrix (Datenmatrix) gespeichert. Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Um auch für immer auftretende Messfehler oder unerwartete Einflüsse gewappnet zu sein, wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
+Die Daten der zufälligen und festen Effekte werden in den Designmatrizen (oder Datenmatrizen) $X_i$ und $W_i$  gespeichert. Die Parametervektoren $\beta$ (für die festen Effekte) und $b_i$ (für die zufälligen Effekte) initialisieren den Einfluss der Daten auf den Antwortvektor. Um auch für immer auftretende Messfehler oder unerwartete Einflüsse gewappnet zu sein, wird ein zufälliges Rauschen $\epsilon$ hinzugefügt.\\
 \\
-Aufgrund des normalverteilten Fehlervektors können nun auch ein marginales Modell als multivariates heteroskedastisches lineares Regressionsmodell definiert werden. Dieses Modell ist für die Berechnung der Likelihood-Inferenz von entscheidender Bedeutung. 
+Aufgrund des normalverteilten Fehlervektors kann nun auch ein marginales Modell als multivariates heteroskedastisches lineares Regressionsmodell definiert werden. Dieses Modell ist für die Berechnung der Likelihood-Inferenz von entscheidender Bedeutung. 
 \begin{definition}[Marginales gemischtes Modell]
 	Seien die Annahmen von \ref{LMM für longitudinale Daten} gegeben. 
 	Das marginale gemischte Modell ist definiert als
@@ -487,10 +521,11 @@ Aufgrund des normalverteilten Fehlervektors können nun auch ein marginales Mode
 	mit dem multivariaten Fehlervektor $\epsilon_i^* = (\epsilon_{i1}^*,...,\epsilon_{iT_i}^*) $ mit $\epsilon_{it}^* = w_{it}^Tb_i + \epsilon_i$. 
 	Die $\epsilon_{it}^*$ sind dabei unabhängig und identisch verteilt (i.i.d.),
 	\begin{align}
-		\epsilon_i^* \sim \mathcal{N}(0,V_i), \hspace{12pt}\text{mit} \hspace{8pt}V_i = \sigma_\epsilon^2I + Z_i Q Z_i^t 
+		\epsilon_i^* \sim \mathcal{N}(0,V_i), \hspace{12pt}\text{mit} \hspace{8pt}V_i = \sigma_\epsilon^2I + W_i Q W_i^t 
 	\end{align}
+	\label{spez-marginales-Modell}
 \end{definition} \noindent
-Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden, welches wie folgt definiert wird:
+Letztendlich können die einzelnen Cluster/Gruppen zu einem einzigen allgemeinen linearen gemischten Modell zusammengefasst werden, welches wie folgt definiert wird:
 \begin{definition}[Allgemeines lineares gemischtes Modell]
 	Ein lineares gemischtes Modell ist definiert durch
 	$$y = X\beta + Wb + \epsilon $$
@@ -511,79 +546,93 @@ Die einzelnen Cluster/Gruppen können zu einem einzigen allgemeinen linearen gem
 			0 & R = \sigma_\epsilon^2I \\
 		\end{pmatrix}
 	\end{pmatrix}$$
-	gegeben. Dabei sind $X$, bzw $W$ die Designmatrizen der festen, bzw zufälligen Effekte, $\beta$ und $b$ die Parametervektoren der festen und der zufälligen Effekten und $\epsilon$ der Fehlervektor.
+	gegeben. Dabei sind $X$, bzw $W$ die Designmatrizen der festen, bzw zufälligen Effekte, $\beta$ und $b$ die Parametervektoren der festen und der zufälligen Effekten und $\epsilon$ der Fehlervektor. Insbesondere sind Q und R die Kovarianzmatrizen der von $b$ und $\epsilon$.
 	\label{def:allg-lin-gem-Modell}
 \end{definition}\noindent
 R ist also die Kovarianzmatrix des Fehlervektors $\epsilon$. Sie beschreibt die Varianz des Fehlers und eventuelle Korrelationen zwischen den Fehlern. Die Kovarianzmatrix der zufälligen Effekte $b$ ist durch $Q$ gegeben. Sie beschreibt die Varianz und die Korrelationen der zufälligen Effekte über die verschiedenen Gruppen oder Individuen.
-In Konsequenz der Definition \ref{def:allg-lin-gem-Modell} lässt sich das marginale Modell verallgemeinern zu: 
+In Konsequenz der Definition \ref{def:allg-lin-gem-Modell} lässt sich das marginale Modell \ref{spez-marginales-Modell} verallgemeinern zu: 
 \begin{align}	
 	y = X\beta + \epsilon^* \label{marginales-Modell}
 \end{align}
-wobei $\epsilon^* = Wb + \epsilon$ ist mit $\epsilon^* \sim \mathcal{N}(0,V)$ und der Gesamtkovarianzmatrix $V= R + WQW^t$.
+wobei $\epsilon^* = Wb + \epsilon$ ist mit $\epsilon^* \sim \mathcal{N}(0,V)$ und der Gesamtkovarianzmatrix $V= R + WQW^t$. Die Gleichung \ref{marginales-Modell} beschreibt also das allgemeine Marginale gemischte Modell.
 %----------------------------------------------------------------------------
 
 %------------------------LIKELIHOOD-INFERENZ---------------------------------
 
 %----------------------------------------------------------------------------
 \section{Likelihood Inferenz und Verzerrung}
-Um die Verzerrung der Inferenz messen zu können, ist es zunächst erforderlich, die Theorie zur Likelihood-Inferenz von gemischten Modellen einzuführen. Dies umfasst sowohl die Schätzung der Parameter der zufälligen Effekte $b_i$ als auch die Schätzung der Parameter $\beta$, $\sigma_\epsilon$ und $Q$. Um die Verzerrung zu quantifizieren, werden wir ein vollständiges gemischtes Modell mit einem reduzierten Modell, das einen festen Effekt weglässt, vergleichen. Dazu wird üblicherweise der sogenannte Likelihood-Ratio Test (LRT) verwendet.
+Um die Verzerrung der Inferenz messen zu können, ist es zunächst erforderlich, die Theorie zur Likelihood-Inferenz von gemischten Modellen einzuführen. Dies umfasst sowohl die Schätzung der Parameter der zufälligen Effekte $b_i$ als auch die Schätzung der Parameter $\beta$, $\sigma_\epsilon$ und $Q$. Um die Verzerrung zu quantifizieren, wird der sogenannte Likelihood-Ratio Test (LRT) eingeführt, welcher hilft den Einfluss eines zusätzlichen Effekts in gemischten Modellen zu messen.
 Wie dieser Test genau funktioniert und wie der Likelihood-Ratio Test durchgeführt wird, werden wir später erläutern. Zuvor benötigen wir noch etwas Theorie zur Likelihood-Berechnung.
 \subsection{Likelihood Berechnung gemischter Modelle}
 Im Folgenden wird die Schätzung der unbekannten Parameter erörtert. Der Vorliegende Ansatz basiert auf den Ausführungen von \cite{fahrmeir-2011-regression}.\\
 \\
 Die Berechnung der Schätzer erfolgt mittels der Maximum-Likelihood Methode. Als Alternative kann die restringierte ML-Methode heran gezogen werden, die jedoch nicht für den Likelihood-Ratio Test geeignet ist. Daher wird die Berechnung der Parameter bei der ML-Methode belassen.\\
-Die Schätzung der Parameter in einem gemischten Modell ist jedoch mit gewissen Schwierigkeiten verbunden. Neben dem $\beta$ sind auch $b_i$, $Q$ und $\sigma_\epsilon$ unbekannt. Daher ist es erforderlich, sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter in $Q$ und $\sigma_\epsilon$, die wir als $\theta$ bezeichnen, zu schätzen. Dies bedingt eine geschachtelte Schätzung.\\
+Die Schätzung der Parameter in einem gemischten Modell ist jedoch mit gewissen Schwierigkeiten verbunden. Neben dem $\beta$ sind auch $b_i$, $Q$ und $\sigma_\epsilon$ unbekannt. Daher ist es erforderlich, sowohl die festen und zufälligen Effekte als auch die unbekannten Parameter in $Q$ und $\sigma_\epsilon$, die wir als $\delta$ bezeichnen, zu schätzen. Dies bedingt eine geschachtelte Schätzung.\\
 \\
-Im Folgenden wird zunächst angenommen, dass die Kovarianzen $R$, bzw. $\sigma_\epsilon$, und  $Q$ bekannt sind. In diesem Zusammenhang ist auch $V$ gemäß \ref{marginales Modell} bekannt. Für die Schätzung von $\beta$, ausgehend vom marginalen Modell, bietet sich 
+Im Folgenden wird zunächst angenommen, dass die Kovarianzen $R$, bzw. $\sigma_\epsilon$, und  $Q$ bekannt sind. In diesem Zusammenhang ist auch $V$ gemäß \ref{marginales-Modell} bekannt. Für die Schätzung von $\beta$, ausgehend vom marginalen Modell, bietet sich 
 \begin{align}
 	\hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y \label{KQ-Schätzerfürbeta}
 \end{align} an.
-Dieser Kleinste-Quadrate-Schätzer (KQ-Schätzer) für $\beta$ ergibt sich aus dem verallgemeinertem Kleinste-Quadrate Kriterium (vgl. \cite{KQ-Schätzer}), welches folgenden Term
-$$(y-X\beta)^tV^{-1}(y-X\beta)$$ 
+Dieser Kleinste-Quadrate-Schätzer (KQ-Schätzer) für $\beta$ ergibt sich aus dem verallgemeinertem Kleinste-Quadrate Kriterium (vgl. \cite{KQ-Schätzer}), welches die quadratische Verlustfunktion unter Berücksichtigung von $V$
+$$L(\beta) = (y-X\beta)^tV^{-1}(y-X\beta)$$ 
 bezüglich $\beta$ minimiert. Siehe hierzu auch \cite{fahrmeir-2011-regression} (Kap. 3).\\
-Der KQ-Schätzer ist gleichzeitig der log-Likelihood Schätzer unter der Normalverteilungsannahme.\\
-Die log-Likelihood für $\beta$ aus dem marginalen Modell sieht folgendermaßen aus:
-$$ l(\beta) =  -0.5 * (log(|V|)+ (y-X\beta)^t V^{-1}(y-X\beta) + N * log(2\pi)).$$ 
-Ableiten nach $\beta$ ergibt den KQ-Schätzer aus \ref{KQ-Schätzerfürbeta}.
+Der KQ-Schätzer ist gleichzeitig der log-Likelihood Schätzer unter der Normalverteilungsannahme. Dazu wird zuerst die Log-Likelihood-Funktion definiert, welche sich aus der Likelihood-Funktion von $y$ gegeben $\beta$ und $\delta$ herleiten lässt:
+\begin{align}
+	L(\beta,\delta|y) &= \frac{1}{(2*\pi)^{\frac{n}{2}}|V|^{\frac{1}{2}}} * \exp (-\frac{1}{2}(y-X\beta)^t V^{-1} (y-X\beta)) \\
+\end{align}
+Wendet man den Logarithmus auf die Likelihood an und vereinfacht diesen Term erhält man die Log-Likelihood: 
+\begin{align}
+	l(\beta,\delta|y) = \log L(\beta,\delta|y) &= \log(\frac{1}{(2*pi)^{\frac{n}{2}} |V|^{\frac{1}{2}}}) - \frac{1}{2} (y-X\beta)^t V^{-1}(y-X\beta) \\
+	&= -0.5 *(log(|V|)+ (y-X\beta)^t V^{-1}(y-X\beta) + N * log(2\pi))
+\end{align}
+Nach dieser Herleitung folgt die Definition:
+\begin{definition}[Log-Likelihood-Funktion]
+	Sei $y = X\beta + \epsilon^*$ ein marginales Modell, wie in  \ref{marginales-Modell} gegeben und sei $\delta$ der Parametervektor der Kovarianzmatrix $V$.
+	Die Log-Likelihood-Funktion der Daten $y$ gegeben $\beta$ und $\delta$ is definiert durch
+	$$ l(\beta,\delta|y) = -0.5 *(log(|V|)+ (y-X\beta)^t V^{-1}(y-X\beta) + N * log(2\pi))$$
+	Dabei ist N die Anzahl der Beobachtungen des marginalen Modells und $|V|$ die Determinante von $V$.
+\end{definition}\noindent
+Ableiten der Log-Likelihood von $\beta$ nach $\beta$ ergibt den KQ-Schätzer aus \ref{KQ-Schätzerfürbeta}.
 $$\frac{d}{d\beta}l(\beta) = X^t V^{-1} (y-X\beta) \stackrel{!}{=} 0  \Rightarrow \hat{\beta} = (X^t V^{-1}X)^{-1}X^t V^{-1}y$$
 Siehe hierzu auch \cite{fahrmeir-2011-regression} (Kap. 3).\\
 \\
-Gemäß dem Gauß-Markov-Theorem stellt $\hat{\beta}$ den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die fixen Effekte dar. Zur Ermittlung des Schätzers ist lediglich eine Schätzung der Parameter in $V$ sowie der Einsatz des Schätzers $\hat{V} $ von $V$ in $\hat{\beta}$ erforderlich. \\
-Für den Schätzer von $b$ verwenden wir den bedingten Erwartungswert $E(b|y)$ von $b$, gegeben die Daten $y$, welcher unter der Normalverteilungsannahme der beste Schätzer ist (vgl. \cite{fahrmeir-2011-regression} Kap. 6.3.1). \\
+Gemäß dem Gauß-Markov-Theorem stellt $\hat{\beta}$ den besten linearen erwartungstreuen Schätzer (BLUE, best linear unbiased estimator) für die festen Effekte dar (vgl. \cite{Statistik-Wiwi}). Zur Ermittlung des Schätzers ist lediglich eine Schätzung der Parameter $\delta$ in $V$ sowie der Einsatz des Schätzers $\hat{V} $ von $V$ in $\hat{\beta}$ erforderlich. \\
+Für den Schätzer von $b$ verwenden wir den bedingten Erwartungswert $E(b|y)$ von $b$ gegeben die Daten $y$, welcher unter der Normalverteilungsannahme der beste Schätzer ist (vgl. \cite{fahrmeir-2011-regression} Kap. 6.3.1). \\
 Im Folgenden wird nun die gemeinsame Verteilung von $b$ und $y$ betrachtet, welche folgendermaßen dargestellt wird:
 $$\begin{pmatrix}
 	y \\
 	b \\
 \end{pmatrix}
 \sim
-\mathbf{N}
+\mathcal{N}
 \begin{pmatrix}
 	\begin{pmatrix}
 		X\beta \\
 		0 \\
 	\end{pmatrix},
 	\begin{pmatrix}
-		V & Z Q \\
-		Q Z^t & Q \\
+		V & W Q \\
+		Q W^t & Q \\
 	\end{pmatrix}
 \end{pmatrix}$$
 In Anbetracht dessen erhalten wir $E(b|y) = Q W^tV^{-1}(y-X\beta)$. \\
-Ersetzt man nun $\beta$ durch den Schätzer $\hat{\beta}$ erhält man den Schätzer für die zufälligen Effekte $$\hat{b} = \hat{Q} W^t\hat{V}^{-1}(y-X\hat{\beta}).$$ Der Schätzer $\hat{b}$ ist der beste lineare unverzerrte Schätzer (BLUP, best linear unbiased prediction)\\
-Die Schätzer für die festen und zufälligen Effekte lassen sich demnach folgendermaßen definieren:
+Ersetzt man nun $\beta$ durch den Schätzer $\hat{\beta}$ erhält man den Schätzer für die zufälligen Effekte $$\hat{b} = \hat{Q} W^t\hat{V}^{-1}(y-X\hat{\beta}).$$ Dieser ist der beste lineare unverzerrte Schätzer (BLUP, best linear unbiased prediction).\\
+Die Schätzer für die festen und zufälligen Effekte lassen sich also folgendermaßen definieren:
 \begin{definition}[Schätzer für feste und zufällige Effekte]
-	Sei $y = X\beta + Wb + \epsilon$ ein lineares gemischtes Modell und $y=X\beta + \epsilon^*$ das zugehörige Marginale nach \ref{marginales Modell}.
+	Sei $y = X\beta + Wb + \epsilon$ ein lineares gemischtes Modell und $y=X\beta + \epsilon^*$ das zugehörige Marginale nach \ref{marginales-Modell}.
 	Dann ist $$\hat{\beta} = (X^t \hat{V}^{-1}X)^{-1}X^t \hat{V}^{-1}y$$ ein Schätzer für die festen Effekte und $$ \hat{b} = \hat{Q} Z^t\hat{V}^{-1}(y-X\hat{\beta})$$ ein Schätzer für die zufälligen Effekte.
 \end{definition}\noindent
-Wie bereits erwähnt, soll der Parametervektor $\theta$ alle unbekannten Parameter in $V= V(\theta), Q = Q(\theta)$ und $\sigma_\epsilon = \sigma_\epsilon(\theta)$ enthalten. Anhand des Schätzers $\hat{\theta}$  lassen sich der Kovarianzschätzer sowie die Schätzer der festen und zufälligen Effekte berechnen. 
-Die ML-Methode für $\theta$ basiert auf dem marginalen Modell 
-$$y \sim \mathcal{N}(X\beta,V(\theta)).$$
-Die Log-Likelihood von $\beta$ und $\theta$ ist gegeben durch
-$$l(\beta,\theta) = - \frac{1}{2} (log(|V|)+(y-X\beta)^tV^{-1}(y-X\beta)).$$
-Maximieren von $l(\beta,\theta)$ bezüglich $\beta$ für festes $\theta$ ergibt 
+Wie man den Schätzer der zufälligen und festen Effekte erhält im Falle, dass die Kovarianzen bekannt sind, wurde bereits gezeigt. Nun gilt es noch den die Berechnung des Kovarianzschätzer einzuführen, damit die Schätzer der zufälligen und festen Effekte tatsächlich berechnet werden können. \\
+Wie bereits erwähnt, soll der Parametervektor $\delta$ alle unbekannten Parameter in den Kovarianzen $V, Q$ und $\sigma_\epsilon$ enthalten. Anhand des Schätzers $\hat{\delta}$  lassen sich dann der Kovarianzschätzer sowie die Schätzer der festen und zufälligen Effekte berechnen.\\ 
+Die ML Schätzung für $\delta$ basiert auf dem marginalen Modell 
+$$y \sim \mathcal{N}(X\beta,V).$$
+Es wird im Folgenden die Log-Likelihood von $\beta$ und $\delta$ abzüglich des Konstanten Terms betrachtet: 
+$$l(\beta,\delta) = - \frac{1}{2} (log(|V|)+(y-X\beta)^tV^{-1}(y-X\beta))$$
+Maximiert man diese bezüglich $\beta$ für festes $\delta$, erhält man folgenden Schätzer:
 $$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y.$$
-Setzt man nun $\hat{\theta}$ in $l(\beta,\theta)$ ein, so erhält man die Profil-Log-Wahrscheinlichkeit 
-$$ l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})).$$
-Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von $l(\theta)_p$, welcher wie folgt definiert wird:
+Setzt man nun $\hat{\delta}$ in $l(\beta,\delta)$ ein, so erhält man die Profil-Log-Wahrscheinlichkeit 
+$$ l(\delta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})).$$
+Folglich erhält man den ML-Schätzer $\hat{\delta}_{ML}$ durch Maximierung von $l(\delta)_p$, welcher wie folgt definiert wird:
 \begin{definition}[Kovarianz-Schätzer]
 	Sei $y = X\beta + Wb + \epsilon $ ein lineares gemischtes Modell mit $$\begin{pmatrix}
 		b \\
@@ -601,32 +650,36 @@ Folglich erhält man den ML-Schätzer $\hat{\theta}_{ML}$ durch Maximierung von 
 			Q & 0 \\
 			0 & R \\
 		\end{pmatrix}
-	\end{pmatrix}$$ und sei $\theta$ der unbekannte Parametervektor von $Q$,$R$ und $V=Var(y)$. \\
-	Dann ist $\hat{\theta}_{ML}$ der ML-Schätzer für $\theta$, den man durch maximieren von $$  l(\theta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})) $$erhält.
+	\end{pmatrix}$$ und sei $\delta$ der unbekannte Parametervektor von $Q$,$R$ und $V=Var(y)$. \\
+	Dann ist $\hat{\delta}_{ML}$ der ML-Schätzer für $\delta$, den man durch maximieren von $$  l(\delta)_p = - \frac{1}{2} (log(|V|)+(y-X\hat{\beta})^tV^{-1}(y-X\hat{\beta})) $$erhält.
 	Dabei ist $$ \hat{\beta} = (X^tV^{-1}X)^{-1}X^tV^{-1}y$$
 \end{definition} \noindent
 Mit dem Schätzer $\hat{V}$ lassen sich die Schätzer der festen und zufälligen Effekte nun berechnen.\\
-Um die Verzerrung der Inferenz messen zu können, müssen wir die  log-Likelihood Werte berechnen können, um diese in den Likelihood-Ratio-Test einzusetzen. Der log-Likelihood Wert eines gemischten Modell ergibt sich aus der Maximum-Likelihood (ML)-Methode und ist folgendermaßen definiert:
+Um die Verzerrung der Inferenz messen zu können, müssen wir die  Log-Likelihood Werte berechnen können. Diese werden dann mit dem Likelihood-Ratio-Test ausgewertet. Der Log-Likelihood Wert eines gemischten Modell ergibt sich aus der Maximum-Likelihood (ML)-Methode und ist folgendermaßen definiert:
 \begin{definition}[log-Likelihood Wert für ein gemischtes Modell]
 	Sei $y=X\beta + \epsilon^*$ wie in \ref{marginales-Modell} definiert mit $V = R + WQW^t$ und $N$ die Anzahl der Daten in der Designmatrix $W$. Sei $r = y - X(X^tV^{-1}X)^{-1}X^tV^{-1}y$ und p der Rang von X. Dann ist  die Log-Likelihood definiert als:
 	$$ l_{ML}(Q,R) = -0.5 * (log(|V|)+ r^tV^{-1}r + N * log(2\pi))$$
 	Und die Restricted-Log-Likelihood ist definiert durch:
 	$$l_{REML}(Q,R) = -0.5 * (log(|V|)+ X^tV^{-1}X + r^tV^{-1}r+ (N-p) * log(2\pi))$$ \label{def:log-likelihood}
 \end{definition}\noindent
-$l_{REML}(Q,R)$ ist die eingeschränkte log-Likelihood, der sich aus der Methode "Restricted Maximum Likelihood" ergibt und entspricht im Wesentlichen der normalen log-Likelihood mit Ausnahme einer Differenz. Bei der "Restricted Maximum Likelihood" werden im Gegensatz zu der Methode "Maximum Likelihood" die Freiheitsgrade, die für die Schätzung fester Effekte bei der Schätzung von Varianzkomponenten verwendet werden, berücksichtigt. Im Gegensatz zum ursprünglichen Datenvektor basiert die eingeschränkte Maximum-Likelihood-Methode auf linearen Kombinationen der Beobachtungen, die so gewählt sind, dass diese Kombinationen invariant zu den Werten der festen Effektparametern sind. \\
+Wie man sieht wird in dieser Definition im Gegensatz zu der vorigen Definition mit \\ $r=y - X(X^tV^{-1}X)^{-1}X^tV^{-1}y$ anstatt $(y-X\beta)$ gearbeitet, um die Residuen zu berechnen. Dies ist eine spezialisierte Definition, um die Struktur der Designmatrix $X$ und der zufälligen Effekte $WV^{-1}W^t$ zu berücksichtigen.\\
+$l_{REML}(Q,R)$ ist die eingeschränkte log-Likelihood, der sich aus der Methode 'Restricted Maximum Likelihood' ergibt und entspricht im Wesentlichen der normalen log-Likelihood mit Ausnahme einer Differenz. Bei der 'Restricted Maximum Likelihood' werden im Gegensatz zu der Methode 'Maximum Likelihood' die Freiheitsgrade, die für die Schätzung fester Effekte bei der Schätzung von Varianzkomponenten verwendet werden, berücksichtigt. Im Gegensatz zum ursprünglichen Datenvektor basiert die eingeschränkte Maximum-Likelihood-Methode auf linearen Kombinationen der Beobachtungen, die so gewählt sind, dass diese Kombinationen invariant zu den Werten der festen Effektparametern sind. \\
 Diese linearen Kombinationen sind äquivalent zu den Residuen, die nach der Anpassung durch normale kleinste Quadrate (gewichtet bei Angabe einer Regressionsgewichtung) lediglich den festen Effektanteil des Modells berechnen. Das Verfahren führt somit eine Maximierung in einem eingeschränkten Vektorraum durch.
 \subsection{Likelihood-Ratio-Test}
-Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ einfach, sofern die Theorie der ML-Methode vergegenwärtigt wird. Zur Erinnerung: Der Vergleich eines reduziertes Modells mit dem vollständigen Modell dient der Evaluierung des Einflusses einer Störgröße. Zur Durchführung dieser Analyse dient der Likelihood-Ratio-Test. Er ermöglicht den Vergleich eines einfacheren Modells (Nullmodell) mit einem komplexeren Modell (alternatives Modell), indem er die Likelihoods, bzw. die log-Likelihoods, der beiden Modelle vergleicht. Dies ist zum Beispiel nützlich um den Einfluss eines zusätzlichen Parameters zu beurteilen.\\
+Die Berechnung der Likelihood-Ratio-Test-Statistik (LRT-Statistik) ist relativ einfach, sofern die Theorie der Likelihood Inferenz vergegenwärtigt wird. Zur Erinnerung: Der Vergleich eines reduziertes Modells mit dem vollständigen Modell dient der Evaluierung des Einflusses einer Störgröße und somit der Bewertung einer möglichen Verzerrung. Zur Durchführung dieser Analyse dient der Likelihood-Ratio-Test. Er ermöglicht den Vergleich eines einfacheren Modells (Nullmodell) mit einem komplexeren Modell (alternatives Modell), indem er die Likelihoods, bzw. die log-Likelihoods, der beiden Modelle vergleicht. Dies ist zum Beispiel nützlich um den Einfluss eines zusätzlichen Parameters zu beurteilen.\\
 Der Likelihood-Ratio Test wird wie folgt definiert:\\
 \begin{definition}[Likelihood-Ratio-Test (LRT)] 
 	Sei $\mathbf{L}_{full}$ der Likelihood-Wert des vollständigen Modells sowie $\mathbf{L}_{red}$ der Likelihood-Wert des reduzierten Modells. Es sei i die Anzahl der Freiheitsgrade.\\
 	Dann ist die LRT Statistik gegeben durch 
-	$$ LRT = 2(\log \mathbf{L}_{full}- \log \mathbf{L}_{red}) $$ 
+	$$ LRT(\mathbf{L}_{full}, \mathbf{L}_{red}) = 2(\log \mathbf{L}_{full}- \log \mathbf{L}_{red}) $$ 
 \end{definition} \noindent
 Sofern die Größen $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gemäß der Definition initialisiert sind, gilt $\mathbf{L}_{full} > \mathbf{L}_{red}$. Insbesondere gilt $\log(\mathbf{L}_{full}) > \log(\mathbf{L}_{red})$.
-Sofern die Log-Likelihood-Werte der Modelle bereits als $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gegeben sind, lässt sich die LRT-Statistik durch $2(\mathbf{L}_{full} - \mathbf{L}_{red})$ berechnen. \\
+Sofern die Log-Likelihood-Werte der Modelle bereits als $l_{full}$ und $l_{red}$ gegeben sind, lässt sich die LRT-Statistik durch $2(l_{full} - l_{red})$ berechnen. \\
 \\
-Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir die LRT-Werte als Histogramm darstellen, und folgt einer $\chi^2$-Verteilung. Eine Chi-Quadrat-Verteilung mit $k$ Freiheitsgraden ist folgendermaßen definiert:
+Für die spätere Analyse werden noch ein paar Kenngrößen wichtig sein, welche im Folgenden definiert werden.\\
+\\
+Die LRT-Statistik folgt asymptotisch einer $\chi^2$-Verteilung mit $k$ Freiheitsgraden. Dabei ist $k$ auch die Differenz der betrachteten Effekte zwischen dem Nullmodell und dem alternativen Modell. \\
+Eine $\chi^2$-Verteilung ist folgendermaßen definiert:
 \begin{definition}[$\chi^2$-Verteilung]
 	Sei \( X_1, X_2, \ldots, X_k \) eine Folge von unabhängigen standardnormalverteilten Zufallsvariablen, also \( X_i \sim N(0, 1) \) für \( i = 1, \ldots, k \). Dann ist die Zufallsvariable 
 	
@@ -634,7 +687,7 @@ Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir
 	Y = \sum_{i=1}^{k} X_i^2
 	\]
 	
-	Chi-Quadrat-verteilt mit \( k \) Freiheitsgraden. Wir schreiben:
+	$\chi^2$-verteilt mit \( k \) Freiheitsgraden. Wir schreiben:
 	
 	\[
 	Y \sim \chi^2(k)
@@ -651,8 +704,9 @@ Die Teststatistik des Likelihood-Ratio-Tests ergibt sich letztendlich, indem wir
 	
 	wobei \( \Gamma(\cdot) \) die Gamma-Funktion ist.
 \end{definition} \noindent
-Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der Ergebnisse. Somit kann festgestellt werden, wie signifikant der Einfluss des zusätzlichen Parameters ist und ob die Anwendung gemischter Modelle im latenten Raum die Inferenz verzerrt. Um dies anschaulich darzustellen legt man das Histogramm der Teststatistik unter die $\chi^2$ Verteilung. Dies erleichtert die Analyse, ob die Inferenz verzerrt ist. Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
-Eine weitere wihtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Differenz zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. ):
+Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
+\\
+Eine weitere wihtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Differenz zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. \cite{MSE}):
 \begin{definition}[Mean-Squarred-Error (MSE)]
 	Seien $\hat{y_i}$ ,für  $i=0,...,n$ die geschätzten Werte und $y_i$ die tatsächlichen Werte. Dann ist der mittlere quadratische Fehler folgendermaßen definiert:
 	$$ MSE = \frac{1}{n} \sum_{i = 0}^{n} (\hat{y_i}-y_i)^2$$
@@ -692,19 +746,22 @@ Eine weitere wihtige Komponente für die Analyse wird der Mean-Squarred-Error (M
 	\label{fig:chi2}
 \end{figure}
 
+%-------------------------------------------------------------
 
+%-------------------EMPIRISCHE-ERGEBNISSE---------------------
+
+%-------------------------------------------------------------
 \chapter{Empirische Ergebnisse}
-Die nötigen theoretischen Grundlagen wurden nun für die empirischen Ergebnisse dieser Arbeit eingeführt. Im folgenden kann nun empirisch untersucht werden, ob es zu einer Verzerrung der Inferenz bei Verwendung gemischter Modelle in einer latenten Repräsentation in Form eines Variational Autoencoder kommt. Die Kombination von VAE und gemischten Modellen ermöglicht es Daten mit einer komplexen Struktur bei denen sowohl die Variabilität zwischen Gruppen als auch innerhalb von Gruppen berücksichtigt werden muss, effektiver zu analysieren. Dazu muss allerdings zuerst untersucht werden, ob es zu einer signifikanten Verzerrung kommt.\\
+Die nötigen theoretischen Grundlagen wurden nun für die empirischen Ergebnisse dieser Arbeit eingeführt. Im folgenden kann nun empirisch untersucht werden, ob es zu einer Verzerrung der Inferenz bei Verwendung gemischter Modelle in einer latenten Repräsentation in Form eines Variational Autoencoder kommt. Die Kombination von VAE und gemischten Modellen ermöglicht es Daten mit einer komplexen Struktur bei denen sowohl die Variabilität zwischen Gruppen als auch innerhalb von Gruppen berücksichtigt werden muss, effektiver zu analysieren. Dazu muss allerdings zuerst untersucht werden, ob es zu einer signifikanten Verzerrung kommt und gemischte Modelle im positiven Fall problemlos in latenten Repräsentationen angewendet werden können.\\
 \\
 In diesem Kapitel wird demnach untersucht, ob es zu einer Verzerrung der Inferenz kommt. Insbesondere wird im Falle einer Verzerrung quantifiziert wie stark diese ist und ob sie eventuell akzeptiert werden kann.\\
-\\
+\section{Das experimentelle Modell}
 Für die Analyse muss zuerst das eigene Modell vorgestellt werden. 
-\section{Das eigene Modell}
-In dem ersten Kapitel wurden bereits Variational Autoencoder und gemischte Modell eingeführt. In diesem Abschnitt wird nun ein gemischtes Modell auf der Encoder-Ausgabe eingeführt, um die Verzerrung der Inferenz bei solchen Anwendungen bewerten zu können. Das Modell trainiert zuerst einen Variational-Autoencoder auf einem hochdimensionalen Datensatz und daraufhin die gemischten Modelle auf der dimensionsreduzierten latenten Datenwolke des Encoder-Modells. Dazu wird nun zuerst das VAE-Modell eingeführt welches im Rahmen dieser Arbeit verwendet wurde. Sei also $q_\phi(z|x)$ die approximierte posterior Verteilung des VAE, $p_\theta(x|z)$ die Likelihood des Decoders und $p(z)$ die prior Verteilung im latenten Raum, wie sie im Kapitel 'Einführung in Variational Autoencoder' eingeführt wurden. Das Encoder Modell wird zunächst mit einer latenten Dimension und einer einzelnen verborgenen Schicht mit 150 Neuronen initialisiert. Dieser liefert den Erwartungswert $\mu$ und die Standardabweichung $\sigma$ der Verteilung der Eingabedaten. Ebenso wie der Encoder wird der Decoder zunächst mit einer versteckten Schicht mit 150 Neuronen initialisiert. Beiden neuronalen Netzwerken können zusätzliche Schichten hinzugefügt werden und somit die Komplexität der Modelle erhöht werden. 
+In dem ersten Kapitel wurden bereits Variational Autoencoder und gemischte Modell eingeführt. In diesem Abschnitt wird nun ein gemischtes Modell auf der Encoder-Ausgabe eingeführt, um die Verzerrung der Inferenz bei solchen Anwendungen bewerten zu können. Das Modell trainiert zuerst einen Variational-Autoencoder auf einem hochdimensionalen Datensatz und daraufhin die gemischten Modelle auf der dimensionsreduzierten latenten Datenwolke des Encoder-Modells. Dazu wird nun zuerst das VAE-Modell eingeführt welches im Rahmen dieser Arbeit verwendet wurde. Seien also $q_\phi(z|x)$ die approximierte posterior Verteilung des VAE, $p_\theta(x|z)$ die Likelihood des Decoders und $p(z)$ die prior Verteilung im latenten Raum, wie sie im Kapitel 'Einführung in Variational Autoencoder' eingeführt wurden. Das Encoder Modell wird zunächst mit einer latenten Dimension und einer einzelnen verborgenen Schicht mit 150 Neuronen initialisiert. Dieser liefert den Erwartungswert $\mu$ und die Standardabweichung $\sigma$ der Verteilung der Eingabedaten. Ebenso wie der Encoder wird der Decoder zunächst mit einer versteckten Schicht mit 150 Neuronen initialisiert. Beiden neuronalen Netzwerken können zusätzliche Schichten hinzugefügt werden und somit die Komplexität der Modelle erhöht werden. 
 Der Reparametrisierungstrick in diesem VAE-Modell ist wie folgt definiert:
-$$z = \mu + \exp(\log(\sigma)) \odot \epsilon$$  mit $\epsilon \sim \mathbf{N}(0,I)$. Aus ihm werden letztendlich die latenten Daten berechnet, auf denen das gemischte Modell angewendet wird.\\
+$$z = \mu + \exp(\log(\sigma)) \odot \epsilon$$  Dabei ist $\epsilon \sim \mathbf{N}(0,I)$. Aus ihm werden letztendlich die latenten Daten berechnet, auf denen das gemischte Modell angewendet wird.\\
 Ein gemischtes Modell auf einer latenten Datenwolke kann, aus der Definition \ref{def:allg-lin-gem-Modell} abgeleitet, wie folgt definiert werden. Wir ersetzten dabei den $y$ Vektor mit dem latenten Vektor $z$:
-$$z = X\beta + Wb + \epsilon $$
+$$z = X\beta + Wb + \epsilon $$ \label{MM-auf-latentData}
 mit
 $$\begin{pmatrix}
 		b \\
@@ -729,7 +786,7 @@ Aus ihr werden dann auch die Werte für das vollständige und das reduzierte Mod
 \\
 Das VAE-Modell wird nach der vorangegangenen Theorie optimiert. \\
 Für die Berechnung der KL-Divergenz im Kontext des VAE-Modells werden die beiden Verteilungen $q_\phi(z|x)$ und $p_\theta(z|x)$ als mehrdimensionale Normalverteilungen angenommen. \\
-Die Wahrscheinlichkeitsdichte für eine Normalverteilung wurde bereits in Definition \ref{def:Normalverteilung} definiert. Wird nun in die KL-Divergenz zwischen $q_\phi(z|x)$ und $p_\theta(z|x)$, wie sie in Gleichung \ref{ELBO & DKL Gleichung} definiert ist, die Wahrscheinlichkeitsdichtefunktion eingesetzt, so erhält man folgende Gleichung:
+Die Wahrscheinlichkeitsdichte für eine Normalverteilung wurde bereits in Definition \ref{def:Normalverteilung} definiert. Setzt man nun in die KL-Divergenz zwischen $q_\phi(z|x)$ und $p_\theta(z|x)$, wie sie in Gleichung \ref{ELBO & DKL Gleichung} definiert ist, die Wahrscheinlichkeitsdichtefunktion ein, so erhält man folgende Gleichung:
 \begin{align}
 	\mathbb{E}_{q_\phi(z|x)}\left[\log\left[ \frac{q_\phi(z|x)}{p_\theta(z|x)}\right]\right] &=\mathbb{E}_{q_\phi(z|x)}\left[\log\left(\frac{1}{\sigma\sqrt{2\mu}}\right)- \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 - \log\left(\frac{1}{\sqrt{2\pi}}\right)+ \frac{1}{2}(x)^2\right] \\
 	&=\mathbb{E}_{q_\phi(z|x)}\left[\log\left(\frac{1}{\sigma\sqrt{2\mu}}\right) - \log\left(\frac{1}{\sqrt{2\pi}}\right)\right] + \mathbb{E}_{q_\phi(z|x)}\left[ \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right] + \mathbb{E}_{q_\phi(z|x)}\left[\frac{1}{2}(x)^2\right] 
@@ -744,62 +801,110 @@ Der Term lässt sich durch einfache mathematische Umformungen weiter vereinfache
 Der Rekonstruktionsverlust des Variational Autoencoder wird durch die Differenz zwischen den Rekonstruierten Daten $\hat{x}$ und den Eingabedaten $x$ berechnet. Dieser wird durch den Decoder ausgegeben und zusammen mit der KL-Divergenz in der Loss-Funktion berücksichtigt. \\
 \\
 Die Loss-Funktion für das grundlegende VAE-Modell im Rahmen dieser Arbeit wird wie folgt berechnet:\\
-$$ \mathcal{L} = \alpha * D_{KL}(q_\phi(z|x)||p_\theta(z|x)) + \gamma * RECLOSS $$
-Dabei sind $\alpha$ und $\gamma$ standardgemäß auf den Wert 1 ($\alpha=1, \gamma=1$) gesetzt. Somit entspricht die Loss-Funktion im Standardfall der negativen ELBO. Die Loss-Funktion lässt sich allerdings auch erweitern um den Einfluss des gemischten Modells zu erhöhen. Dabei wird der Mean-Squarred-Error berechnet und in der Loss-Funktion mit $\eta = 10$ gewichtet. Ebenso kann die negative Log-Likelihood der Loss-Funtkion angehängt werden. Sie wird mit $\lambda = 10$ gewichtet, sodass sich die Loss-Funktion folgendermaßen ergänzt:
-$$ \mathcal{L} = \alpha * D_{KL}(q_\phi(z|x)||p_\theta(z|x)) + \gamma * RECLOSS + \eta * MSE + \lambda * l_{ML}(Q,R)$$
+$$ \mathcal{L}(\alpha, \gamma) = \alpha * D_{KL}(q_\phi(z|x)||p_\theta(z|x)) + \gamma * RECLOSS $$
+Dabei sind $\alpha$ und $\gamma$ standardgemäß auf den Wert 1 ($\alpha=1, \gamma=1$) gesetzt. Somit entspricht die Loss-Funktion im Standardfall der negativen ELBO.
+$$ \mathcal{L}(\alpha=1, \gamma=1) = - \mathcal{L}(\theta,\phi;x) $$
+Die Loss-Funktion lässt sich allerdings auch erweitern um den Einfluss des gemischten Modells zu erhöhen. Dabei wird der Mean-Squarred-Error berechnet und in der Loss-Funktion mit $\eta = 10$ gewichtet. Ebenso kann die negative Log-Likelihood der Loss-Funtkion angehängt werden. Sie wird mit $\lambda = 10$ gewichtet, sodass sich die Loss-Funktion folgendermaßen ergänzt:
+$$ \mathcal{L}(\alpha,\gamma,\eta,\lambda) = \alpha * D_{KL}(q_\phi(z|x)||p_\theta(z|x)) + \gamma * RECLOSS + \eta * MSE + \lambda * l_{ML}(Q,R)$$
 Mit diesen Ergänzungen in der Loss-Funktion wird ein sogenanntes 'Overfitting' des Variational Autoencoder provoziert.
 %-------------------------------------------------------------
 
-%-------------------EMPIRISCHE-ERGEBNISSE---------------------
+%-------------EXPERIMENTE-UND-ERGEBNISSE----------------------
 
 %-------------------------------------------------------------
+
 \section{Experimente und Ergebnisse}
-Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, fällt die Wahl im Rahmen dieser Arbeit auf den bereits eingeführten Likelihood-Ratio Test. Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist. Für dieses Szenario wird die Teststatistik nicht auf der latenten Repräsentation sondern auf den wahren Daten durchgeführt. Später fährt die Analyse auf einem komplexen medizinischen Datensatz in einer latenten Repräsentation fort.
+Die theoretischen Grundlagen für die Ergebnisse dieser Arbeit sind nun gegeben und es kann mit der Analyse fortgefahren werden. Um am Ende die Verzerrung der Inferenz zu messen, wird im Rahmen dieser Arbeit mithilfe des Likelihood-Ratio-Tests ein vollständiges Modell mit einem reduzierten Modell verglichen. Die so erhaltene LRT-Statistik wird in einem Histogramm ausgewertet und mit einer $\chi^2$-Verteilung abgeglichen. Die $\chi^2$-Verteilung bietet einen Vergleichswert für die Interpretation der Ergebnisse. Somit kann festgestellt werden, wie signifikant der Einfluss des zusätzlichen Parameters ist und ob die Anwendung gemischter Modelle im latenten Raum die Inferenz verzerrt.
+Um einen Vergleichswert zu haben, schaffen wir zuerst ein Szenario, in dem eine $\chi^2$-Verteilung in der LRT-Statistik erwartbar ist. Für dieses Szenario wird die Teststatistik nicht auf der latenten Repräsentation sondern auf den wahren Daten durchgeführt. Später fährt die Analyse auf einem komplexen medizinischen Datensatz in einer latenten Repräsentation fort.
 \subsection{gemischte Modelle auf simulierten Daten}
-Da im Rahmen der späteren Analyse ein komplexer longitudinaler medizinischer Datensatz verwendet wird, erfolgt für das einfachere Szenario die Wahl eines Simulationsdesigns für einen einfachen longitudinalen medizinischen Datensatz, welchem wir dann eine Variable hinzufügen, die keinen Einfluss auf die Testergebnisse haben soll. Im Folgenden wird ein Simulationsdesign für eine Studie präsentiert, welche die Herzgesundheit von Patienten über einen Zeitraum von zehn Jahren analysiert. Die Gewichtung der verschiedenen Parameter auf den sogenannten „Health-Score” ist unterschiedlich.\\
+Da im Rahmen der späteren Analyse ein komplexer longitudinaler medizinischer Datensatz verwendet wird, fällt die Wahl für das einfachere Szenario auf ein Simulationsdesign für einen einfachen longitudinalen medizinischen Datensatz, welchem wir dann eine Variable hinzufügen, die keinen Einfluss auf die Testergebnisse haben soll. Im Folgenden wird ein Simulationsdesign für eine Studie präsentiert, welche die Herzgesundheit von Patienten über einen Zeitraum von zehn Jahren analysiert. Die Gewichtung der verschiedenen Parameter auf den sogenannten „Health-Score” ist unterschiedlich.\\
 \\
 \textbf{Simulationsdesign}\\
-Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 und 60 Jahren auf verschiedene Parameter untersucht, die einen Einfluss auf die Herzgesundheit haben. Die Simulationen für jeden Parameter basieren auf einer Normalverteilung und umfassen Daten über den Zeitraum von zehn Jahren. Die in Tabelle \ref{tab:health_score_parameters} dargestellten Einflussfaktoren sind als feste Parameter für die Herzgesundheit zu betrachten. In der Berechnung des Health-Scores wird insbesondere berücksichtigt, dass es zu zufälligen Einflussfaktoren kommen kann, die die Herzgesundheit betreffen. Daher wurde in die Berechnung ein zufälliger Interzept und eine zufällige Steigung integriert. Es wird eine Normalverteilung für den random\_intercept $\sim \mathcal{N}(0,2)$ und den random\_slope $\sim \mathcal{N}(0,0.1)$ angenommen. Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei die Parameter gemäß Tabelle \ref{tab:health_score_parameters} berechnet werden. Insbesondere wird zu einem Zeitpunkt, welcher zufällig zwischen drei und zehn Jahren für jeden Patienten festgelegt wird, die Gewichtung der Parameter angepasst. Dies soll einen Behandlungsstart mit Medikamenten simulieren. So werden dann letztendlich mit einer Health-Score Formel $$ y = 150 +  gewichte * feste\_Effekte + random\_slope * jahr + random\_intercept + \epsilon $$ die Testergebnisse nach einem gemischten Modell berechnet. $\epsilon \sim \mathcal{N}(0,0.1)$ ist ein zufälliger Fehlervektor, welcher Messfehler berücksichtigt. Eine Beispielhafte Simulation der Daten ist in \ref{fig:sample_image} für 20 ausgewählte Patienten dargestellt. \\
+Im Rahmen einer zehnjährigen Studie wurden 500 Patienten im Alter zwischen 30 und 60 Jahren auf verschiedene Parameter untersucht, die einen Einfluss auf die Herzgesundheit haben. Die Simulationen für jeden Parameter basieren auf einer Normalverteilung und umfassen Daten über den Zeitraum von zehn Jahren. Die in Tabelle \ref{tab:health_score_parameters} dargestellten Einflussfaktoren sind als feste Parameter für die Herzgesundheit zu betrachten. In der Berechnung des Health-Scores wird insbesondere berücksichtigt, dass es zu zufälligen Einflussfaktoren kommen kann, die die Herzgesundheit betreffen. Daher wurde in die Berechnung ein zufälliger Interzept und eine zufällige Steigung integriert, für die eine Normalverteilung angenommen wird. $$random\_intercept \sim \mathcal{N}(0,2), random\_slope \sim \mathcal{N}(0,0.1)$$  
+Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei die Parameter gemäß Tabelle \ref{tab:health_score_parameters} berechnet werden. Insbesondere wird zu einem Zeitpunkt, welcher zufällig zwischen drei und zehn Jahren für jeden Patienten festgelegt wird, die Gewichtung der Parameter angepasst. Dies soll einen Behandlungsstart mit Medikamenten simulieren. So werden dann letztendlich mit einer Health-Score Formel $$ y = 150 +  gewichte * feste\_Effekte + random\_slope * jahr + random\_intercept + \epsilon $$ die Testergebnisse nach einem gemischten Modell berechnet. Dabei ist $\epsilon \sim \mathcal{N}(0,0.1)$ ein zufälliger Fehlervektor, welcher Messfehler berücksichtigt. Eine detailliertere Beschreibung des Simulationsdesign ist im Anhang zu finden und eine beispielhafte Simulation der Daten ist in Abbildung \ref{fig:sample_image} für 20 ausgewählte Patienten dargestellt. \\
 \begin{table}[h]
 	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{|l|c|c|c|c|}
-			\hline
-			\textbf{feste Effekte} & \textbf{Mittelwert} & \textbf{Standardabweichung} & \textbf{Gewicht} & \textbf{Gewicht nach Behandlungsstart} \\ \hline
-			Systolischer Blutdruck  & 120 & 10 & -0.1 & -2 \\ \hline
-			Diastolischer Blutdruck & 80 & 10 & -0.1 & -2\\ \hline
-			Cholesterin  & 200 & 30 & -0.2 & -5\\ \hline
-			Triglyceride & 150 & 20 & -0.2 & -3 \\ \hline
-			Kreatinin & 1 & 0.2 & -0.1 &  -0.08\\ \hline
-			Body-Mass-Index (BMI) & 25 & 4 & -0.4 & -0.4\\ \hline
-			Alter & \multicolumn{2}{l|}{} & -0.1 &  \\ \hline
-		\end{tabular}
-	}
+	%\resizebox{\textwidth}{!}{%
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\textbf{Feste Effekte} & \textbf{Mittelwert} & \textbf{Standardabweichung} & \textbf{Gewicht} \\
+		\hline
+		Systolischer Blutdruck  & 120 & 10 & -0.1\\ \hline
+		Diastolischer Blutdruck & 80 & 10 & -0.1 \\ \hline
+		Cholesterin  & 200 & 30 & -0.2 \\ \hline
+		Triglyceride & 150 & 20 & -0.2  \\ \hline
+		Kreatinin & 1 & 0.2 & -0.1 \\ \hline
+		Body-Mass-Index (BMI) & 25 & 4 & -0.4 \\ \hline
+		Alter & & & -0.1 \\ \hline
+	\end{tabular}
+
 	\caption{Einfluss und Erstellung der Parameter des Health-Scores}
 	\label{tab:health_score_parameters}
 \end{table}
 \\
 \textbf{LRT-Statistik}\\
 Um einen Likelihood-Ratio-Test durchzuführen, der eine Vergleichsstatistik für die spätere Analyse liefert, wird jedem Patienten zufällig ein Geschlecht zugewiesen. Das Geschlecht sollte keinen Einfluss auf die Testergebnisse haben und wird deswegen in der Berechnung des Health-Scores mit Null gewichtet. \\
-Nun wurde ein Szenario entwickelt, in dem ein vollständiges Modell mit einem reduzierten Modell (ohne den Einfluss des Geschlechts) verglichen werden kann. Für die LRT-Statistik erfolgt ein Training beider Modelle jeweils 500 Mal auf einem neu simulierten Datensatz. Im Anschluss erfolgt ein Vergleich der bei jeder Simulation berechneten log-Likelihood-Werte mittels Likelihood-Ratio-Test, wobei das Ergebnis der Vergleichsanalyse zusammengetragen wird. Das Resultat wird in Form eines Histogramms, was zum Abgleich unter eine $\chi^2$-Verteilung gelegt wird, in Abbildung \ref{fig:LRT_Hist_MM} dargestellt. Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, alle Ergebnisse des LRT-Statistik, wie zu erwarten, unter der $\chi^2$-Verteilung bleiben.
+Es wurde nun ein Szenario geschaffen, in dem ein vollständiges Modell mit einem reduzierten Modell verglichen werden kann. Das vollständige Modell berücksichtigt dabei alle festen Effekte aus Tabelle \ref{tab:health_score_parameters} zuzüglich des Geschlechts, wohingegen das reduzierte Modell nur die festen Effekte aus Tabelle \ref{tab:health_score_parameters} berücksichtigt. Für die Erstellung der LRT-Statistik werden beide Modelle jeweils 500 Mal auf einem neu simulierten Datensatz trainiert. In jeder Iteration werden die berechneten Log-Likelihood-Werte anhand des Likelihood-Ratio-Test ausgewertet, wobei das Ergebnis der Vergleichsanalyse in einem Histogramm zusammengetragen wird. Das Histogramm wird zum Abgleich unter eine $\chi^2$-Verteilung gelegt, welche in Abbildung \ref{fig:HIST_MM} dargestellt ist. \\
+\\
+Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, die Ergebnisse des LRT-Statistik, wie zu erwarten, einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgen. 
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\KwData{num\_simulations = 1000, $X_{\text{full}}$, $W_{\text{full}}$, $X_{\text{red}}$, $W_{\text{red}}$, $y$}
+	\KwResult{lrt\_results}
+	\SetKw{Initialize}{Initialize}
+	\SetKw{Train}{train\_vae}
+	\SetKw{TrainTwo}{train\_vae\_2}
+	\SetKw{Calc}{calc\_likelihood}
+	\SetKw{Likelihood}{likelihood\_ratio}
+	\SetKw{Minimize}{minimize}
+	\SetKw{Calculate}{calculate}
+	\SetKw{Update}{update}
+	
+	\For{$i \gets 1$ \textbf{to} num\_simulations}{
+		simulate the dataset according to the simulation design\;
+		
+		\Initialize{$\delta_{\text{full}}, \delta_{\text{red}}$}\;     
+		\Minimize{$l_{\text{ML}}(\delta_{\text{full}}) \gets X_{\text{full}}, W_{\text{full}}, z$}\;
+		\Minimize{$l_{\text{ML}}(\delta_{\text{red}}) \gets X_{\text{red}}, W_{\text{red}}, z$}\;
+		
+		$res_{\text{full}} \gets l_{\text{ML}}(\delta_{\text{full}})$\;
+		$res_{\text{red}} \gets l_{\text{ML}}(\delta_{\text{red}})$\;
+		
+		$lrt\_val \gets \Likelihood(res_{\text{full}}, res_{\text{red}})$\;
+		$lrt\_results$ add $lrt\_val$\;
+	}
+	
+	\caption{Algorithmus zur Berechnung der Likelihood-Ratio-Teststatistik für die gemischten Modelle nach dem Simulationsdesign}
+	\label{Algo2}
+\end{algorithm}
+
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\textwidth]{plots/Herzgesundheit_Hist_1000sim.png}
-	\caption{Histogramm der LRT-Statistik für ein vollständiges und ein reduziertes gemischtes Modell auf simulierten Daten mit dem Simulationsdesign aus Kapitel 2.1}
-	\label{fig:LRT_Hist_MM}
-\end{figure} 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
-	\caption{Trajektorien der festen Effekte und des Gesundheitsscores eines simulierten Datensatzes für 20 zufällig ausgewählte Patienten}
-	\label{fig:sample_image}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plots/Herzgesundheit_Hist_1000sim.png}
+		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für gemischte Modelle auf simulierten Daten}
+		\label{fig:HIST_MM}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plots/Hist_MSE_nML_100its.png}
+		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für ein gemischtes Modell auf latenter Datenwolke}
+		\label{fig:HITS_VAEMM_nMLinLoss}
+	\end{subfigure}
+	\caption{Histogramme der LRT-Statistiken}
+	\label{fig:LRT_HIST}
 \end{figure}
+
 \subsection{Gemischte Modelle in latenten Repräsentationen}
 In der bisherigen Betrachtung wurden die gemischten Modelle lediglich auf Basis der realen Daten evaluiert. Im Folgenden wird die Betrachtung der gemischten Modelle auf latenten Daten vorgenommen. Zur Analyse der gemischten Modelle auf latenten Daten wird ein Variational-Autoencoder verwendet. Die Grundlage unserer Analyse bildet das folgende Grundszenario: \\
 Zur Analyse wird nun ein komplexer longitudinaler medizinischer Datensatz betrachtet, der durch einen Encoder des VAEs im latenten Raum modelliert wird. Das Ziel ist es nun, das gemischte Modell auf dieser latenten Datenwolke zu trainieren, um herauszufinden, ob es zu einer erwartbaren Verzerrung kommt. Dazu wird im Folgenden zuerst eine detaillierte Betrachtung des vorliegenden Datensatzes vorgenommen.
 \subsubsection{Der Datensatz}
-Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten. Der Datensatz wurde aus datenschutzrechtlichen Gründen einem originellen Datensatz nachgebaut.\\
+Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten. Zusammen ergeben sie einen komplexen Datensatz, welcher für 260 Patienten die Ergebnisse von 33 Mobilität-Tests enthält, die mehrmals wiederholt wurden. Somit lässt sich aus diesem Datensatz der Verlauf und die Schwere der Krankheit für jeden Patienten ablesen.  Der Datensatz wurde aus datenschutzrechtlichen Gründen einem originellen Datensatz nachgebaut und bildet die Grundlage der Analyse dieser Arbeit.\\
+\\
+Im Folgenden wird der komplexe medizinische Datensatz, der für die Hauptanalyse dieser Arbeit verwendet wurde, genauer beschrieben. Er setzt sich zusammen aus drei verschiedenen Datensätzen, welche die Basisdaten, die Testergebnisse und die zeitbezogenen Daten enthalten, zusammen. \\
 \\
 \textbf{Basisdaten}\\
 Der 'baseline\_df' Datensatz enthält die grundlegenden Informationen der Patienten, welche mit einer eindeutigen Patienten-ID identifiziert werden. Zu jeder Patienten-ID sind folgenden Informationen gegeben: 
@@ -858,6 +963,7 @@ Der Datensatz 'test\_scores' enthält die Ergebnisse von insgesamt 33 Tests, in 
 \\
 \textbf{Zeitbezogene Daten} \\
 Der letzte Datensatz 'time\_df' enthält zeitbezogene Informationen, wie das Alter. Des Weiteren gibt er an, seit wann ein Patient behandelt wird ('since\_medication') und wieviel Zeit nach dem letzten Medikamentenwechsel vergangen ist ('since\_switch'). Symbolisch für den Datensatz werden die Daten für die ersten zwei Patienten in Tabelle \ref{table:time_df} erfasst.\\
+\\
 \begin{table}[ht]
 	\centering
 	\small
@@ -875,88 +981,115 @@ Der letzte Datensatz 'time\_df' enthält zeitbezogene Informationen, wie das Alt
 	\caption{Zeitbezogene Daten von Patient 0 (time\_df)}
 	\label{table:time_df}
 \end{table}
-\\ 
-Diese Datensätze bilden die Grundlage der Analyse dieser Arbeit. Zusammen ergeben sie einen komplexen Datensatz, welcher für 260 Patienten die Ergebnisse von 33 Mobilität-Tests enthält, die mehrmals wiederholt wurden. Somit lässt sich aus diesem Datensatz der Verlauf und die Schwere der Krankheit für jeden Patienten ablesen.\\
-
+\\
+\\
+Die Designmatrizen der festen Effekte werden aus dem Basisdatensatz gewonnen, während die Designmatrizen der zufälligen Effekte aus den zeitbezogenen Daten gewonnen werden. Der Datensatz mit den Versuchsergebnissen ist das Rekonstruktionsobjekt, das dem Encoder als Eingangsdaten gegeben wird und das der Decoder so genau wie möglich zu rekonstruieren versucht. Eine genauere Beschreibung der Datensätze findet sich im Anhang.\\
+\\
 \subsubsection{Gemischtes Modell auf der latenter Datenwolke}
-Nachdem der Datensatz mit dem im Rahmen dieser Arbeit gearbeitet wird eingeführt wurde, kann die eigentliche Analyse dieser Arbeit beginnen. Das Ziel ist es herauszufinden, ob und wie stark es zu einer Verzerrung unter Anwendung gemischter Modelle in latenten Repräsentationen kommt. Dass die LRT-Statistik zwischen einem Nullmodell und einem alternativen reduzierten Modell einer $\chi^2$-Verteilung folgt wurde bereits gezeigt. Nun sollen beide gemischten Modelle auf einer latenten Datenwolke trainiert werden. Wie bereits erwähnt wird im Rahmen dieser Arbeit mit einem Variational Autoencoder (VAE) gearbeitet.\\
+Nachdem der Datensatz, mit dem im Rahmen dieser Arbeit gearbeitet wird, eingeführt wurde, kann die eigentliche Analyse dieser Arbeit beginnen. Das Ziel ist es herauszufinden, ob und wie stark es zu einer Verzerrung unter Anwendung gemischter Modelle in latenten Repräsentationen kommt. Dass die LRT-Statistik zwischen einem Nullmodell (vollständiges gemischtes Modell) und einem alternativen reduzierten gemischten Modell auf einem simulierten Datensatz einer $\chi^2$-Verteilung folgt wurde bereits gezeigt. Nun sollen beide gemischten Modelle auf einer latenten Datenwolke trainiert werden. Wie bereits erwähnt wird im Rahmen dieser Arbeit mit einem in Kapitel 1 'Das eigene Modell' eingeführten Variational Autoencoder (VAE) gearbeitet. Das gemischte Modell, mit welchem in dieser Arbeit gearbeitet wird, wurde bereits ebenso in Kapitel 1 eingeführt. Allerdings sind die Designmatrizen abhängig von dem Datensatz, mit dem gearbeitet wird. Deswegen werden die gemischten Modelle nochmal bezüglich des oben beschriebenen Datensatz spezifiziert.\\
 \\
-\textbf{Das VAE-Modell}\\
-Für den Variational Autoencoder benötigt es ein Encoder-Modell und ein Decoder-Modell. Für das Encoder- und Decoder-Modell wird ein vielseitig anpassbares Modell gewählt, welches allerdings recht einfach gehalten wird. Die latente Dimension wird dabei standardmäßig auf zwei gesetzt und der Encoder wird erstmal mit zwei Schichten und einer versteckten Dimension von 150 initialisiert. In der Verlustfunktion des VAEs wird der Reconstruction-Loss und die Kullback-Leibler-Divergenz optimiert. \\
-\\
-Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, trainieren wir einen VAE und im Anschluss auf den latenten Daten das vollständige und das reduzierte gemischte Modell. \\
-\\
-\textbf{Das gemischte Modell}\\
+\textbf{Das experimentelle Modell}\\
 Für die Berechnung der Schätzer benötigt es natürlich die Designmatrizen für die festen und die zufälligen Effekte. \\
-Die festen Effekte des vorgestellten Datensatzes sind alle in Tabelle \ref{table:baseline_df} aufgezählten Parameter und der künstlich hinzugefügte Parameter 'Geschlecht'. Aus den Werten der festen Effekte setzt sich die Designmatrix der festen Effekte für das vollständige gemischte Modell zusammen. Dementsprechend setzt sich die Designmatrix für die festen Effekte des reduzierten Modells nur aus den Effekten aus Tabelle \ref{table:baseline_df}.\\
-Die Designmatrizen für die zufälligen Effekte beider Modelle setzten sich aus den Werten der zufälligen Effekte 'since\_medication', 'since\_switch' und 'intercept' zusammen.\\ 
-Der Antwortvektor ist in diesem Szenario nun nicht durch den aus dem gemischten Modell berechneten Antwortvektor gegeben, sondern durch die aus dem Encoder gewonnene latente Datenwolke.\\
+Die festen Effekte des vorgestellten Datensatzes sind alle in Tabelle \ref{table:baseline_df} aufgezählten Parameter und der künstlich hinzugefügte Parameter 'Geschlecht'. Aus den Werten der festen Effekte setzt sich die Designmatrix der festen Effekte für das vollständige gemischte Modell $X_{full}$ zusammen. Dementsprechend setzt sich die Designmatrix für die festen Effekte des reduzierten Modells $X_{red}$ nur aus den Effekten aus Tabelle \ref{table:baseline_df}.\\
+Die Designmatrizen für die zufälligen Effekte $W_{full}, W_{red}$ beider Modelle setzten sich aus den Werten der zufälligen Effekte 'since\_medication', 'since\_switch' und 'intercept' zusammen.\\ 
+Der Antwortvektor ist in diesem Szenario nun nicht durch den aus dem gemischten Modell berechneten Antwortvektor gegeben, sondern, wie in \ref{MM-auf-latentData} beschrieben, durch die aus dem Encoder gewonnene latente Datenwolke.\\
 \\
-Für die Auswertung einer ersten Analyse wird das zuerst das VAE-Modell trainiert und daraufhin auf den latenten Daten, die aus dem Encoder gewonnen werden, wird separat das vollständige und das reduzierte Modell trainiert. Mit den trainierten Modellen lassen sich die log-Likelihood Werte der Modelle berechnen und mit dem Likelihood-Ratio Test auswerten. Wird das beschriebene Szenario für mehrere Wiederholungen wiederholt, erhält man eine Teststatistik, welche in einem Histogramm unter die $\chi^2$-Verteilung gelegt wird.
-Für 100 Simulationen dieses Szenarios entsteht somit eine LRT-Statistik, welche wieder in Abbildung \ref{fig:LRT_Hist_MM_latentData} unter eine $\chi^2$-Verteilung gelegt wird. Wie man sieht ist schon für 100 Simulationen eine Verzerrung erkennbar. Die Daten erstrecken sich über einen größeren Bereich und liegen für geringere Werte nicht mehr unter der $\chi^2$-Verteilung.\\
+Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, gibt es mehrere Trainingsschritte, die in Algorithmus \ref{Algo1} dargestellt sind. In diesem Szenario wird ein gemischtes Modell auf dem latenten Output eines Variational Autoencoder Im ersten Schritt des Trainingsalgorithmus wird der VAE mit der train\_vae Funktion, welche die normale Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1) $ maximiert, trainiert. Für das Training des Variational Autoencoder wird eine Minibatch-Training verwendet. Dies ist eine Methode die verwendet wird um generative Modelle effizient auf großen Datensätzen zu trainieren, indem der Datensatz in kleine handhabbare Teilmengen, sogenannte Minibatches, aufgeteilt wird. Eine genauere Erklärung zum Minibatch-Training ist im Anhang zu finden. Im Anschluss wird die negative Log-Likelihood des vollständigen gemischten Modells mit dem latenten Vektor z und den vollständigen Designmatrizen $X_{full}$ und $W_{full}$ maximiert. Für das gemischte Modell wird der zweite Ordnung Optimierer LBFGS gewählt, da dieser effizienter bei großen Parameterräumen ist und die Berechnung somit schneller läuft. Sowohl für das vollständige als auch für das reduzierte gemischte Modell wurde der Optimierer wie folgt initialisiert:
+\begin{enumerate}
+	\item lr = 0.01 (Lernrate)
+	\item max\_iter = 200 (maximale Anzahl an Iterationen pro Optimierungsschritt)
+	\item max\_eval = 500 (maximale Anzahl von Funktionsauswertungen pro Optimierungsschritt)
+	\item tolerance\_grad = 1e-09 (Abbruchtoleranz bei Optimalität erster Ordnung)
+	\item tolerance\_change = 1e-11 (Abbruchtoleranz bei Änderung von Funktionswerten/Parametern)
+	\item history\_size = 200 (Größe der Update-Historie)
+\end{enumerate}
+Mit dieser Initialisierung werden numerische Fehler während der Berechnung verhindert.
+Für den Variational Autoencoder fällt die Wahl auf den für tiefe neuronale Netzwerke effizienten ADAM-Optimierer, bei dem nur die Lernrate auf 0.01 angepasst wird. Ansonsten wird mit der Standardinitialisierung gearbeitet.\\
+Im zweiten Trainingsschritt wird nun der VAE mit der Funktion train\_vae\_2, welche den Mean Squarred Error und die negativen Log-Likelihood in der Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1,\eta=10,\lambda=10)$ hat, trainiert. Das bedeutet der Einfluss des Mean-Squarred-Error und der negativen Log-Likelihood ist sehr hoch, was das VAE-Modell provozieren könnte, zu gut zu lernen und somit in der Inferenz eine Verzerrung verursachen. Im Anschluss auf das zweite Training des Variational Autoencoder wird wieder das vollständige gemischte Modell wie zuvor trainiert. Der zweite Trainingsschritt wird dann insgesamt für 30 Iterationen wiederholt. Sobald dieser zweite Trainingsschritt abgeschlossen ist, wird dann das reduzierte Modell noch ein Mal auf dem zuletzt berechneten latenten Vektor wie zuvor das vollständige gemischte Modell trainiert.\\
+Die zuletzt berechnete negative Log-Likelihood des vollständigen Modell $\mathbf{L}_{full}$ und der negative Log-Likelihood Wert des reduzierten Modell $\mathbf{L}_{red}$ werden letztendlich mit dem \\ Likelihood-Ratio Test $LRT(\mathbf{L}_{full},\mathbf{L}_{red})$ ausgewertet. Dieses Szenario wurde für 1000 Wiederholungen durchgeführt und die Ergebnisse in einem Histogramm in Abbildung \ref{fig:Hist_nML_inLoss} gesammelt.\\
 \\
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.5\textwidth]{plots/lrt_histogram.png}
-	\caption{Histogramm der LRT-Statistik für vollständiges und reduziertes gemischtes Modell auf latenter Datenwolke und Iterativen Training eines VAE mit dem MSE in der Lossfunktion und einem vollständigen gemischten Modell}
-	\label{fig:LRT_Hist_MM_latentData}
-\end{figure} 
+Wie man in Abbildung \ref{fig:Hist_nML_inLoss} sieht, wurde das Histogramm unter eine $\chi^2$-Verteilung gelegt und verglichen. Es ist leicht zur erkennen, dass die Teststatistik der Verteilung folgt. \\
+\\
+Für dieses Testszenario ist demnach keine Verzerrung in der Inferenz zu erkennen, was bedeutet, dass der Mean Squarred Error und die negative Log-Likelihood trotz hoher Gewichtung in der Loss-Funktion keinen Einfluss auf das Training des Variational Autoencoder haben und der Encoder nicht  zu gut lernt.\\
+\\
+Für ein zweites Szenario, was im Rahmen dieser Bachelorarbeit untersucht wurde, wurde das VAE-Modell ausgetauscht durch einen üblichen Autoencoder. Diese Anpassung gelingt relativ einfach, da man dazu einfach den Output des Encoders nimmt und den Reparametrisierungstrick weglässt. Die latenten Variablen sind dann einfach $\mu$ aus dem oben vorgestellten VAE-Modell. Ziel ist es das Modell zu provozieren zu gut zu lernen, weswegen die Loss-Funktion aus dem VAE-Modell dem Autoencoder übergeben wird. In Algorithmus \ref{Algo1} müssen demnach nur die train\_vae und train\_vae\_2 Funtkion angepasst werden. So erhält man eine neue LRT-Statistik, welche in Abbildung () dargestellt ist. \\
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.5\textwidth]{plots/Hist_MSE_nML_100its.png}
-	\caption{Histogramm der LRT-Statistik für vollständiges und reduziertes gemischtes Modell auf latenter Datenwolke und Iterativen Training eines VAE mit dem MSE in der Lossfunktion und einem vollständigen gemischten Modell}
-	\label{fig:Hist_nML_inLoss}
-\end{figure} 
-
-\section{Modellierungstechniken}
-
-Beschreibung der spezifischen gemischten Modelle und der Techniken zur Gewinnung latenter Repräsentationen.
-\section{Analysemethoden}
-
-\subsection{Post-Selection-Inferenz}
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\KwData{num\_simulations = 1000, iterations = 30, $X_{\text{full}}$, $W_{\text{full}}$, $X_{\text{red}}$, $W_{\text{red}}$}
+	\KwResult{lrt\_results}
+	\SetKw{Initialize}{Initialize}
+	\SetKw{Train}{train\_vae}
+	\SetKw{TrainTwo}{train\_vae\_2}
+	\SetKw{Calc}{calc\_likelihood}
+	\SetKw{Likelihood}{likelihood\_ratio}
+	\SetKw{Maximize}{maximize}
+	\SetKw{Calculate}{calculate}
+	\SetKw{Update}{update}
+	
+	\For{$i \gets 1$ \textbf{to} num\_simulations}{
+		Load and prepare datasets\;
+		\Initialize{$encoder$, $decoder$} \;
+		\Initialize{$optimizer\_vae(encoder.parameters(),decoder.parameters())$}\;
+		$z \gets \Train(epochs=2, batch\_size=128, encoder, decoder)$\;
+		
+		\For{$j \gets 0$ \textbf{to} iterations}{
+			\If{$j \neq 0$}{
+				$z \gets \TrainTwo(epochs=1, batch\_size=128, encoder, decoder, optimizer\_vae, W_{\text{full}}, X_{\text{full}}, Q_{\text{full}}, R_{\text{full}})$\;
+			}
+			\Initialize{$Q_{\text{full}}, R_{\text{full}}$}\;   
+			\Initialize{$optimizer\_mm\_full(Q_{\text{red}}, R_{\text{red}})$}      
+			\Maximize{$l_{\text{ML}}(Q_{\text{full}}, R_{\text{full}})$} $\gets X_{\text{full}}, W_{\text{full}}, z$\;
+		}
+		
+		\Initialize{$Q_{\text{red}}, R_{\text{red}}$}\;     
+		\Initialize{$optimizer\_mm\_full(Q_{\text{red}}, R_{\text{red}})$}   
+		\Maximize{$l_{\text{ML}}(Q_{\text{red}}, R_{\text{red}})$} $\gets X_{\text{red}}, W_{\text{red}}, z$\;
+		
+		$res_{\text{full}} \gets l_{\text{ML}}(Q_{\text{full}}, R_{\text{full}})$\;
+		$res_{\text{red}} \gets l_{\text{ML}}(Q_{\text{red}}, R_{\text{red}})$\;
+		
+		$lrt\_val \gets \Likelihood(res_{\text{full}}, res_{\text{red}})$\;
+		$lrt\_results$ add $lrt\_val$\;
+	}
+	
+	\caption{Algorithmus zur Simulation und Berechnung der Likelihood-Ratio-Teststatistik aus Experiment 1}
+	\label{Algo1}
+\end{algorithm}
+\subsection{Post-Selection-Inferenz (PSI)}
 Post-Selection Inference (PSI) bezieht sich auf statistische Methoden, die die Tatsache berücksichtigen, dass eine Hypothese oder ein Modell aufgrund der Daten ausgewählt wurde. Traditionelle statistische Inferenzmethoden setzen oft voraus, dass das Modell oder die Hypothese a priori festgelegt wurde, was in der Praxis selten der Fall ist. Bei PSI werden die statistischen Eigenschaften angepasst, um die zusätzliche Unsicherheit durch den Selektionsprozess zu reflektieren. Dies ist besonders wichtig in Bereichen wie maschinellem Lernen und Data Mining, wo oft zahlreiche Modelle getestet und das beste ausgewählt wird. Durch PSI können zuverlässigeren Konfidenzintervalle und p-Werte berechnet werden, die die Selektion berücksichtigen, was zu robusteren und aussagekräftigeren Ergebnissen führt.
 Verfahren zur Untersuchung der Verzerrung in den Inferenzergebnissen.
 
-%%------------EXPERIMENTE-UND-ERGEBNISSE-------------------------------------
-\section{Experimente und Ergebnisse}
+\subsubsection{Einführung}
+Die Post-Selection-Inferenz (PSI) ist eine statistische Methode, die darauf abzielt, die Verzerrungen zu korrigieren, die nach der Modellauswahl auftreten können. Traditionelle Inferenzmethoden gehen davon aus, dass das Modell a priori festgelegt ist. In der Praxis wird jedoch häufig eine Modellauswahl basierend auf den Daten durchgeführt, was zu einer systematischen Verzerrung der Inferenz führen kann.
 
-\subsection{Methodik}
-In den ersten Wochen habe ich mir selbst ein Simulationsdesign für einen longitudinalen medizinischen Datensatz ausgedacht und basierend darauf ein gemischtes Modell gefittet. Mit diesen simulierten Daten habe ich ein reduziertes Model mit dem vollständigen Model verglichen. Die LRT Statistik habe ich dann in einem Histogramm dargestellt.\\
-\\
-Wir fügen dem gemischten Modell einen festen Effekt hinzu, welcher keinen Einfluss auf die Trajektorie haben soll. In unserem Fall ist dieser feste Effekt das Geschlecht, welches keinen Einfluss auf den Verlauf einer Krankheit haben sollte.\\
-\\
-Mein zweites Projekt ist nun einen hoch dimensionalen medizinischen Datensatz durch den Encoder eines Variational Autoencoders im latenten Raum zu repräsentieren und dort mit einem gemischten Model darzustellen. Ähnlich wie zuvor will ich wieder eine LRT Statistik erhalten, in dem ich ein reduziertes Modell mit dem vollständigen Model vergleiche. Dazu trainiere ich in einer Schleife den Encoder und das gemischte Model für jeden Iterationsschritt neu und vergleiche die negativen Maximum Likelihood-Werte (ML-Werte) durch den Likelihood Ratio Test. Am Ende der Schleife erhalte ich wieder eine LRT Statistik, welche durch ein Histogramm dargestellt wird. Im Optimalfall ähnelt das Histogramm einer Chi-Quadrat-Verteilung mit einem Freiheitsgrad (Da das reduzierte Model nur einen festen Effekt, das Geschlecht, weniger hat).\\
-\subsection{Experimentelles Design}
-Aufbau der experimentellen Tests und Simulationen.
-\subsection{Durchführung}
-Beschreibung der durchgeführten Experimente und verwendeten Parameter.
+PSI berücksichtigt diese Modellauswahl und bietet Methoden zur Korrektur der dadurch entstehenden Verzerrungen. Insbesondere bei komplexen Modellen wie Variational Autoencoders (VAE) in Kombination mit gemischten Modellen ist die Berücksichtigung der Modellauswahl von entscheidender Bedeutung, um zuverlässige und gültige Schlussfolgerungen ziehen zu können.
+
+\subsubsection{Prinzipien der Post-Selection-Inferenz}
+PSI basiert auf der Idee, die Unsicherheit der Modellauswahl explizit in die Inferenz einzubeziehen. Dies wird erreicht durch:
+
+Konditionierung auf die Modellauswahl: Anstatt die Inferenz auf dem ausgewählten Modell durchzuführen, wird die Unsicherheit, die durch den Auswahlprozess entsteht, konditioniert. Dies bedeutet, dass die Schätzungen und Tests die Tatsache berücksichtigen, dass das Modell aus einer Menge möglicher Modelle ausgewählt wurde.
+Anpassung der Teststatistiken: Die Teststatistiken und Konfidenzintervalle werden angepasst, um die zusätzlichen Freiheitsgrade, die durch die Modellauswahl entstehen, zu berücksichtigen. Dadurch werden konservativere und weniger verzerrte Schätzungen erzielt.
+\subsection{Anwendungen der Post-Selection-Inferenz}
+Die Anwendung von PSI in der Kombination von VAEs und gemischten Modellen kann mehrere Vorteile bieten:
+
+Verbesserte Zuverlässigkeit der Inferenz: Durch die Berücksichtigung der Modellauswahlprozesse kann die Verzerrung der Inferenz reduziert werden, was zu verlässlicheren und stabileren Ergebnissen führt.
+Genaue Konfidenzintervalle: PSI bietet genauere Konfidenzintervalle für die Modellparameter, die die Unsicherheit der Modellauswahl korrekt widerspiegeln.
+Bessere Modellbewertung: Die Anpassung der Teststatistiken ermöglicht eine genauere Bewertung der Modellgüte und eine verbesserte Entscheidungsfindung bei der Auswahl des besten Modells.
+\subsubsection{Ausblick}
+Die Integration von PSI in die Analyse von gemischten Modellen in latenten Repräsentationen eröffnet neue Möglichkeiten zur Verbesserung der statistischen Inferenz. In zukünftigen Arbeiten könnte die Anwendung von PSI auf verschiedene Datensätze und Modellkonfigurationen weiter erforscht werden, um die Robustheit und Genauigkeit der Inferenz zu erhöhen. Dies könnte insbesondere in Bereichen wie der medizinischen Datenanalyse, wo präzise und zuverlässige Inferenzmethoden von entscheidender Bedeutung sind, von großem Nutzen sein.
+
 \subsection{Analyse der Ergebnisse}
+
+%--------------HERZGESUNDHEIT----------------------------------
+Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, die Ergebnisse des LRT-Statistik, wie zu erwarten, einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgen. \\
+\\
+%-------------MM-IN-LATENTER-REPRÄSENTATION--------------------
+Wie man in Abbildung \ref{fig:Hist_nML_inLoss} sieht, wurde das Histogramm unter eine $\chi^2$-Verteilung gelegt und verglichen. Es ist leicht zur erkennen, dass die Teststatistik der Verteilung folgt. \\
+\\
+Für dieses Testszenario ist demnach keine Verzerrung in der Inferenz zu erkennen, was bedeutet, dass der Mean Squarred Error und die negative Log-Likelihood trotz hoher Gewichtung in der Loss-Funktion keinen Einfluss auf das Training des Variational Autoencoder haben und der Encoder nicht  zu gut lernt.\\
+
 Diskussion der Ergebnisse im Hinblick auf die Verzerrung der Inferenz.
-
-Wir haben nun die nötigen theoretischen Kenntnisse, um die Verzerrung der Inferenz zu messen. Um die Verzerrung zu messen haben wir uns für eine Likelihood-Ratio-Test Statistik entschieden. Dabei fügen wir dem Datensatz einen neuen Parameter hinzu, welcher keinen Einfluss auf die Daten haben sollte. Bei unserem Datensatz haben wir jedem Patienten zufällig ein Geschlecht hinzugefügt. Das Geschlecht hat keinen Einfluss auf die Testergebnisse und demnach auch keinen Einfluss auf die Response-Variable. 
-Nun können wir das vollständige, mit dem Geschlecht ergänzte, Modell mit dem reduzierten, ohne dem Geschlecht, Modell vergleichen, in dem wir den Likelihood-Ratio-Test anwenden. 
-Um einen Richtwert zu haben, haben wir zuerst ein selbst überlegtes Simulationsdesign erstellt, welches einen niedrigdimensionalen medizinischen Datensatz simuliert. Dabei handelt es sich um einen Datensatz der die Herzgesundheit berechnet. Für jeden der n=500 Patienten wird Health-Score basierend auf verschiedensten Einflussfaktoren berechnet. Jeder der Patienten ist erkrankt und erhält nach frühestens drei Jahren eine Behandlung, die den Einfluss der einzelnen Parametern leicht verbessert. Der Start der Behandlung wird zufällig nach drei Jahren ausgemacht. Die Daten werden über 10 Jahre erhoben. Der Heath-Score setzt sich aus dem diastolischen- und systolischen Blutdruck, dem Cholesterinspiegel, dem Triglyceride-Wert, dem Creatininspiegel und dem BMI zusammen. Die Werte werden für jeden Patienten aus einer Normalverteilung gezogen.
-\begin{align*}
-	bp_sys \sim \mathcal{N}(120,10) \\
-	bp_dia \sim \mathcal{N}(80,10) \\
-	cholesterol \sim \mathcal{N}(200,30) \\
-	triglyceride \sim \mathcal{N}(150,20) \\
-	creatinin \sim \mathcal{N}(1,0.2) \\
-	bmi \sim \mathcal{N}(25,4) \\
-\end{align*} \noindent
-Insbesondere wird jedem Patienten ein zufälliges Alter zwischen 30 und 60 Jahren zugeteilt, welches ebenfalls einen minimal negativen Effekt auf den Health-Score hat. Als zusätzlichen Effekt, welcher keinen Einfluss auf die Response-Variable (in diesem Fall der Health-Score) hat, wird jedem Patienten ein Geschlecht zugeteilt. Für immer zufällig auftretende Effekte wird ein Random Slope und ein Random Intercept in den Health-Score hinzugefügt. 
-
-
-Basierend auf diesem Simulationsdesign, welches einem Gemischten Modell folgt, können wir nun einen Likelihood-Ratio-Test durchführen. Wir trainieren dazu ein vollständiges gemischtes Modell und ein reduziertes gemischtes Modell ohne den Effekt 'Geschlecht'. Mit den log-Likelihood Werten für die trainierten Modelle führen wir den Likelihood-Ratio-Test durch. Nach 500 Wiederholungen ergibt sich ein Histogramm der Likelihood-Ratio-Test Statistik, welches, wie zu erwarten, einer $\chi^2$ Verteilung folgt. Wir wir in Abb sieht folgt das Histogramm der Test Statistik der Roten Kurve, welche die $\chi^2$ Verteilung beschreibt, ohne Verzerrung. Bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, sind die Ergebnisse immer unter der $\chi^2$ Verteilung. Dies war allerdings auch so zu erwarten, da wir ein ganz normales gemischtes Modell betrachtet hatten.
-\subsection{Gemischtes Modell auf latenter Datenwolke mit separatem Training}
-Nun wollen wir das gemischte Modell in einer latenten Repräsentation betrachten. Dazu wählen wir, wie schon angeführt, einen Variational-Autoencoder. Außerdem haben wir nun einen hochdimensionalen medizinischen Datensatz gegeben. Dieser ist einem echten Datensatz bestmöglich nachgebaut, allerdings kann hier aus Datenschutzgründen kein wirklich echter Datensatz benutzt werden. Wir wählen zunächst ein recht simples Encoder-Modell mit zwei Schichten und einer zweidimensionalen latenten Dimension. 
-Wir trainieren zuerst den VAE separat von den gemischten Modellen. Dazu optimieren wir in der Loss-Funktion den Reconstruction Loss und die KL-Divergenz. Das vollständige und reduzierte gemischte Modell trainieren wir dann auf der latenten Datenwolke jeweils nach dem abgeschlossenen Training des VAEs. So erhalten wir wieder zwei log-likelihood Werte welche wir mit dem Likelihood-Ratio-Test auswerten können. Fassen wir alle LRT-Werte gleichermaßen wie zuvor in einem Histogramm zusammen und vergleichen mit der $\chi^2$ Verteilung, so sehen wir, dass eine bedeutende Masse dieses Mal über der $\chi^2$ Verteilung liegt. Wir sehen also, dass es zu einer Verzerrung der Inferenz kommt. 
-\subsection{Gemischtes Modell auf latenter Datenwolke mit gleichzeitigem Training}
-Wenn wir nun versuchen das gemischte Modell zusammen mit dem VAE in einer einzigen Loss-Funktion zu trainieren, sehen wir recht schnell, dass wir so nicht zu einem gewünschten Ergebnis kommen. Bei einem gemeinsamen Training unter der Voraussetzung, dass in der Loss-Funktion alle Parameter gleich gewichtet sind, geht die $\chi^2$ Verteilung komplett verloren. 
-Fügen wir der Lossfunktion auch nur den Mean-Squarred-Error zwischen dem Encoder Output und dem Output des vollständig trainierten gemischten Modells hinzu und gewichten diesen nur minimal, so verlieren wir schon die $\chi^2$-Verteilung. Das bedeutet sobald der Encoder Einfluss auf das gemsischte Modell hat, geht die gewünschte Verteilung verloren.
-Dementsprechend geht die Verteilung auch verloren, wenn wir 
-
 
 
 %%------------DISKUSSION-----------------------------------------------------
@@ -968,20 +1101,92 @@ Wie sich die Ergebnisse zu bereits veröffentlichten Forschungen verhalten.
 \section{Limitationen und Herausforderungen}
 Kritische Betrachtung der Grenzen der Studie und mögliche Probleme.
 \chapter{Fazit}
+Diese Arbeit hat die Verzerrung der Inferenz bei der Verwendung gemischter Modelle in latenten Repräsentationen untersucht, insbesondere unter Einsatz von Variational Autoencoders (VAE). Die Ergebnisse zeigen, dass die Kombination von VAEs und gemischten Modellen eine vielversprechende Methode zur Analyse hochdimensionaler Daten ist. Es konnte jedoch eine signifikante Verzerrung in der Inferenz festgestellt werden, wenn das gemischte Modell auf der latenten Datenwolke trainiert wurde. Diese Verzerrung führt zu fehlerhaften Schlussfolgerungen und mindert die Validität der Modelle. Dennoch bieten die durchgeführten Analysen wertvolle Erkenntnisse für die Anwendung und Weiterentwicklung dieser Modelle in der Praxis.
+
+\section{Ausblick}
+Für zukünftige Forschungen wird empfohlen, die Verzerrung der Inferenz weiter zu untersuchen und zu minimieren, insbesondere durch die Integration von Post-Selection-Inferenz (PSI). PSI-Methoden berücksichtigen die zusätzliche Unsicherheit, die durch den Selektionsprozess entsteht, und können somit robustere und aussagekräftigere Ergebnisse liefern. Dies ist besonders relevant in Bereichen wie dem maschinellen Lernen und Data Mining, wo häufig zahlreiche Modelle getestet und das beste ausgewählt wird. Durch die Anwendung von PSI können verlässlichere Konfidenzintervalle und p-Werte berechnet werden, was die Ergebnisse weiter absichert.
+
+Zukünftige Forschungen sollten sich darauf konzentrieren, alternative Methoden zur Regularisierung der VAEs zu entwickeln und optimierte Trainingsverfahren für gemischte Modelle zu testen. Darüber hinaus wäre es sinnvoll, die Anwendbarkeit dieser Methoden auf reale medizinische Datensätze zu überprüfen, um deren praktischen Nutzen zu validieren und gegebenenfalls anzupassen. Es gibt Hinweise darauf, dass PSI noch ungenutztes Potenzial hat und möglicherweise mehr Möglichkeiten bietet, die Genauigkeit und Robustheit der Inferenz zu verbessern.
+
+Die Integration von PSI in die Analyse gemischter Modelle in latenten Repräsentationen stellt einen vielversprechenden Ansatz dar, um die Zuverlässigkeit und Aussagekraft der Inferenzmethoden zu erhöhen. Dies könnte die Grundlage für weiterführende Studien und die Entwicklung neuer, fortschrittlicher Analysemethoden bilden
+
+
+
 Zusammenfassung der wichtigsten Erkenntnisse
 Praktische Implikationen: Wie die Ergebnisse in der Praxis angewendet werden können.
 Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder ergänzende Studien.
 \chapter{Anhang}
+\section{Herzgesundheits-Datensatz}
+Das Simulationsdesign für den Herzgesundheits-Datensatz wurde bereits in Kapitel 3.2.1 beschrieben. Es folgen Ergänzungen zur Veranschaulichung und zum tieferen Verständnis des Simulationsdesign. Die Trajektorien der festen Effekte 'Systolischer Blutdrck', 'Diastolischer Blutdruck', 'Cholesterinspiegel', Body-Maß-Index' (BMI) und der Testwerte 'Gesundheitsscore' sind in Abbildung \ref{fig:sample_image} für fünf zufällig ausgewählte Patienten dargestellt. Der Wechsel der Farbe einer Trajektorie eines Patienten von Rot auf Grün symbolisiert den Anfang einer Behandlung. Es ist zu erkennen, dass sich mit dem Wechsel der Farben die Werte grundsätzlich verbessern. Dies hängt damit zusammen, dass mit Start der Behandlung die aus den Normalverteilungen (vgl. \ref{tab:health_score_parameters}) gezogenen Daten pro Jahr mit den in Tabelle \ref{tab:weights} dargestellten Werten verbessert werden. Vor der Behandlung werden die Daten mit geringeren Parametern angepasst, was eine minimale natürliche Verbesserung simulieren soll. Die Werte dazu sind genauso wie der Einfluss der festen Effekte auf den Gesundheitsscore in Tabelle \ref{tab:weights} dargestellt. Der Start der Behandlung wird zufällig nach zwischen Jahr drei bis zehn ausgewählt.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+		\hline
+		&  natürliche Verbesserung pro Jahr &  Behandlungseffekt pro Jahr &  Effekt auf den Gesundheitsscore \\
+		\hline
+		Systolischer Blutdruck & -0.5 &  -2 &  -0.1 \\
+		\hline
+		Diastolischer Blutdruck &  -0.5 &  -2 &  -0.1 \\
+		\hline
+		Cholesterin &  -1 &  -5 &  -0.2 \\
+		\hline
+		Triglycerides &  -1 &  -3 &  -0.2 \\
+		\hline
+		BMI &  / &  / &  -0.4 \\
+		\hline
+		Creatinin &  -0.01 &  -0.08 &  -0.1 \\
+		\hline
+	\end{tabular}
+	\caption{Gewichte des Simulationsdesigns des Herzgesundheits-Datensatz}
+	\label{tab:weights}
+\end{table}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{plots/Herzgesundheit_Datensatz.png}
+	\caption{Trajektorien der festen Effekte und des Gesundheitsscores eines simulierten Datensatzes für 20 zufällig ausgewählte Patienten}
+	\label{fig:sample_image}
+\end{figure}
+
+\section{komplexer medizinischer Datensatz}
+
+Die LRT-Statistik für das in Kapitel 3.2.2 beschriebene Modell wurde vorerst ohne die negative Log-Likelihood in der Loss-Funktion erstellt, um zuerst den Einfluss des Mean Squarred Error zu testen. Das Resultat ist in Abbildung \ref{fig:LRT_Hist_MM_latentData} dargestellt. Da dieser auch bei hoher Gewichtung in der Inferenz keine Verzerrung verursacht hatte, wurde die negative Log-Likelihood hinzugefügt, um ein zu gutes Training stärker zu provozieren. Wenn man die Teststatistiken in Abbildung \ref{fig:LRT_Hist_MM_latentData} und Abbildung \ref{fig:Hist_nML_inLoss} vergleicht sind keine größeren Unterschiede zu erkennen.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{plots/lrt_histogram.png}
+	\caption{Histogramm der LRT-Statistik mit $\mathcal{L}(\alpha=1,\gamma=1,\eta=10,\lambda=0)$}
+	\label{fig:LRT_Hist_MM_latentData}
+\end{figure} 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{plots/Hist_MSE_nML_100its.png}
+	\caption{Histogramm der LRT-Statistik mit $\mathcal{L}(\alpha=1,\gamma=1,\eta=10,\lambda=10)$}
+	\label{fig:Hist_nML_inLoss}
+\end{figure} 
+
+\section{Minibatch-Training}
+Das Minibatch-Training ist eine Form des Stochastic Gradient Descent (SGD), bei dem die Modellparameter mithilfe kleiner, zufällig ausgewählter Teilmengen des Datensatzes aktualisiert werden, anstatt den gesamten komplexen Datensatz auf einmal zu verwenden. Diese Methode hat mehrere Vorteile. Es reduziert nicht nur den Speicherbedarf, da immer nur kleine Teilmengen der Daten im Speicher geladen werden, sondern ermöglicht gleichzeitig eine schnellere Konvergenz, da die Modellparameter häufiger aktualisiert werden. \\
+\\
+Im Falle des in dieser Arbeit verwendeten Modells, wird vor der Trainingsschleife der Datensatz für ein Minibatch-Training vorbereitet. Dies geschieht ganz einfach, indem der Datensatz in mehrere Minibatches aufgeteilt wird. Die Größe der Minibatches ist häufig eine Potenz von 2 (z.B. 16, 32, 64, 128)
 \appendix
 \chapter{Appendix}
 \section{Supporting Data}
 \section{Some Code Listings}
 
 \backmatter{}
-\listoffigures% may be removed
-\listoftables% may be removed
+\pagenumbering{arabic}
+%\listoffigures% may be removed
+%\listoftables% may be removed
+%\bibliography{literature.bib}
 \printbibliography{} % print bibliography
+\chapter{Danksagungen}
+An dieser Stelle möchte ich mich recht herzlich bei Herr Clemens Schächter für die stets zuvorkommende und zeitintensive Betreuung bedanken. Ohne den ständigen Austausch und ohne die interessanten Anregungen wäre diese Arbeit mit Sicherheit so nicht zustande gekommen.
 
+Außerdem bedanke ich mich recht herzlich bei Prof. Dr. Harald Binder für die sehr angenehme Kooperation und den häufigen fachlichen Austausch. 
+\chapter{Erklärung}
+Hiermit erkläre ich, dass ich diese Bachelorarbeit eigenständig verfasst habe und keine anderen als
+die von mir angegebenen Quellen und Hilfsmittel benutzt habe und dass ich diese Arbeit nicht
+bereits zur Erlangung eines akademischen Grades eingereicht habe.
 \end{document}
 
 %%% Local Variables:
