@@ -171,6 +171,7 @@ class Encoder(nn.Module):
         z = self.sample(mu, log_sig)
         return z, mu, kl_div
     
+    
 
 class Exp_CumSum(nn.Module):
     def __init__(self):

@@ -676,7 +676,8 @@ Der Likelihood-Ratio Test wird wie folgt definiert:\\
 Sofern die Größen $\mathbf{L}_{full}$ und $\mathbf{L}_{red}$ gemäß der Definition initialisiert sind, gilt $\mathbf{L}_{full} > \mathbf{L}_{red}$. Insbesondere gilt $\log(\mathbf{L}_{full}) > \log(\mathbf{L}_{red})$.
 Sofern die Log-Likelihood-Werte der Modelle bereits als $l_{full}$ und $l_{red}$ gegeben sind, lässt sich die LRT-Statistik durch $2(l_{full} - l_{red})$ berechnen. \\
 \\
-Für die spätere Analyse werden noch ein paar Kenngrößen wichtig sein, welche im Folgenden definiert werden.\\
+\section{Theorie für die Analyse}
+Für die spätere Analyse werden noch ein paar Kenngrößen für die Auswertung der Ergebnisse wichtig sein, welche im Folgenden definiert werden.\\
 \\
 Die LRT-Statistik folgt asymptotisch einer $\chi^2$-Verteilung mit $k$ Freiheitsgraden. Dabei ist $k$ auch die Differenz der betrachteten Effekte zwischen dem Nullmodell und dem alternativen Modell. \\
 Eine $\chi^2$-Verteilung ist folgendermaßen definiert:
@@ -705,8 +706,26 @@ Eine $\chi^2$-Verteilung ist folgendermaßen definiert:
 	wobei \( \Gamma(\cdot) \) die Gamma-Funktion ist.
 \end{definition} \noindent
 Die $\chi^2$-Verteilungen sind in Abbildung \ref{fig:chi2} veranschaulicht.\\
+\subsection{Chi-Quadrat-Test}
+Um später nicht die Ergebnisse nicht nur visuell abzugleichen, sondern auch numerisch zu überprüfen, wird der Chi-Quadrat-Test eingeführt. Dieser ist ein statistischer Test, der eingeführt wird, um zu testen, ob eine beobachtete Verteilung einer theoretischen Verteilung folgt. Er ist eine der Grundlegenden Methoden in der Statistik zur Überprüfung von Hypothesen über die Verteilung von Zufallsvariablen. Im Rahmen dieser Arbeit wird der Chi-Quadrat-Test nur auf die theoretische $\chi^2$-Verteilung mit einem Freiheitsgrad angewendet.\\
 \\
-Eine weitere wihtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Differenz zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. \cite{MSE}):
+Der Test folgt folgender Vorgehensweise:\\
+Seien $\mathcal{D}$ die beobachteten Daten und 
+Formulierung der Hypothesen: 
+\begin{enumerate}
+	\item Nullhypothese ($\mathbf{H}_0$): Die Daten $\mathcal{D}$ folgend der theoretischen Verteilung\\
+	\item Alternativhypothese ($\mathbf{H}_1$): Die Daten $\mathcal{D}$ folgend nicht der theoretischen Verteilung \\
+\end{enumerate}
+Die Daten werden nun in  $k$ Klassen (Bins) unterteilt, wobei $N_i$ die beobachtete Häufigkeit in der i-ten Klasse ist. Daraufhin werden die erwarteten Häufigkeiten $\mathcal{E}_i$ berechnet. Diese werden mit der Wahrscheinlichkeit $p_{0i}$, dass eine Ausprägung von $\mathcal{D}$ in Klasse $i$ fällt, berechnet. \\
+$$ \mathcal{E}_i = N * p_{0i}$$
+Dabei ist $N$ die Anzahl der Beobachtungen.\\
+Die Chi-Quadrat-Statistik wird dann wie folgt berechnet (vgl. \cite{Chi-Quadrat-Test}):\\
+\begin{align}
+	\mathcal{X}^2 = \sum_{i=1}^{k} = \frac{(N_i - \mathcal{E}_i)^2}{\mathcal{E}_i} \label{Chi-Quadrat-Test}
+\end{align}
+Die Nullhypothese wird abgelehnt, wenn die Teststatistik hoch ist. Wenn die Nullhypothese angenommen wird, sollte der Unterschied zwischen der beobachteten Verteilung und der theoretischen Verteilung gering sein. Der kritische Wert berechnet sich durch das (1-$\alpha_0$)-Quantil $\chi^2_{(1-\alpha_0; d)}$ der $\chi^2$-Verteilung mit $d$ Freiheitsgraden, wobei $\alpha_0$ das Signifikanzniveau ist. Falls also die Teststatistik $\mathcal{X}^2$ größer dem (1-$\alpha_0$)-Quantil der $\chi^2$-Verteilung mit $d$ Freiheitsgraden ($\mathcal{X}^2$ > $\chi^2_{(1-\alpha_0; d)}$) ist, so wird die Nullhypothese abgelehnt. 
+\\
+Eine weitere wichtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Differenz zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. \cite{MSE}):
 \begin{definition}[Mean-Squarred-Error (MSE)]
 	Seien $\hat{y_i}$ ,für  $i=0,...,n$ die geschätzten Werte und $y_i$ die tatsächlichen Werte. Dann ist der mittlere quadratische Fehler folgendermaßen definiert:
 	$$ MSE = \frac{1}{n} \sum_{i = 0}^{n} (\hat{y_i}-y_i)^2$$
@@ -846,7 +865,8 @@ Zu Beginn der Studie wird jedem Patienten zufällig ein Alter zugewiesen, wobei 
 Um einen Likelihood-Ratio-Test durchzuführen, der eine Vergleichsstatistik für die spätere Analyse liefert, wird jedem Patienten zufällig ein Geschlecht zugewiesen. Das Geschlecht sollte keinen Einfluss auf die Testergebnisse haben und wird deswegen in der Berechnung des Health-Scores mit Null gewichtet. \\
 Es wurde nun ein Szenario geschaffen, in dem ein vollständiges Modell mit einem reduzierten Modell verglichen werden kann. Das vollständige Modell berücksichtigt dabei alle festen Effekte aus Tabelle \ref{tab:health_score_parameters} zuzüglich des Geschlechts, wohingegen das reduzierte Modell nur die festen Effekte aus Tabelle \ref{tab:health_score_parameters} berücksichtigt. Für die Erstellung der LRT-Statistik werden beide Modelle jeweils 500 Mal auf einem neu simulierten Datensatz trainiert. In jeder Iteration werden die berechneten Log-Likelihood-Werte anhand des Likelihood-Ratio-Test ausgewertet, wobei das Ergebnis der Vergleichsanalyse in einem Histogramm zusammengetragen wird. Das Histogramm wird zum Abgleich unter eine $\chi^2$-Verteilung gelegt, welche in Abbildung \ref{fig:HIST_MM} dargestellt ist. \\
 \\
-Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, die Ergebnisse des LRT-Statistik, wie zu erwarten, einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgen. 
+Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, die Ergebnisse des LRT-Statistik, wie zu erwarten, einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgen. \\
+\\
 \begin{algorithm}[H]
 	\SetAlgoLined
 	\KwData{num\_simulations = 1000, $X_{\text{full}}$, $W_{\text{full}}$, $X_{\text{red}}$, $W_{\text{red}}$, $y$}
@@ -881,25 +901,13 @@ Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welch
 
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}[b]{0.45\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{plots/Herzgesundheit_Hist_1000sim.png}
-		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für gemischte Modelle auf simulierten Daten}
-		\label{fig:HIST_MM}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{plots/Hist_MSE_nML_100its.png}
-		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für ein gemischtes Modell auf latenter Datenwolke}
-		\label{fig:HITS_VAEMM_nMLinLoss}
-	\end{subfigure}
-	\caption{Histogramme der LRT-Statistiken}
-	\label{fig:LRT_HIST}
+	\includegraphics[width=\textwidth]{plots/Herzgesundheit_Hist_1000sim.png}
+	\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für gemischte Modelle auf simulierten Daten}
+	\label{fig:HIST_MM}
 \end{figure}
 
 \subsection{Gemischte Modelle in latenten Repräsentationen}
-In der bisherigen Betrachtung wurden die gemischten Modelle lediglich auf Basis der realen Daten evaluiert. Im Folgenden wird die Betrachtung der gemischten Modelle auf latenten Daten vorgenommen. Zur Analyse der gemischten Modelle auf latenten Daten wird ein Variational-Autoencoder verwendet. Die Grundlage unserer Analyse bildet das folgende Grundszenario: \\
+In der bisherigen Betrachtung wurden die gemischten Modelle lediglich auf Basis der tatsächlichen Daten evaluiert. Im Folgenden wird die Betrachtung der gemischten Modelle auf latenten Daten vorgenommen. Zur Analyse der gemischten Modelle auf latenten Daten wird das eingeführte Variational-Autoencoder Modell verwendet. Die Grundlage unserer Analyse bildet das folgende Grundszenario: \\
 Zur Analyse wird nun ein komplexer longitudinaler medizinischer Datensatz betrachtet, der durch einen Encoder des VAEs im latenten Raum modelliert wird. Das Ziel ist es nun, das gemischte Modell auf dieser latenten Datenwolke zu trainieren, um herauszufinden, ob es zu einer erwartbaren Verzerrung kommt. Dazu wird im Folgenden zuerst eine detaillierte Betrachtung des vorliegenden Datensatzes vorgenommen.
 \subsubsection{Der Datensatz}
 Im Rahmen dieser Bachelorarbeit basieren die Ergebnisse und Experimente, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle in latenten Repräsentationen zu untersuchen, auf einem generierten, hoch-dimensionalen, medizinischem Datensatz, welcher sich aus drei zentralen Datensätzen zusammensetzt. Diese Datensätze enthalten Informationen über die Basisdaten der Patienten, die Testergebnisse und zeitbezogene Informationen zu jedem Patienten. Zusammen ergeben sie einen komplexen Datensatz, welcher für 260 Patienten die Ergebnisse von 33 Mobilität-Tests enthält, die mehrmals wiederholt wurden. Somit lässt sich aus diesem Datensatz der Verlauf und die Schwere der Krankheit für jeden Patienten ablesen.  Der Datensatz wurde aus datenschutzrechtlichen Gründen einem originellen Datensatz nachgebaut und bildet die Grundlage der Analyse dieser Arbeit.\\
@@ -986,7 +994,7 @@ Der letzte Datensatz 'time\_df' enthält zeitbezogene Informationen, wie das Alt
 Die Designmatrizen der festen Effekte werden aus dem Basisdatensatz gewonnen, während die Designmatrizen der zufälligen Effekte aus den zeitbezogenen Daten gewonnen werden. Der Datensatz mit den Versuchsergebnissen ist das Rekonstruktionsobjekt, das dem Encoder als Eingangsdaten gegeben wird und das der Decoder so genau wie möglich zu rekonstruieren versucht. Eine genauere Beschreibung der Datensätze findet sich im Anhang.\\
 \\
 \subsubsection{Gemischtes Modell auf der latenter Datenwolke}
-Nachdem der Datensatz, mit dem im Rahmen dieser Arbeit gearbeitet wird, eingeführt wurde, kann die eigentliche Analyse dieser Arbeit beginnen. Das Ziel ist es herauszufinden, ob und wie stark es zu einer Verzerrung unter Anwendung gemischter Modelle in latenten Repräsentationen kommt. Dass die LRT-Statistik zwischen einem Nullmodell (vollständiges gemischtes Modell) und einem alternativen reduzierten gemischten Modell auf einem simulierten Datensatz einer $\chi^2$-Verteilung folgt wurde bereits gezeigt. Nun sollen beide gemischten Modelle auf einer latenten Datenwolke trainiert werden. Wie bereits erwähnt wird im Rahmen dieser Arbeit mit einem in Kapitel 1 'Das eigene Modell' eingeführten Variational Autoencoder (VAE) gearbeitet. Das gemischte Modell, mit welchem in dieser Arbeit gearbeitet wird, wurde bereits ebenso in Kapitel 1 eingeführt. Allerdings sind die Designmatrizen abhängig von dem Datensatz, mit dem gearbeitet wird. Deswegen werden die gemischten Modelle nochmal bezüglich des oben beschriebenen Datensatz spezifiziert.\\
+Nachdem der Datensatz, mit dem im Rahmen dieser Arbeit gearbeitet wird, eingeführt wurde, kann die eigentliche Analyse dieser Arbeit beginnen. Das Ziel ist es herauszufinden, ob und wie stark es zu einer Verzerrung unter Anwendung gemischter Modelle in latenten Repräsentationen kommt. Dass die LRT-Statistik zwischen einem Nullmodell (vollständiges gemischtes Modell) und einem alternativen reduzierten gemischten Modell auf einem simulierten Datensatz einer $\chi^2$-Verteilung folgt wurde bereits gezeigt. Nun sollen beide gemischten Modelle auf einer latenten Datenwolke trainiert werden. Wie bereits erwähnt wird im Rahmen dieser Arbeit mit dem bereits eingeführten Variational Autoencoder (VAE) gearbeitet. Das gemischte Modell, mit welchem in dieser Arbeit gearbeitet wird, wurde bereits ebenso in Kapitel 1 eingeführt. Allerdings sind die Designmatrizen abhängig von dem Datensatz, mit dem gearbeitet wird. Deswegen werden die gemischten Modelle nochmal bezüglich des oben beschriebenen Datensatz spezifiziert.\\
 \\
 \textbf{Das experimentelle Modell}\\
 Für die Berechnung der Schätzer benötigt es natürlich die Designmatrizen für die festen und die zufälligen Effekte. \\
@@ -994,7 +1002,7 @@ Die festen Effekte des vorgestellten Datensatzes sind alle in Tabelle \ref{table
 Die Designmatrizen für die zufälligen Effekte $W_{full}, W_{red}$ beider Modelle setzten sich aus den Werten der zufälligen Effekte 'since\_medication', 'since\_switch' und 'intercept' zusammen.\\ 
 Der Antwortvektor ist in diesem Szenario nun nicht durch den aus dem gemischten Modell berechneten Antwortvektor gegeben, sondern, wie in \ref{MM-auf-latentData} beschrieben, durch die aus dem Encoder gewonnene latente Datenwolke.\\
 \\
-Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, gibt es mehrere Trainingsschritte, die in Algorithmus \ref{Algo1} dargestellt sind. In diesem Szenario wird ein gemischtes Modell auf dem latenten Output eines Variational Autoencoder Im ersten Schritt des Trainingsalgorithmus wird der VAE mit der train\_vae Funktion, welche die normale Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1) $ maximiert, trainiert. Für das Training des Variational Autoencoder wird eine Minibatch-Training verwendet. Dies ist eine Methode die verwendet wird um generative Modelle effizient auf großen Datensätzen zu trainieren, indem der Datensatz in kleine handhabbare Teilmengen, sogenannte Minibatches, aufgeteilt wird. Eine genauere Erklärung zum Minibatch-Training ist im Anhang zu finden. Im Anschluss wird die negative Log-Likelihood des vollständigen gemischten Modells mit dem latenten Vektor z und den vollständigen Designmatrizen $X_{full}$ und $W_{full}$ maximiert. Für das gemischte Modell wird der zweite Ordnung Optimierer LBFGS gewählt, da dieser effizienter bei großen Parameterräumen ist und die Berechnung somit schneller läuft. Sowohl für das vollständige als auch für das reduzierte gemischte Modell wurde der Optimierer wie folgt initialisiert:
+Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, gibt es mehrere Trainingsschritte, die in Algorithmus \ref{Algo1} dargestellt sind. In diesem Szenario wird ein gemischtes Modell auf dem latenten Output eines Variational Autoencoder trainiert. Im ersten Schritt des Trainingsalgorithmus wird der VAE mit der train\_vae Funktion, welche die normale Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1) $ maximiert, trainiert. Für das Training des Variational Autoencoder wird eine Minibatch-Training verwendet. Dies ist eine Methode die verwendet wird um generative Modelle effizient auf großen Datensätzen zu trainieren, indem der Datensatz in kleine handhabbare Teilmengen, sogenannte Minibatches, aufgeteilt wird. Eine genauere Erklärung zum Minibatch-Training ist im Anhang zu finden. Im Anschluss wird die negative Log-Likelihood des vollständigen gemischten Modells mit dem latenten Vektor z und den vollständigen Designmatrizen $X_{full}$ und $W_{full}$ maximiert. Für das gemischte Modell wird der zweite Ordnung Optimierer LBFGS gewählt, da dieser effizienter bei großen Parameterräumen ist und die Berechnung somit schneller läuft. Sowohl für das vollständige als auch für das reduzierte gemischte Modell wurde der Optimierer wie folgt initialisiert:
 \begin{enumerate}
 	\item lr = 0.01 (Lernrate)
 	\item max\_iter = 200 (maximale Anzahl an Iterationen pro Optimierungsschritt)
@@ -1005,15 +1013,52 @@ Für das erste Szenario, was im Rahmen dieser Arbeit untersucht wird, gibt es me
 \end{enumerate}
 Mit dieser Initialisierung werden numerische Fehler während der Berechnung verhindert.
 Für den Variational Autoencoder fällt die Wahl auf den für tiefe neuronale Netzwerke effizienten ADAM-Optimierer, bei dem nur die Lernrate auf 0.01 angepasst wird. Ansonsten wird mit der Standardinitialisierung gearbeitet.\\
-Im zweiten Trainingsschritt wird nun der VAE mit der Funktion train\_vae\_2, welche den Mean Squarred Error und die negativen Log-Likelihood in der Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1,\eta=10,\lambda=10)$ hat, trainiert. Das bedeutet der Einfluss des Mean-Squarred-Error und der negativen Log-Likelihood ist sehr hoch, was das VAE-Modell provozieren könnte, zu gut zu lernen und somit in der Inferenz eine Verzerrung verursachen. Im Anschluss auf das zweite Training des Variational Autoencoder wird wieder das vollständige gemischte Modell wie zuvor trainiert. Der zweite Trainingsschritt wird dann insgesamt für 30 Iterationen wiederholt. Sobald dieser zweite Trainingsschritt abgeschlossen ist, wird dann das reduzierte Modell noch ein Mal auf dem zuletzt berechneten latenten Vektor wie zuvor das vollständige gemischte Modell trainiert.\\
-Die zuletzt berechnete negative Log-Likelihood des vollständigen Modell $\mathbf{L}_{full}$ und der negative Log-Likelihood Wert des reduzierten Modell $\mathbf{L}_{red}$ werden letztendlich mit dem \\ Likelihood-Ratio Test $LRT(\mathbf{L}_{full},\mathbf{L}_{red})$ ausgewertet. Dieses Szenario wurde für 1000 Wiederholungen durchgeführt und die Ergebnisse in einem Histogramm in Abbildung \ref{fig:Hist_nML_inLoss} gesammelt.\\
+Im zweiten Trainingsschritt wird nun der VAE mit der Funktion train\_vae\_2, welche den Mean Squarred Error und die negativen Log-Likelihood in der Loss-Funktion $\mathcal{L}(\alpha=1,\gamma=1,\eta=10,\lambda=10)$ berücksichtigt, trainiert. Das bedeutet der Einfluss des Mean-Squarred-Error und der negativen Log-Likelihood ist sehr hoch, was das VAE-Modell provozieren könnte, zu gut zu lernen und somit in der Inferenz eine Verzerrung zu verursachen. Im Anschluss auf das zweite Training des Variational Autoencoder wird wieder das vollständige gemischte Modell wie zuvor trainiert. Der zweite Trainingsschritt wird dann insgesamt für 30 Iterationen wiederholt. Sobald dieser zweite Trainingsschritt abgeschlossen ist, wird dann das reduzierte Modell noch ein Mal auf dem zuletzt berechneten latenten Vektor wie zuvor das vollständige gemischte Modell trainiert.\\
+Die zuletzt berechnete negative Log-Likelihood des vollständigen Modell $\mathbf{L}_{full}$ und der negative Log-Likelihood Wert des reduzierten Modell $\mathbf{L}_{red}$ werden letztendlich mit dem \\ Likelihood-Ratio Test $LRT(\mathbf{L}_{full},\mathbf{L}_{red})$ ausgewertet. Der Algorithmus \ref{Algo1} wurde für 1000 Wiederholungen durchgeführt und die Ergebnisse $\mathcal{D}_1$ in einem Histogramm in Abbildung \ref{fig:Hist_nML_inLoss} gesammelt. Für den visuellen Vergleich wurde die Verteilung der beobachteten Daten (in Grün) mit der $\chi^2$-Verteilung mit einem Freiheitsgrad (in Rot) abgeglichen. Wie man sieht, könnte man behaupten, dass das Histogramm einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgt. Um die visuellen Ergebnisse numerisch zu überprüfen wurde der in \ref{Chi-Quadrat-Test} beschriebene Chi-Quadrat-Test auf die beobachteten Daten und eine $\chi^2$-Verteilung mit einem Freiheitsgrad angewendet. Die Daten wurden dabei in 10 Klassen (Bins) unterteilt. Für die Anschauung wurden in Abbildung \ref{fig:HITS_VAEMM_nMLinLoss} die Daten in 120 Klassen unterteilt. Für den numerischen Test könnte dies allerdings die Ergebnisse verfälschen.\\
+Die Hypothesen für das erste Testszenario lauten:\\
+\begin{enumerate}
+	\item Nullhypothese ($\mathbf{H}_0$): Die Daten $\mathcal{D}_1$ folgend der theoretischen Verteilung\\
+	\item Alternativhypothese ($\mathbf{H}_1$): Die Daten $\mathcal{D}_1$ folgend nicht der theoretischen Verteilung \\
+\end{enumerate}
+Das Signifikanzniveau wird auf 5 \% gesetzt ($\alpha_0 = 0.05$).
+Für die beobachteten Daten $\mathcal{D}_1$ des ersten Testszenarios ist der Wert des Chi-Quadrat-Test folgendermaßen:\\
+$$\mathcal{X}^2_1 = 0.05157511461061281$$
+Um zu testen, ob die Nullhypothese angenommen wird, benötigt es noch den Wert des (1-$\alpha_0$)-Quantils einer $\chi^2$-Verteilung mit einem Freiheitsgrad.\\
+Dieser Wert ist der kritische Wert $\chi^2_{(1-\alpha_0; 1)} = 3.841458820694124$.
+Die Nullhypothese wird demnach angenommen, da $0.05157511461061281 < 3.841458820694124$ gilt. Somit wurde auch numerisch bestätigt, dass die Verteilung der Daten einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgt. 
 \\
-Wie man in Abbildung \ref{fig:Hist_nML_inLoss} sieht, wurde das Histogramm unter eine $\chi^2$-Verteilung gelegt und verglichen. Es ist leicht zur erkennen, dass die Teststatistik der Verteilung folgt. \\
+Für dieses Testszenario ist demnach keine Verzerrung in der Inferenz weder zu erkennen noch zu messen. Dies bedeutet, dass der Mean Squarred Error und die negative Log-Likelihood trotz hoher Gewichtung in der Loss-Funktion keinen Einfluss auf das Training des Variational Autoencoder haben und der Encoder nicht zu gut lernt.\\
 \\
-Für dieses Testszenario ist demnach keine Verzerrung in der Inferenz zu erkennen, was bedeutet, dass der Mean Squarred Error und die negative Log-Likelihood trotz hoher Gewichtung in der Loss-Funktion keinen Einfluss auf das Training des Variational Autoencoder haben und der Encoder nicht  zu gut lernt.\\
+\textbf{Gemischtes Modell auf latenter Datenwolke eines Autoencoders}\\
+Für ein zweites Szenario, was im Rahmen dieser Arbeit untersucht wurde, wurde das VAE-Modell ausgetauscht durch einen üblichen Autoencoder. Diese Anpassung gelingt relativ einfach, da man dazu einfach den Output des Encoders nimmt und den Reparametrisierungstrick weglässt. Die latenten Variablen sind dann einfach $\mu$ aus dem oben vorgestellten VAE-Modell. Dies führt dazu, dass spezifische Deteils der Daten vom Autoencoder gelernt werden können und der Autoencoder somit zu gut lernt. Ziel ist es das Modell zu provozieren zu gut zu lernen, weswegen die Loss-Funktion aus dem VAE-Modell dem Autoencoder übergeben wird. In Algorithmus \ref{Algo1} müssen demnach nur die train\_vae und train\_vae\_2 Funtkion angepasst werden. So erhält man eine neue LRT-Statistik, welche in Abbildung \ref{fig:HIST_Autoencoder} dargestellt ist. Die beobachteten Daten $\mathcal{D}_2$ aus dem zweiten Testszenario wurden wieder für den visuellen Vergleich in 120 Klassen unterteilt und mit einer $\chi^2$-Verteilung abgeglichen. Auch für dieses Szenario ist in Abbildung \ref{fig:HIST_Autoencoder} keine Verzerrung zu erkennen. Für die numerische Überprüfung dieser Vermutung werden die Hypothesen wie folgt aufgestellt:\\
+\begin{enumerate}
+	\item Nullhypothese ($\mathbf{H}_0$): Die Daten $\mathcal{D}_2$ folgend der theoretischen Verteilung\\
+	\item Alternativhypothese ($\mathbf{H}_1$): Die Daten $\mathcal{D}_2$ folgend nicht der theoretischen Verteilung \\
+\end{enumerate}
+Das Signifikanzniveau $\alpha_0$ und der kritische Wert $\chi^2_{(1-\alpha_0; 1)}$ ändern sich nicht im Vergleich zu dem ersten Testszenario.
+Berechnet man nun die Chi-Quadrat-Statistik, wie in \ref{Chi-Quadrat-Test} beschrieben, so erhält man den Wert $\mathcal{X}^2_2 = 0.04330499004467964 < \chi^2_{(1-\alpha_0; 1)}$. Die Nullhypothese wird demnach auch im zweiten Testszenario angenommen. Wie es visuell zu erkennen ist, kommt es bei der Reduzierung des VAE-Modells zu einem herkömmlichen Autoencoder zu keiner Verzerrung. 
 \\
-Für ein zweites Szenario, was im Rahmen dieser Bachelorarbeit untersucht wurde, wurde das VAE-Modell ausgetauscht durch einen üblichen Autoencoder. Diese Anpassung gelingt relativ einfach, da man dazu einfach den Output des Encoders nimmt und den Reparametrisierungstrick weglässt. Die latenten Variablen sind dann einfach $\mu$ aus dem oben vorgestellten VAE-Modell. Ziel ist es das Modell zu provozieren zu gut zu lernen, weswegen die Loss-Funktion aus dem VAE-Modell dem Autoencoder übergeben wird. In Algorithmus \ref{Algo1} müssen demnach nur die train\_vae und train\_vae\_2 Funtkion angepasst werden. So erhält man eine neue LRT-Statistik, welche in Abbildung () dargestellt ist. \\
-
+\textbf{Gemischtes Modell auf der latenten Datenwolke eines komplexen VAE-Modells}
+In einem letzten experimentellen Szenario wird die Komplexität des Encoder Modells erhört. Das Ziel ist es wieder ein 'Overfitting' zu provozieren. In dem zuerst vorgestellten Szenario wurde mit dem eingeführten VAE Modell gearbeitet. In diesem bereits vorgestellten Modell hat der Encoder eine versteckte Schicht mit 150 Neuronen und transformiert die Eingabedaten in einen eindimensionalen latenten Raum. Um die Komplexität des Encoder Modells zu erhöhen wird dem Encoder nun eine zusätzliche versteckte Schicht hinzugefügt und die Anzahl der Neuronen wird auf 200 erhöht. Insbesondere wird die latente Dimension auf vier erhöht, was das Modell komplexer macht. Mit diesem neuen Encoder Modell wird Algorithmus \ref{Algo1} für eine weitere LRT-Statistik, welche in Abbildung () dargestellt ist, ausgeführt. \\
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plots/1_latent_dim_VAE.png}
+		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für gemischte Modelle auf latenter Datenwolke eine einfachen VAE-Modells}
+		\label{fig:HIST_4latent_dim}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plots/Autoencoder.png}
+		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für ein gemischtes Modell auf latenter Datenwolke eines Autoencoders}
+		\label{fig:HIST_Autoencoder}
+	\end{subfigure}
+	\caption{Histogramme der LRT-Statistiken}
+	\label{fig:LRT_HIST2}
+\end{figure}
+\\
 \begin{algorithm}[H]
 	\SetAlgoLined
 	\KwData{num\_simulations = 1000, iterations = 30, $X_{\text{full}}$, $W_{\text{full}}$, $X_{\text{red}}$, $W_{\text{red}}$}
@@ -1070,17 +1115,15 @@ PSI basiert auf der Idee, die Unsicherheit der Modellauswahl explizit in die Inf
 
 Konditionierung auf die Modellauswahl: Anstatt die Inferenz auf dem ausgewählten Modell durchzuführen, wird die Unsicherheit, die durch den Auswahlprozess entsteht, konditioniert. Dies bedeutet, dass die Schätzungen und Tests die Tatsache berücksichtigen, dass das Modell aus einer Menge möglicher Modelle ausgewählt wurde.
 Anpassung der Teststatistiken: Die Teststatistiken und Konfidenzintervalle werden angepasst, um die zusätzlichen Freiheitsgrade, die durch die Modellauswahl entstehen, zu berücksichtigen. Dadurch werden konservativere und weniger verzerrte Schätzungen erzielt.
-\subsection{Anwendungen der Post-Selection-Inferenz}
+\subsubsection{Anwendungen der Post-Selection-Inferenz}
 Die Anwendung von PSI in der Kombination von VAEs und gemischten Modellen kann mehrere Vorteile bieten:
-
+\\
 Verbesserte Zuverlässigkeit der Inferenz: Durch die Berücksichtigung der Modellauswahlprozesse kann die Verzerrung der Inferenz reduziert werden, was zu verlässlicheren und stabileren Ergebnissen führt.
 Genaue Konfidenzintervalle: PSI bietet genauere Konfidenzintervalle für die Modellparameter, die die Unsicherheit der Modellauswahl korrekt widerspiegeln.
 Bessere Modellbewertung: Die Anpassung der Teststatistiken ermöglicht eine genauere Bewertung der Modellgüte und eine verbesserte Entscheidungsfindung bei der Auswahl des besten Modells.
-\subsubsection{Ausblick}
-Die Integration von PSI in die Analyse von gemischten Modellen in latenten Repräsentationen eröffnet neue Möglichkeiten zur Verbesserung der statistischen Inferenz. In zukünftigen Arbeiten könnte die Anwendung von PSI auf verschiedene Datensätze und Modellkonfigurationen weiter erforscht werden, um die Robustheit und Genauigkeit der Inferenz zu erhöhen. Dies könnte insbesondere in Bereichen wie der medizinischen Datenanalyse, wo präzise und zuverlässige Inferenzmethoden von entscheidender Bedeutung sind, von großem Nutzen sein.
 
 \subsection{Analyse der Ergebnisse}
-
+Die Ergebnisse der drei Testszenarios wurden in Form von Histogrammen in Abbildung \ref{fig:LRT_HIST} und \ref{fig:LRT_HIST2} zusammengetragen. Die Histogramme liefern einen visuellen Abgleich mit der $\chi^2$-Verteilung. Da dies alleine ein unzuverlässiger Beleg wäre, wurden die Ergebnisse zudem noch numerisch anhand des 'Chi-Quadrat-Test' überprüft. 
 %--------------HERZGESUNDHEIT----------------------------------
 Wie man sieht folgt das grüne Histogramm ohne Verzerrung der roten Kurve, welche die $\chi^2$-Verteilung beschreibt. Das bedeutet, dass bis auf einzelne Ausnahmen, welche durch Instabilitäten der Berechnung immer verursacht werden können, die Ergebnisse des LRT-Statistik, wie zu erwarten, einer $\chi^2$-Verteilung mit einem Freiheitsgrad folgen. \\
 \\
@@ -1105,13 +1148,11 @@ Diese Arbeit hat die Verzerrung der Inferenz bei der Verwendung gemischter Model
 
 \section{Ausblick}
 Für zukünftige Forschungen wird empfohlen, die Verzerrung der Inferenz weiter zu untersuchen und zu minimieren, insbesondere durch die Integration von Post-Selection-Inferenz (PSI). PSI-Methoden berücksichtigen die zusätzliche Unsicherheit, die durch den Selektionsprozess entsteht, und können somit robustere und aussagekräftigere Ergebnisse liefern. Dies ist besonders relevant in Bereichen wie dem maschinellen Lernen und Data Mining, wo häufig zahlreiche Modelle getestet und das beste ausgewählt wird. Durch die Anwendung von PSI können verlässlichere Konfidenzintervalle und p-Werte berechnet werden, was die Ergebnisse weiter absichert.
-
+\\
 Zukünftige Forschungen sollten sich darauf konzentrieren, alternative Methoden zur Regularisierung der VAEs zu entwickeln und optimierte Trainingsverfahren für gemischte Modelle zu testen. Darüber hinaus wäre es sinnvoll, die Anwendbarkeit dieser Methoden auf reale medizinische Datensätze zu überprüfen, um deren praktischen Nutzen zu validieren und gegebenenfalls anzupassen. Es gibt Hinweise darauf, dass PSI noch ungenutztes Potenzial hat und möglicherweise mehr Möglichkeiten bietet, die Genauigkeit und Robustheit der Inferenz zu verbessern.
-
-Die Integration von PSI in die Analyse gemischter Modelle in latenten Repräsentationen stellt einen vielversprechenden Ansatz dar, um die Zuverlässigkeit und Aussagekraft der Inferenzmethoden zu erhöhen. Dies könnte die Grundlage für weiterführende Studien und die Entwicklung neuer, fortschrittlicher Analysemethoden bilden
-
-
-
+\\
+Die Integration von PSI in die Analyse von gemischten Modellen in latenten Repräsentationen eröffnet neue Möglichkeiten zur Verbesserung der statistischen Inferenz. In zukünftigen Arbeiten könnte die Anwendung von PSI auf verschiedene Datensätze und Modellkonfigurationen weiter erforscht werden, um die Robustheit und Genauigkeit der Inferenz zu erhöhen. Dies könnte insbesondere in Bereichen wie der medizinischen Datenanalyse, wo präzise und zuverlässige Inferenzmethoden von entscheidender Bedeutung sind, von großem Nutzen sein.
+\\
 Zusammenfassung der wichtigsten Erkenntnisse
 Praktische Implikationen: Wie die Ergebnisse in der Praxis angewendet werden können.
 Empfehlungen für zukünftige Forschungen: Vorschläge für weiterführende oder ergänzende Studien.

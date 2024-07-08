@@ -2360,8 +2360,9 @@
     <bcf:citekey order="14">fahrmeir-2011-regression</bcf:citekey>
     <bcf:citekey order="15">Statistik-Wiwi</bcf:citekey>
     <bcf:citekey order="16">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="17">MSE</bcf:citekey>
-    <bcf:citekey order="18">KL-Div</bcf:citekey>
+    <bcf:citekey order="17">Chi-Quadrat-Test</bcf:citekey>
+    <bcf:citekey order="18">MSE</bcf:citekey>
+    <bcf:citekey order="19">KL-Div</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="anyt">
