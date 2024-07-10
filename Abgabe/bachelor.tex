@@ -164,7 +164,6 @@ coverBCOR=11mm% binding correction for the cover - adapt accordingly
 \section*{Abstract}
 This thesis examines the potential for bias in inference when utilising mixed models in latent representations. The research primarily focuses on the application of Variational Autoencoders (VAE) combined with mixed models to analyse high-dimensional medical datasets. The study investigates the extent to which inference results may be biased and evaluates the robustness of the models used. The objective of this study is to examine the likelihood-ratio test statistics and compare them across different model configurations in order to gain insights into the reliability of using VAEs in conjunction with mixed models for statistical analysis.
 \mainmatter{}
-\pagenumbering{arabic}
 %%---------------EINLEITUNG--------------------------------------------------
 \chapter{Einleitung}
 Die Anwendung gemischter Modelle zur Analyse und Verarbeitung komplexer Datenstrukturen stellt in vielen wissenschaftlichen und industriellen Bereichen eine Herausforderung dar und hat in den letzten Jahren stark an Bedeutung gewonnen. Insbesondere in der medizinischen Datenwissenschaft und maschinellen Lernverfahren sind Datensätze oft durch hohe Dimensionen und komplexe Strukturen gekennzeichnet, was die Analyse und Interpretation erschwert. Die Anwendung gemischter Modelle in latenten Repräsentationen könnte eine vielversprechende Methode sein, um die Handhabung solcher Datenstrukturen zu erleichtern.\\
@@ -1238,19 +1237,31 @@ Das Minibatch-Training ist eine Form des Stochastic Gradient Descent (SGD), bei 
 \\
 Im Falle des in dieser Arbeit verwendeten Modells, wird vor der Trainingsschleife der Datensatz für ein Minibatch-Training vorbereitet. Dies geschieht ganz einfach, indem der Datensatz in mehrere Minibatches aufgeteilt wird. Die Größe der Minibatches ist häufig eine Potenz von 2 (z.B. 16, 32, 64, 128)
 \backmatter{}
-\pagenumbering{arabic}
 %\listoffigures% may be removed
 %\listoftables% may be removed
 %\bibliography{literature.bib}
 \printbibliography{} % print bibliography
-\chapter{Danksagungen}
+\newpage
+\section*{Danksagungen}
 An dieser Stelle möchte ich mich recht herzlich bei Herr Clemens Schächter für die stets zuvorkommende und zeitintensive Betreuung bedanken. Ohne den ständigen Austausch und ohne die interessanten Anregungen wäre diese Arbeit mit Sicherheit so nicht zustande gekommen.\\
 \\
 Außerdem bedanke ich mich recht herzlich bei Prof. Dr. Harald Binder für die sehr angenehme Kooperation und den häufigen fachlichen Austausch. 
-\chapter{Erklärung}
-Hiermit erkläre ich, dass ich diese Bachelorarbeit eigenständig verfasst habe und keine anderen als
-die von mir angegebenen Quellen und Hilfsmittel benutzt habe und dass ich diese Arbeit nicht
-bereits zur Erlangung eines akademischen Grades eingereicht habe.
+\newpage
+\section*{Selbstständigkeitserklärung}
+Hiermit erkläre ich, \textbf{Yannick Bantel}, dass ich die vorliegende Bachelorarbeit mit dem Titel \textbf{Verzerrung der Inferenz bei Verwendung gemischter Modelle in latenten Repräsentationen} eigenständig und ohne fremde Hilfe verfasst habe. Sämtliche verwendeten Quellen und Hilfsmittel sind im Literaturverzeichnis aufgeführt. Wörtlich oder inhaltlich übernommene Stellen sind als solche gekennzeichnet.\\
+\\
+Ich versichere, dass ich diese Arbeit weder vollständig noch in wesentlichen Teilen im Rahmen einer anderen Prüfung eingereicht habe.\\
+
+\vspace{2cm}
+
+\begin{flushleft}
+	\begin{tabbing}
+		\hspace{8cm} \= \hspace{4cm} \kill
+		Ort, Datum: \> Unterschrift: \\
+		\\
+		\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \> \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+	\end{tabbing}
+\end{flushleft}
 \end{document}
 
 %%% Local Variables:
