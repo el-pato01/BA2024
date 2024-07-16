@@ -2344,25 +2344,27 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">literature.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">bigdata-insider-vae</bcf:citekey>
+    <bcf:citekey order="1">Skript-neuronalesNetz</bcf:citekey>
     <bcf:citekey order="2">Auto-EncodingVariationalBayes</bcf:citekey>
-    <bcf:citekey order="3">IntroductiontoVAEs</bcf:citekey>
-    <bcf:citekey order="4">JensenscheUngleichung</bcf:citekey>
-    <bcf:citekey order="5">MonteCarloEstimation</bcf:citekey>
-    <bcf:citekey order="6">MonteCarloEstimation</bcf:citekey>
+    <bcf:citekey order="3">bigdata-insider-vae</bcf:citekey>
+    <bcf:citekey order="4">Auto-EncodingVariationalBayes</bcf:citekey>
+    <bcf:citekey order="5">IntroductiontoVAEs</bcf:citekey>
+    <bcf:citekey order="6">JensenscheUngleichung</bcf:citekey>
     <bcf:citekey order="7">MonteCarloEstimation</bcf:citekey>
-    <bcf:citekey order="8">fahrmeir-2001-multivariate</bcf:citekey>
-    <bcf:citekey order="9">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="10">pinheiro2000</bcf:citekey>
+    <bcf:citekey order="8">MonteCarloEstimation</bcf:citekey>
+    <bcf:citekey order="9">MonteCarloEstimation</bcf:citekey>
+    <bcf:citekey order="10">fahrmeir-2001-multivariate</bcf:citekey>
     <bcf:citekey order="11">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="12">KQ-Schätzer</bcf:citekey>
+    <bcf:citekey order="12">pinheiro2000</bcf:citekey>
     <bcf:citekey order="13">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="14">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="15">Statistik-Wiwi</bcf:citekey>
+    <bcf:citekey order="14">KQ-Schätzer</bcf:citekey>
+    <bcf:citekey order="15">fahrmeir-2011-regression</bcf:citekey>
     <bcf:citekey order="16">fahrmeir-2011-regression</bcf:citekey>
-    <bcf:citekey order="17">Chi-Quadrat-Test</bcf:citekey>
-    <bcf:citekey order="18">MSE</bcf:citekey>
-    <bcf:citekey order="19">KL-Div</bcf:citekey>
+    <bcf:citekey order="17">Statistik-Wiwi</bcf:citekey>
+    <bcf:citekey order="18">fahrmeir-2011-regression</bcf:citekey>
+    <bcf:citekey order="19">Chi-Quadrat-Test</bcf:citekey>
+    <bcf:citekey order="20">MSE</bcf:citekey>
+    <bcf:citekey order="21">KL-Div</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="anyt">
