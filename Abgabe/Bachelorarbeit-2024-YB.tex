@@ -172,25 +172,19 @@ Das Ziel dieser Arbeit ist es, die Auswirkungen dieser Methode auf die Genauigke
 
 %%---------------EINLEITUNG--------------------------------------------------
 \chapter{Einleitung}
-In der heutigen Zeit, in der die Entwicklung modernster Techniken immer weiter zunimmt, ist die präzise Analyse und Interpretation von Daten immer wichtiger. Vor Allem im Bereich klinischer Forschung, wo hochdimensionale Datensätze und komplexe Strukturen mittlerweile immer häufiger zum Einsatz kommen, können neue methodische Ansätze die Handhabung solcher Datenstrukturen erheblich vereinfachen. Klinische Datensätze sind oft mit Zeitstruktur durch hohe Dimensionen und komplexe Strukturen gekennzeichnet, was die Analyse und Interpretation durch Methoden maschinellen Lernens erschwert. Eine solche Methode ist die Anwendung gemischter Modelle zur Analyse und Verarbeitung komplexer Datenstrukturen. Gemischte Modellstellt in vielen wissenschaftlichen und industriellen Bereichen eine Herausforderung dar und hat in den letzten Jahren stark an Bedeutung gewonnen. Die Anwendung gemischter Modelle in latenten Repräsentationen könnte eine vielversprechende Methode sein, um die Handhabung solcher Datenstrukturen zu erleichtern.\\
+In der heutigen Zeit, in der die Entwicklung modernster Techniken immer weiter zunimmt, ist die präzise Analyse und Interpretation von Daten immer wichtiger. Vor Allem im Bereich klinischer Forschung, wo hochdimensionale Datensätze und komplexe Strukturen mittlerweile immer häufiger zum Einsatz kommen, können neue methodische Ansätze die Handhabung solcher Datenstrukturen erheblich vereinfachen. Klinische Datensätze sind oft mit Zeitstruktur durch hohe Dimensionen und komplexe Strukturen gekennzeichnet, was die Analyse und Interpretation durch Methoden maschinellen Lernens erschwert. Eine solche Methode ist die Anwendung gemischter Modelle zur Analyse und Verarbeitung komplexer Datenstrukturen. Die Anwendung gemischter Modelle auf komplexe Datenstrukturen hat in den letzten Jahren stark an Bedeutung gewonnen, stellt jedoch in vielen wissenschaftlichen und industriellen Bereichen eine Herausforderung dar. Eine innovative Methodik, um die Handhabung solcher Datenstrukturen zu erleichtern, ist die Anwendung gemischter Modelle in latenten Repräsentationen.\\
 \\
-Gemischte Modelle ermöglichen 
-es komplexe Datenstrukturen zu modellieren, indem feste und zufällige Effekte kombinieren. Dadurch  kann die Variabilität in den Daten besser wieder gegeben und genauere Vorhersagen getroffen werden. Allerdings bleibt die Handhabung hochdimensionaler Datenstrukturen sowohl rechnerisch intensiv als auch konzeptionell schwierig.\\
+Latente Repräsentationen entstehen zum Beispiel durch einen Variational Autoencoder, der einen komplexen Datensatz in eine latente Datenwolke transformieren kann. Diese latente Datenwolke ist eine dimensionsreduzierte Repräsentation des Eingabedatensatzes, welche dennoch die wesentlichen Merkmale enthält. Ziel eines Variational Autoencoders ist die Erfassung der zugrunde liegenden Struktur sowie die Generierung neuer Daten, welche ähnliche Merkmale wie die Trainingsdaten aufweisen. Sie sind eine Erweiterung der herkömmlichen Autoencoder. \\
+Gemischte Modelle hingegen ermöglichen es, sowohl feste als auch zufällige Effekte zu kombinieren, um die Variabilität und Struktur der Daten präzise abzubilden. Dadurch  kann die Variabilität in den Daten besser wieder gegeben und genauere Vorhersagen getroffen werden.\\
+Durch die Reduktion der Dimension der Datensätze wird die Handhabung und Analyse erheblich vereinfacht, ohne wesentliche Informationen zu verlieren. Somit kann die Kombination von gemischten Modellen und Variational Autoencodern eine vielversprechende Methodik sein, um komplexe Datenstrukturen zu Analysieren und Interpretieren. \\
 \\
-Die genannten Probleme können durch den Einsatz von gemischten Modellen in latenten Repräsentationen gelöst werden. Diese Vorgehensweise ermöglicht es, die Vorteile der dimensionseduzierten Darstellung im latenten Raum zu nutzen. Latente Repräsentationen sind niedrigdimensionale Darstellungen der tatsächlichen Daten, die die wesentlichen Informationen und Merkmale beibehalten. \\
-Eine vielversprechende Methode zur Erstellung solcher latenten Repräsentationen ist der Variational Autoencoder. VAEs sind generative Modelle, die hochdimensionale Daten in einen niedrigdimensionalen latenten Raum transformieren. Ziel ist die Erfassung der zugrunde liegenden Struktur sowie die Generierung neuer Daten, welche ähnliche Merkmale wie die Trainingsdaten aufweisen. Sie sind eine Erweiterung der herkömmlichen Autoencoder. Durch die Reduktion der Dimension der Datensätze wird die Handhabung und Analyse erheblich vereinfacht, ohne wesentliche Informationen zu verlieren. \\
-\\
-Allerdings können solche Anwendungen eine Verzerrung der Inferenz verursachen.
+Doch wie jede vielversprechende Technologie birgt auch diese Methode Herausforderungen.\\
+Eine zentrale Frage, die sich stellt, ist die nach der Verzerrung der Inferenz: Wie verlässlich sind die Schlussfolgerungen, die wir aus diesen kombinierten Modellen ziehen können?\\
 Verzerrung in der Inferenz kann die Genauigkeit und Zuverlässigkeit von Schlussfolgerungen erheblich beeinträchtigen, was in vielen Bereichen, wie der medizinischen Diagnostik, schwerwiegende Konsequenzen haben kann. Daher ist es von großer Bedeutung, die Ursachen und Auswirkungen dieser Verzerrungen zu verstehen und Methoden zu ihrer Minimierung zu entwickeln. Um in der Zukunft die Vorteile der Anwendung gemischter Modelle in latenten Repräsentationen auszunutzen, wird in dieser Arbeit die womöglich auftretende Verzerrung der Inferenz analysiert und quantifiziert. Besonders wird analysiert, wie die Kombination von Variational Autoencodern und gemischten Modellen die statistischen Eigenschaften der Inferenz beeinflusst. \\
 \\
-Im ersten Teil der Arbeit, "Theoretische Grundlagen",  werden die theoretischen Aspekte von Variational Autoencodern  und gemischten Modellen erläutert. Die Architektur und das Training von Variational Autoencodern wird detailliert beschrieben, um ein tiefes Verständnis ihrer Funktionsweise zu vermitteln.\\
+Im theoretischen Teil der Arbeit werden zunächst die Grundlagen der Variational Autoencoders und gemischten Modelle detailliert dargestellt. Darauf aufbauend folgt eine empirische Analyse, bei der medizinische Datensätze verwendet werden, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle auf latente Repräsentationen zu quantifizieren.\\
 \\
-Anschließend werden gemischte Modelle beschrieben, welche besonders nützlich bei der Analyse von Längsschnitt- und Cluster-Daten sind, wie sie in der Medizin, den Sozialwissenschaften und der Ökonomie häufig vorkommen. Ein zentrales Element der gemischten Modelle ist die Likelihood-Inferenz, bei der die Parameter durch Maximum-Likelihood-Schätzung bestimmt werden. Zudem werden die nötigen Kenntnisse für die späteren Testverfahren geschaffen. \\
-\\
-Im empirischen Teil der Arbeit wird ein komplexer,  medizinischer Datensatz verwendet, um die Verzerrung der Inferenz bei der Anwendung gemischter Modelle auf latente Repräsentationen zu untersuchen. Die Analyse basiert auf der Likelihood-Ratio-Test Statistik, die zwischen einem vollständigen und einem reduzierten gemischten Modell unterscheidet. Durch wiederholtes Training und Evaluierung dieser Modelle auf der latenten Datenwolke des Variational Autoencoders wird die Verzerrung quantifiziert und bewertet.\\
-\\
-Die Ergebnisse dieser Untersuchung tragen dazu bei, die Zuverlässigkeit von Inferenzmethoden in Kombination mit VAEs zu bewerten und liefern wertvolle Erkenntnisse für die praktische Anwendung solcher Modelle. Abschließend werden die Implikationen der Ergebnisse diskutiert und Empfehlungen für zukünftige Forschungen gegeben.\\
-\\
+Die Ergebnisse dieser Untersuchung tragen dazu bei, die Zuverlässigkeit von Inferenzmethoden in Kombination mit Variational Autoencodern zu bewerten und liefern wertvolle Erkenntnisse für die praktische Anwendung solcher Modelle. Abschließend werden die Implikationen der Ergebnisse diskutiert und Empfehlungen für zukünftige Forschungen gegeben.\\
 
 %%-------------THEORETISCHE-GRUNDLAGEN---------------------------------------
 \chapter{Theoretische Grundlagen}
@@ -198,11 +192,14 @@ Eine grundlegende theoretische Aufarbeitung der in dieser Arbeit behandelten The
 \\
 Das vorliegende Kapitel beginnt mit einer detaillierten Einführung in Variational Autoencoder. Dabei werden die Architektur und das Training von Variational Autoencodern detailliert beschrieben, um ein fundiertes Verständnis ihrer Funktionsweise zu vermitteln.\\
 \\
-Im zweiten Teil des Kapitels erfolgt eine Behandlung von gemischten Modellen. Die Modelle kombinieren feste und zufällige Effekte, um die Variabilität in den Daten zu erfassen. Die Grundlagen gemischter Modelle, einschließlich der Annahmen und mathematischen Formulierungen, werden ausführlich erörtert.\\
+Im zweiten Teil des Kapitels erfolgt eine Behandlung von gemischten Modellen, welche besonders nützlich bei der Analyse von Längsschnitt- und Cluster-Daten sind, wie sie in der Medizin, den Sozialwissenschaften und der Ökonomie häufig vorkommen. Die Modelle kombinieren feste und zufällige Effekte, um die Variabilität in den Daten zu erfassen. Die Grundlagen gemischter Modelle, einschließlich der Annahmen und mathematischen Formulierungen, werden ausführlich erörtert.\\
 \\
 Ein zentrales Element der theoretischen Grundlagen ist die Likelihood-Inferenz. Im Folgenden wird die Schätzung der Parameter von gemischten Modellen unter Verwendung der Maximum-Likelihood-Methode erörtert. Es wird insbesondere dargelegt, wie die Likelihood-Funktion zur Schätzung der festen und zufälligen Effekte maximiert wird und wie der Likelihood-Ratio-Test (LRT) zur Evaluierung der Modelle zum Einsatz kommt. Der Likelihood-Ratio-Test erlaubt die Bestimmung der Signifikanz zusätzlicher Parameter sowie die Identifikation potenzieller Verzerrungen in der Inferenz.\\
 \\
-Bevor in diesem Kapitel die theoretische Basis für die nachfolgenden empirischen Untersuchungen dargelegt werden, erfolgt eine kurze Beschreibung neuronaler Netzwerke, welche ein grundlegendes Konzept im Bereich des maschinellen Lernens und der künstlichen Intelligenz sind und somit auch ein grundlegendes Konzept der gesamten Arbeit sind. Ein neuronales Netzwerk ist ein mathematisches Modell, welches aus miteinander verbundenen Neuronen besteht, die von der Aktivierungsfunktion geprägt sind. Die Neuronen bilden die Eingabeschicht, die versteckten Schichten und die Ausgabeschicht. Die Komplexität des Modells variiert mit der Anordnung und der Struktur der Schichten. Eine genaue Definition neuronaler Netze ist in Kapitel 15.1 in \cite{Skript-neuronalesNetz} zu finden.\\
+\section{Kurzer Überblick über neuronale Netzwerke}
+Bevor in den nächsten Kapiteln die theoretische Basis für die nachfolgenden empirischen Untersuchungen dargelegt werden, erfolgt eine kurze Beschreibung neuronaler Netzwerke, welche ein grundlegendes Konzept im Bereich des maschinellen Lernens und der künstlichen Intelligenz sind und somit auch ein grundlegendes Konzept der gesamten Arbeit sind.\\
+\\
+Ein neuronales Netzwerk ist ein mathematisches Modell, welches aus miteinander verbundenen Neuronen besteht, die von der Aktivierungsfunktion geprägt sind. Die Neuronen bilden die Eingabeschicht, die versteckten Schichten und die Ausgabeschicht. Die Komplexität des Modells variiert mit der Anordnung und der Struktur der Schichten. Eine genaue Definition neuronaler Netze ist in Kapitel 15.1 in \cite{Skript-neuronalesNetz} zu finden.\\
 %----------------------------------------------------------------------------
 
 %-----------------------VARIATIONAL-AUTOENCODER------------------------------
@@ -210,7 +207,7 @@ Bevor in diesem Kapitel die theoretische Basis für die nachfolgenden empirische
 %----------------------------------------------------------------------------
 \section{Einführung in Variational Autoencoder}
 Wie bereits erwähnt, erfolgt die Anwendung der gemischten Modelle auf einer latenten Repräsentation mittels Variational Autoencoder (VAE, vgl. \cite{Auto-EncodingVariationalBayes}).
-Variational Autoencoder sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe ihres Encoders im latenten Raum  niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht eine effizientere Anwendung gemischte Modelle. Variational Autoencoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten x im latenten Raum zu modellieren.\\
+Variational Autoencoder sind für die Modellierung latenter Repräsentationen von großem Interesse, da sie hochdimensionale Datensätze mit Hilfe ihres Encoders im latenten Raum  niedrigdimensional darstellen können. Dies reduziert die Komplexität der Modellierung und ermöglicht eine effizientere Anwendung gemischte Modelle. Variational Autoencoder sind generative Modelle, welche versuchen die zugrunde liegende Struktur der Inputdaten $x$ im latenten Raum zu modellieren.\\
 Im Gegensatz zu herkömmlichen Autoencodern ist der VAE in der Lage, nicht nur den Eingabedatensatz zu rekonstruieren, sondern auch neue Daten, die ähnliche Merkmale wie die Trainingsdaten aufweisen, zu generieren. Dies wird durch die verbesserte Repräsentation ermöglicht (vgl. \cite{bigdata-insider-vae}). Insbesondere wird der latente Raum nicht wie bei normalen Autoencoder durch feste Punkte modellieret, wie es in Abbildung \ref{fig:vae} dargestellt ist, sondern in der Erweiterung VAE durch eine Wahrscheinlichkeitsverteilung (Normalverteilung).
 \begin{figure}
 	\centering
@@ -318,13 +315,13 @@ Die  Wahrscheinlichkeit, dass die beobachteten Daten aus den latenten Repräsent
 
 \subsection{Training eines Variational Autoencoders}
 Das Training eines Variational Autoencoder basiert auf den Prinzipien der sogenannten Variational Inference, einer Methode zur Approximation komplexer posterior Verteilungen. Die Berechnung der posterior Verteilung ist besonders bei komplexen Modellen mit Schwierigkeiten verbunden. Infolgedessen wird bei der Variationsinferenz eine einfachere Verteilung verwendet, um die wahre posteriore Verteilung zu approximieren, wodurch Berechnungen effizienter und skalierbarer werden.
-Im Kontext eines VAE wird die wahre posterior Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit der Input-Daten, durch eine einfachere Verteilung $q_\phi(z|x)$ approximiert. Das Ziel ist es die Parameter dieser Verteilung so zu optimieren, dass $q_\phi(z|x)$ so nah wie möglich an $p(z|x)$ liegt. Diese Annäherung wird durch die Maximierung des Evidence Lower Bound (ELBO) erreicht, der eine untere Schranke der Datenloglikelihood darstellt. \\
+Im Kontext eines Variational Autoencoders wird die wahre posterior Verteilung $p(z|x)$ der latenten Variablen in Abhängigkeit der Input-Daten, durch eine einfachere Verteilung $q_\phi(z|x)$ approximiert. Das Ziel ist es die Parameter dieser Verteilung so zu optimieren, dass $q_\phi(z|x)$ so nah wie möglich an $p(z|x)$ liegt. Diese Annäherung wird durch die Maximierung des Evidence Lower Bound (ELBO) erreicht, der eine untere Schranke der Datenloglikelihood darstellt. \\
 Zur Effizienten Berechnung wird der Reparametrisierungs Trick verwendet, welcher die Anwendung von Gradientenverfahren zur Optimierung der Modellparameter verbessert.\\
 \\
 In diesem Abschnitt werden die wesentlichen mathematischen Aspekte hinter dem Training des VAE erläutert und beschrieben.\\
 \\
 Das Training eines Variational Autoencoders (VAE) umfasst mehrere Schritte, deren Ziel es ist, die Parameter des Modells so anzupassen, dass der Evidence Lower Bound (ELBO) maximiert wird. Der Prozess lässt sich in drei Hauptkomponenten unterteilen: die Definition des ELBO, die Anwendung des Reparameterization Trick und die Optimierung des Modells mittels stochastischer Gradientenverfahren.\\
-Eine im Rahmen dieser Arbeit und auch im Bereich Machine Learning wichtige Verteilung ist die Normal- oder auch Gauß-Verteilung. Diese wird als erste Definition in dieser Arbeit eingeführt:
+Eine im Rahmen dieser Arbeit und auch im Bereich Machine Learning wichtige Verteilung ist die Normal- oder auch Gauß-Verteilung. Diese wird als erste Definition in dieser Arbeit eingeführt (vgl. \cite{wasserman2004all}, Kapitel 2.4):
 \begin{definition}[Normal-/Gaußverteilung]
 	Seien $\mu, \sigma \in \mathbb{R}$ mit $\sigma > 0$.
 	Die Zufallsvariable X ist normalverteilt mit Erwartungswert $\mu$ und Standardabweichung $\sigma$ bzw. Varianz $\sigma^2$, falls X die folgende Wahrscheinlichkeitsdichte hat: 
@@ -335,7 +332,7 @@ Eine im Rahmen dieser Arbeit und auch im Bereich Machine Learning wichtige Verte
 Ein wichtiges Beispiel der Normalverteilung ist die Standardnormalverteilung, welche eine Normalverteilung mit den Parametern $\mu = 0$ und  $\sigma^2 = 1$ ist ($X \sim \mathcal{N}(0,1)$). Eine solche Standardnormalverteilung hat die Dichtefunktion\\
 $$p(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2}.$$
 \\
-Der ELBO lässt sich aus dem Rekonstruktionsverlust (Reconstruction Loss) und der Kullback-Leibler-Divergenz zusammensetzten. Die Kullback-Leibler-Divergenz quantifiziert die Differenz zwischen der approximierten posterior Verteilung und der prior Verteilung und ist folgendermaßen definiert:\\
+Der ELBO lässt sich aus dem Rekonstruktionsverlust (Reconstruction Loss) und der Kullback-Leibler-Divergenz zusammensetzten. Die Kullback-Leibler-Divergenz quantifiziert die Differenz zwischen der approximierten posterior Verteilung und der prior Verteilung und ist folgendermaßen definiert (vgl. \cite{bishop2006pattern}, Kapitel 1.1.6):\\
 \begin{definition}[Kullback-Leibler-Divergenz (KL-Divergenz)]
 Seien Q und P zwei Wahrscheinlichkeitsverteilungen. 
 Sei dabei P die wahre Verteilung mit Dichtefunktion p(x) und Q die approximierte Verteilung mit Dichtefunktion q(x). Dann ist die KL-Divergenz zwischen Q und P definiert als
@@ -374,7 +371,7 @@ Alternativ kann dies mit der Jensenschen Ungleichung (vgl. \cite{JensenscheUngle
 \end{align}\noindent
 Es ist sofort ersichtlich, dass die log-likelihood $p_\theta(x)$ durch Maximieren der ELBO bzgl. $\theta$ und  $\phi$ selbst maximiert wird und somit die Qualität unseres generatives Modells verbessert wird. Gleichzeitig minimiert sich dadurch die KL-Differenz zwischen der approximativen Verteilung $q_\phi(z|x)$ und den wahren posterior Verteilung $p_\theta(z|x)$. Durch die Maximierung der ELBO wird also die Approximation $q_\phi(z|x)$ an die posterior Verteilung optimiert. \\
 \\
-Die Maximierung der negativen ELBO, beziehungsweise die Minimierung der ELBO, kann durch stochastische Gradientenverfahren wie Stochastic Gradient Descent (SGD) oder andere fortschrittliche Verfahren erfolgen. Die Berechnung der Gradienten des ELBOs bzgl. $\theta$ stellt keine Probleme dar. Mit dem für solche Methoden üblichen Monte-Carlo Schätzer (Gleichung \ref{MC-Schätzer}) lassen sich die Gradienten bzgl. $\theta$ einfach berechnen, wie man in den folgenden Gleichungen sehen kann.\\
+Die Maximierung der negativen ELBO, beziehungsweise die Minimierung der ELBO, kann durch stochastische Gradientenverfahren wie Stochastic Gradient Descent (SGD) oder andere fortschrittliche Verfahren erfolgen. Für eine ausführlichere Einführung in Stochastic Gradient Descent siehe \cite{Goodfellow-et-al-2016} Kapitel 5.9. Die Berechnung der Gradienten des ELBOs bzgl. $\theta$ stellt keine Probleme dar. Mit dem für solche Methoden üblichen Monte-Carlo Schätzer (Gleichung \ref{MC-Schätzer}) lassen sich die Gradienten bzgl. $\theta$ einfach berechnen, wie man in den folgenden Gleichungen sehen kann.\\
 \begin{align}
 	\nabla_\theta \mathcal{L}(\phi, \theta;x) &=\nabla_\theta \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)] \\
 	&=  \mathbb{E}_{q_\phi(z|x)}[\nabla_\theta (\log p_\theta(x,z)-\log q_\phi(z|x))] \\
@@ -727,10 +724,10 @@ Die Chi-Quadrat-Statistik wird dann wie folgt berechnet (vgl. \cite{Chi-Quadrat-
 \end{align}
 Die Nullhypothese wird abgelehnt, wenn die Teststatistik hoch ist. Wenn die Nullhypothese nicht abgelehnt wird, sollte der Unterschied zwischen der beobachteten Verteilung und der theoretischen Verteilung nicht signifikant verschieden sein. Der kritische Wert berechnet sich durch das (1-$\alpha_0$)-Quantil $\chi^2_{(1-\alpha_0; d)}$ der $\chi^2$-Verteilung mit $k$ Freiheitsgraden, wobei $\alpha_0$ das Signifikanzniveau ist. Falls also die Teststatistik $\mathcal{X}^2$ größer dem (1-$\alpha_0$)-Quantil der $\chi^2$-Verteilung mit $d$ Freiheitsgraden ($\mathcal{X}^2$ > $\chi^2_{(1-\alpha_0; d)}$) ist, so wird die Nullhypothese abgelehnt. 
 \\
-Eine weitere wichtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Abweichung zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. \cite{MSE} (2.25)):
+Eine weitere wichtige Komponente für die Analyse wird der Mean-Squarred-Error (MSE/Mittlere quadratische Fehler) sein, welcher die Abweichung zwischen den geschätzten Werten und den tatsächlichen Werten misst. Er wird verwendet um die Qualität eines Schätzers oder eines Vorhersagemodells zu bewerten und wird wie folgt definiert (vgl. \cite{Goodfellow-et-al-2016} Kapitel 5.4.4):
 \begin{definition}[Mean-Squarred-Error (MSE)]
 	Seien $\hat{y_i}$ ,für  $i=0,...,n$ die geschätzten Werte und $y_i$ die tatsächlichen Werte. Dann ist der mittlere quadratische Fehler folgendermaßen definiert:
-	$$ MSE = \frac{1}{n} \sum_{i = 0}^{n} (\hat{y_i}-y_i)^2$$
+	$$ MSE = \mathbf{E}(\hat{y_i}-y_i)^2$$
 \end{definition}
 \begin{figure}[h!]
 	\centering
@@ -903,7 +900,7 @@ Es wurde nun ein Szenario geschaffen, in dem ein vollständiges Modell mit einem
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[scale=0.5]{plots/Herzgesundheit_Hist_1000sim_3eff.png}
+		\includegraphics[scale=0.5]{plots/Herzgesundheit_Hist_1000sim_5eff.png}
 		\caption{Histogramm der LRT-Statistik mit 1000 Iterationen für gemischte Modelle auf simulierten Daten}
 		\label{fig:HIST_MM}
 	\end{subfigure}
